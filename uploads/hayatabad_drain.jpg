@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+        <rect width="640" height="480" fill="#12263A"/>
+        <circle cx="320" cy="200" r="80" fill="#0E6B73" opacity="0.8"/>
+        <path d="M320 140 C340 180, 360 200, 360 230 C360 252, 342 270, 320 270 C298 270, 280 252, 280 230 C280 200, 300 180, 320 140 Z" fill="#EAF0F2"/>
+        <text x="320" y="340" fill="#EAF0F2" font-size="22" font-family="sans-serif" text-anchor="middle" font-weight="bold">Naali Watch Report Photo</text>
+        <text x="320" y="375" fill="#C9D4DA" font-size="16" font-family="sans-serif" text-anchor="middle">hayatabad drain</text>
+      </svg>
