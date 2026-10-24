@@ -19,7 +19,9 @@ import {
   Globe,
   Navigation,
   Key,
+  WifiOff,
 } from "lucide-react";
+import { saveReportOffline } from "@/lib/offline-queue";
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -50,8 +52,8 @@ export function ReportModal({
   const { t, language } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Flow steps: 'photo' | 'analyzing' | 'review' | 'duplicate_warning' | 'success' | 'invalid_image'
-  const [step, setStep] = useState<"photo" | "analyzing" | "review" | "duplicate_warning" | "success" | "invalid_image">("photo");
+  // Flow steps: 'photo' | 'analyzing' | 'review' | 'duplicate_warning' | 'success' | 'success_offline' | 'invalid_image'
+  const [step, setStep] = useState<"photo" | "analyzing" | "review" | "duplicate_warning" | "success" | "success_offline" | "invalid_image">("photo");
   const [invalidImageDetails, setInvalidImageDetails] = useState<{
     detectedContent: string;
     reason: string;
@@ -378,6 +380,25 @@ export function ReportModal({
   // Submit report to DB
   const finalizeSubmit = async () => {
     setLoading(true);
+
+    // If client is offline, save directly to offline queue
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      if (photoPreview) {
+        saveReportOffline({
+          photoDataUrl: photoPreview,
+          photoName: photoFileObj?.name || "offline_hazard.jpg",
+          type: problemType,
+          severity,
+          complaintText,
+          lat: location?.lat || 34.0151,
+          lng: location?.lng || 71.5249,
+        });
+        setStep("success_offline");
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
       const res = await fetch("/api/reports", {
         method: "POST",
@@ -399,6 +420,20 @@ export function ReportModal({
       setStep("success");
       onReportCreated(data.report);
     } catch (e: any) {
+      // Fallback: If network failed, save offline
+      if (photoPreview) {
+        saveReportOffline({
+          photoDataUrl: photoPreview,
+          photoName: photoFileObj?.name || "offline_hazard.jpg",
+          type: problemType,
+          severity,
+          complaintText,
+          lat: location?.lat || 34.0151,
+          lng: location?.lng || 71.5249,
+        });
+        setStep("success_offline");
+        return;
+      }
       setErrorMsg("Error saving report.");
     } finally {
       setLoading(false);
@@ -942,6 +977,37 @@ export function ReportModal({
                 </h4>
                 <p className="text-xs text-[#4B6073] max-w-sm mx-auto leading-relaxed">
                   Your report has been logged and queued for WSSP Peshawar desiltation response. Nearby citizens can now confirm the issue.
+                </p>
+              </div>
+              <div className="p-3 bg-[#EAF0F2] rounded-xl text-xs text-[#12263A] max-w-sm mx-auto">
+                📍 <strong>{locationAddress}</strong>
+              </div>
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-6 py-2.5 rounded-xl bg-[#0E6B73] text-white text-xs font-bold shadow-md hover:bg-[#0a545a] transition"
+                >
+                  Return to Live Map
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* -------------------------------------------------------------
+              STEP 6: OFFLINE SAVED CONFIRMATION
+             ------------------------------------------------------------- */}
+          {step === "success_offline" && (
+            <div className="py-8 text-center space-y-4">
+              <div className="w-14 h-14 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center mx-auto">
+                <WifiOff className="w-8 h-8" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="font-heading text-lg font-bold text-[#12263A]">
+                  Report Saved to Device (Offline Mode)
+                </h4>
+                <p className="text-xs text-[#4B6073] max-w-sm mx-auto leading-relaxed">
+                  No internet connection was detected. Your photo, location, and hazard details are safely saved on your device and will automatically dispatch to WSSP as soon as your phone reconnects to 4G or Wi-Fi.
                 </p>
               </div>
               <div className="p-3 bg-[#EAF0F2] rounded-xl text-xs text-[#12263A] max-w-sm mx-auto">

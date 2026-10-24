@@ -73,7 +73,27 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
       }
     }, 5000);
 
-    return () => clearInterval(interval);
+    const handleSyncedReport = (e: any) => {
+      const newReport = e.detail?.report;
+      if (newReport) {
+        setReports((prev) => {
+          const map = new Map(prev.map((r) => [r.id, r]));
+          map.set(newReport.id, newReport);
+          return Array.from(map.values());
+        });
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("naali-report-synced", handleSyncedReport);
+    }
+
+    return () => {
+      clearInterval(interval);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("naali-report-synced", handleSyncedReport);
+      }
+    };
   }, [lastTimestamp]);
 
   // Filter & Search Reports

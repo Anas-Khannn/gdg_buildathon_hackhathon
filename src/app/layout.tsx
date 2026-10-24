@@ -8,6 +8,7 @@ import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import { Providers } from "@/components/providers";
 import { LanguageProvider } from "@/components/language-provider";
+import { PwaRegister } from "@/components/pwa-register";
 
 const bricolage = Bricolage_Grotesque({
   weight: ["700"],
@@ -34,6 +35,12 @@ export const metadata: Metadata = {
   title: "Naali Watch | Peshawar Drain & Flood Map",
   description:
     "Peshawar waterlogging, flooded roads, blocked drains and open manholes live citizen map. See it. Snap it. Make them fix it.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "NaaliWatch",
+  },
   icons: {
     icon: [
       { url: "/icon.svg", type: "image/svg+xml" },
@@ -62,7 +69,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#EAF0F2] text-[#12263A]">
         <Providers>
-          <LanguageProvider>{children}</LanguageProvider>
+          <LanguageProvider>
+            {children}
+            <PwaRegister />
+          </LanguageProvider>
         </Providers>
       </body>
     </html>

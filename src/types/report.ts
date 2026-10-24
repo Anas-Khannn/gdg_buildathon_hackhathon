@@ -22,4 +22,7 @@ export interface ReportItem {
   confirmationsCount: number;
   fixChecksYesCount: number;
   fixChecksNoCount: number;
+  fixPhotoFile?: string | null;
+  aiFixConfidence?: string | null;
+  aiFixAnalysis?: string | null;
 }

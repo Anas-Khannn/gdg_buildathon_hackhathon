@@ -114,6 +114,9 @@ export const reports = pgTable(
     areaId: integer("area_id").references(() => areas.id),
     status: reportStatusEnum("status").notNull().default("open"),
     aiConfidence: numeric("ai_confidence"),
+    fixPhotoFile: text("fix_photo_file"),
+    aiFixConfidence: numeric("ai_fix_confidence"),
+    aiFixAnalysis: text("ai_fix_analysis"),
     hidden: boolean("hidden").notNull().default(false),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
