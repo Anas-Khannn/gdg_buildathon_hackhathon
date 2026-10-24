@@ -106,7 +106,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
     async (options: { name: string; email: string; password?: string; role: "user" | "admin"; callbackUrl?: string }) => {
       setStatus("loading");
       const role = options.role || "user";
-      const callbackUrl = options.callbackUrl || (role === "admin" ? "/admin" : "/");
 
       try {
         const res = await fetch("/api/auth/signin/demo-login", {
@@ -118,32 +117,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
             email: options.email,
             password: options.password,
             role,
-            callbackUrl,
           }),
         });
 
-        if (res.ok) {
-          const data = await res.json();
-          if (data.user) {
-            setSession({ user: data.user });
-            setStatus("authenticated");
-            if (typeof document !== "undefined") {
-              const val = encodeURIComponent(JSON.stringify(data.user));
-              const isHttps = typeof window !== "undefined" && window.location.protocol === "https:";
-              document.cookie = `naali_session=${val}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax${isHttps ? "; Secure" : ""}`;
-              try {
-                localStorage.setItem("naali_session", JSON.stringify(data.user));
-              } catch {}
-            }
-          }
-          const destination = data.url || callbackUrl;
-          if (typeof window !== "undefined") {
-            window.location.replace(destination);
-          }
-        } else {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.error || "Failed to create account");
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(data.error || "Failed to create account");
         }
+
+        // On sign up, do NOT set authenticated session; user must sign in on the sign in page
+        setStatus("unauthenticated");
+        return data;
       } catch (err) {
         console.error("Sign-up error:", err);
         setStatus("unauthenticated");
@@ -271,7 +255,6 @@ export async function signIn(provider?: string, options?: { role?: "user" | "adm
 // Client signUp
 export async function signUp(options: { name: string; email: string; password?: string; role: "user" | "admin"; callbackUrl?: string }) {
   const role = options.role || "user";
-  const callbackUrl = options.callbackUrl || (role === "admin" ? "/admin" : "/");
 
   const res = await fetch("/api/auth/signin/demo-login", {
     method: "POST",
@@ -282,24 +265,16 @@ export async function signUp(options: { name: string; email: string; password?: 
       email: options.email,
       password: options.password,
       role,
-      callbackUrl,
     }),
   });
 
-  if (res.ok) {
-    const data = await res.json();
-    if (data.user) {
-      syncClientSession(data.user);
-    }
-    const destination = data.url || callbackUrl;
-    if (typeof window !== "undefined") {
-      window.location.replace(destination);
-    }
-    return data;
-  } else {
-    const errData = await res.json().catch(() => ({}));
-    throw new Error(errData.error || "Failed to create account");
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to create account");
   }
+
+  // Do NOT syncClientSession or redirect to dashboard on sign up
+  return data;
 }
 
 // Client resetPassword

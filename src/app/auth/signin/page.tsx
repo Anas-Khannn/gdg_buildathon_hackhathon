@@ -13,18 +13,26 @@ function AuthSignInContent() {
   const searchParams = useSearchParams();
   const { data: session } = useSession();
   const initialRole = searchParams.get("role") === "admin" ? "admin" : "user";
+  const initialEmail = searchParams.get("email") || "";
   const initialTab =
     searchParams.get("tab") === "forgot"
       ? "forgot"
-      : searchParams.get("tab") === "signin"
-      ? "signin"
-      : "signup";
+      : searchParams.get("tab") === "signup"
+      ? "signup"
+      : "signin";
+  const isRegistered = searchParams.get("registered") === "true";
+  const initialSuccessMsg = isRegistered
+    ? "Account created successfully! Please sign in with your email and password."
+    : undefined;
 
   useEffect(() => {
-    if (session?.user) {
+    // Only auto-redirect to dashboard if session exists and user is not explicitly accessing signin/signup tabs
+    const hasExplicitAuthIntent =
+      searchParams.has("tab") || searchParams.has("registered") || searchParams.has("email");
+    if (session?.user && !hasExplicitAuthIntent) {
       window.location.replace(session.user.role === "admin" ? "/admin" : "/");
     }
-  }, [session]);
+  }, [session, searchParams]);
 
   const { language, setLanguage } = useLanguage();
 
@@ -69,6 +77,8 @@ function AuthSignInContent() {
       <AuthWidget
         initialTab={initialTab}
         initialRole={initialRole}
+        initialEmail={initialEmail}
+        initialSuccessMsg={initialSuccessMsg}
         onSuccessRedirect="/"
         className="w-full"
       />

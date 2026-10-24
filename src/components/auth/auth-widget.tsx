@@ -23,6 +23,8 @@ import Link from "next/link";
 interface AuthWidgetProps {
   initialTab?: "signup" | "signin" | "forgot";
   initialRole?: "user" | "admin";
+  initialEmail?: string;
+  initialSuccessMsg?: string;
   onSuccessRedirect?: string;
   className?: string;
 }
@@ -30,6 +32,8 @@ interface AuthWidgetProps {
 export function AuthWidget({
   initialTab = "signup",
   initialRole = "user",
+  initialEmail = "",
+  initialSuccessMsg = "",
   onSuccessRedirect,
   className = "",
 }: AuthWidgetProps) {
@@ -39,7 +43,7 @@ export function AuthWidget({
 
   // Form states
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -52,7 +56,7 @@ export function AuthWidget({
   // Feedback states
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(initialSuccessMsg || null);
 
   // If already authenticated, show logged-in quick enter card
   if (session?.user) {
@@ -133,16 +137,31 @@ export function AuthWidget({
 
     setLoading("signup");
     try {
-      const targetUrl = onSuccessRedirect || (role === "admin" ? "/admin" : "/");
+      const userEmail = email.trim().toLowerCase();
       await signUp({
         name: name.trim() || (role === "admin" ? "WSSP Official" : "Peshawar Citizen"),
-        email: email.trim().toLowerCase(),
+        email: userEmail,
         password: password || undefined,
         role,
-        callbackUrl: targetUrl,
       });
-      if (typeof window !== "undefined") {
-        window.location.replace(targetUrl);
+
+      setLoading(null);
+      setPassword("");
+      setConfirmPassword("");
+
+      // CRITICAL: Take the user to the Sign In page / tab, NOT the dashboard inside
+      const isSignInPage = typeof window !== "undefined" && window.location.pathname.startsWith("/auth/signin");
+
+      if (isSignInPage) {
+        setTab("signin");
+        setSuccessMsg("Account created successfully! Please sign in with your email and password.");
+        if (typeof window !== "undefined" && window.history?.replaceState) {
+          window.history.replaceState(null, "", `/auth/signin?tab=signin&email=${encodeURIComponent(userEmail)}&role=${role}`);
+        }
+      } else {
+        if (typeof window !== "undefined") {
+          window.location.href = `/auth/signin?tab=signin&email=${encodeURIComponent(userEmail)}&role=${role}&registered=true`;
+        }
       }
     } catch (err: any) {
       console.error(err);
@@ -422,7 +441,7 @@ export function AuthWidget({
             disabled={loading !== null}
             className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#0E6B73] to-[#095259] hover:from-[#095259] hover:to-[#06383d] text-white font-bold text-xs sm:text-sm transition shadow-lg shadow-[#0E6B73]/25 flex items-center justify-center gap-2 group disabled:opacity-60 mt-2"
           >
-            <span>{loading === "signup" ? "Creating Account..." : "Create Account & Enter Dashboard"}</span>
+            <span>{loading === "signup" ? "Creating Account..." : "Create Account & Go to Sign In"}</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         </form>

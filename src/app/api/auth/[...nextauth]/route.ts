@@ -81,13 +81,36 @@ export async function POST(req: NextRequest) {
         newPassword: body.password || body.newPassword || "Peshawar@2026",
         role,
       });
-    } else if (action === "signup" && body.email) {
-      // Custom user registration
+      const res = NextResponse.json({
+        url: callbackUrl,
+        user,
+      });
+      setSessionCookie(res, user);
+      return res;
+    } else if (action === "signup") {
+      if (!body.email) {
+        return NextResponse.json(
+          { error: "Email address is required to register." },
+          { status: 400 }
+        );
+      }
+
+      // Custom user registration in database
       user = await signUpUser({
         name: body.name || (role === "admin" ? "WSSP Official" : "Peshawar Citizen"),
         email: body.email,
         password: body.password,
         role,
+      });
+
+      // DO NOT set session cookie on signup!
+      // Return sign-in redirect info so the user must sign in with their credentials.
+      return NextResponse.json({
+        success: true,
+        action: "signup",
+        url: `/auth/signin?tab=signin&email=${encodeURIComponent(user.email)}`,
+        message: "Account created successfully! Please sign in with your email and password.",
+        user: { email: user.email, name: user.name, role: user.role },
       });
     } else if (body.email && action === "signin") {
       // Custom user login
@@ -108,7 +131,7 @@ export async function POST(req: NextRequest) {
 
     setSessionCookie(res, user);
     return res;
-  } catch (error) {
+  } catch (error: any) {
     console.error("Auth POST error:", error);
     const fallbackUser: SessionUser = {
       id: "citizen-ali-id",
