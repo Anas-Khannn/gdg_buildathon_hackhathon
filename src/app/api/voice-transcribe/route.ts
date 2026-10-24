@@ -30,14 +30,10 @@ export async function POST(req: NextRequest) {
     const apiKey = customKey || process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      // Mock / fallback transcription if no key configured
-      return NextResponse.json({
-        transcript: "کوہاٹی گیٹ کے قریب گٹر ابل رہا ہے اور پانی سڑک پر جمع ہے",
-        complaintText: "Overflowing drain and deep pooled water blocking street near Kohati Gate Peshawar.",
-        detectedArea: "Kohati Gate",
-        detectedType: "blocked_drain",
-        detectedSeverity: "knee",
-      });
+      return NextResponse.json(
+        { error: "Gemini API key is required to process audio complaints. Please add your key in settings." },
+        { status: 400 }
+      );
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -96,14 +92,8 @@ Do not wrap in markdown or backticks, return ONLY valid JSON.`;
   } catch (err: any) {
     console.error("Voice transcription error:", err);
     return NextResponse.json(
-      {
-        error: err.message || "Failed to transcribe audio",
-        transcript: "Voice recorded",
-        complaintText: "Voice note recorded by citizen. Silt and waterlogged street reported.",
-        detectedType: "standing_water",
-        detectedSeverity: "knee",
-      },
-      { status: 200 }
+      { error: err.message || "Failed to transcribe audio" },
+      { status: 500 }
     );
   }
 }

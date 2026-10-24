@@ -309,58 +309,83 @@ export default function ScoreboardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {guardians.map((g, idx) => {
-              const badgeLabel =
-                language === "ur"
-                  ? g.badgeTitleUr
-                  : language === "ps"
-                  ? g.badgeTitlePs
-                  : g.badgeTitle;
-
-              return (
-                <div
-                  key={g.id}
-                  className="bg-white p-4 sm:p-5 rounded-2xl border border-[#C9D4DA] shadow-xs relative overflow-hidden group hover:border-[#0E6B73] transition space-y-3"
+          {guardians.length === 0 ? (
+            <div className="bg-white p-8 rounded-3xl border border-[#C9D4DA] text-center space-y-3">
+              <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto">
+                <Trophy className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="font-heading font-bold text-base text-[#12263A]">
+                  No Citizen Guardians Ranked Yet
+                </h4>
+                <p className="text-xs text-[#4B6073] max-w-md mx-auto leading-relaxed">
+                  Be the first citizen in Peshawar to report a drainage hazard (+50 Karma) or confirm an issue (+20 Karma) on the live map to claim the #1 spot on your neighborhood board!
+                </p>
+              </div>
+              <div className="pt-2">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0E6B73] hover:bg-[#095259] text-white text-xs font-bold transition shadow-xs"
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-white font-heading font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0">
-                        #{idx + 1}
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Open Live Map & Report Problem</span>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+              {guardians.map((g, idx) => {
+                const badgeLabel =
+                  language === "ur"
+                    ? g.badgeTitleUr
+                    : language === "ps"
+                    ? g.badgeTitlePs
+                    : g.badgeTitle;
+
+                return (
+                  <div
+                    key={g.id}
+                    className="bg-white p-4 sm:p-5 rounded-2xl border border-[#C9D4DA] shadow-xs relative overflow-hidden group hover:border-[#0E6B73] transition space-y-3"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-white font-heading font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0">
+                          #{idx + 1}
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="font-heading text-sm font-bold text-[#12263A] truncate">
+                            {g.name}
+                          </h4>
+                          <span className="text-[11px] text-[#4B6073] block truncate">
+                            📍 {g.area}
+                          </span>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <h4 className="font-heading text-sm font-bold text-[#12263A] truncate">
-                          {g.name}
-                        </h4>
-                        <span className="text-[11px] text-[#4B6073] block truncate">
-                          📍 {g.area}
+
+                      <div className="text-right shrink-0">
+                        <span className="font-heading text-lg font-extrabold text-[#0E6B73] block leading-none">
+                          {g.points}
+                        </span>
+                        <span className="text-[9px] font-bold uppercase text-[#4B6073] tracking-wider block mt-0.5">
+                          Karma Pts
                         </span>
                       </div>
                     </div>
 
-                    <div className="text-right shrink-0">
-                      <span className="font-heading text-lg font-extrabold text-[#0E6B73] block leading-none">
-                        {g.points}
+                    <div className="flex items-center justify-between pt-2 border-t border-[#C9D4DA]/50 text-xs">
+                      <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[10px] font-extrabold border border-amber-200">
+                        {badgeLabel}
                       </span>
-                      <span className="text-[9px] font-bold uppercase text-[#4B6073] tracking-wider block mt-0.5">
-                        Karma Pts
+
+                      <span className="text-[11px] text-[#4B6073] font-medium">
+                        📸 {g.reportsCount} • 👥 {g.confirmationsCount} • ✓ {g.verifiedCount}
                       </span>
                     </div>
                   </div>
-
-                  <div className="flex items-center justify-between pt-2 border-t border-[#C9D4DA]/50 text-xs">
-                    <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[10px] font-extrabold border border-amber-200">
-                      {badgeLabel}
-                    </span>
-
-                    <span className="text-[11px] text-[#4B6073] font-medium">
-                      📸 {g.reportsCount} • 👥 {g.confirmationsCount} • ✓ {g.verifiedCount}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </section>
       </main>
     </div>

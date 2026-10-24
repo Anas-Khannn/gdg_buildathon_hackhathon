@@ -20,108 +20,89 @@ export interface GuardianItem {
 
 export async function GET() {
   try {
-    let activeGuardiansCount = 42;
-    try {
-      const countRes: any = await db.execute(
-        sql`SELECT COUNT(DISTINCT user_id)::int as cnt FROM reports WHERE user_id IS NOT NULL;`
-      );
-      const rows = countRes?.rows || countRes;
-      if (rows && rows[0]?.cnt) {
-        activeGuardiansCount = Math.max(activeGuardiansCount, Number(rows[0].cnt));
-      }
-    } catch {
-      // Fallback
-    }
+    // 100% Real Live Database Aggregation: Join reports, confirmations, users, and areas
+    const queryResult = await db.execute(sql`
+      WITH user_reports AS (
+        SELECT 
+          r.user_id,
+          COUNT(r.id)::int as rep_count,
+          COUNT(CASE WHEN r.status = 'verified_fixed' THEN 1 END)::int as ver_count,
+          MAX(a.name) as last_area
+        FROM reports r
+        LEFT JOIN areas a ON a.id = r.area_id
+        WHERE r.hidden = false
+        GROUP BY r.user_id
+      ),
+      user_confirms AS (
+        SELECT 
+          c.user_id,
+          COUNT(*)::int as conf_count
+        FROM confirmations c
+        GROUP BY c.user_id
+      )
+      SELECT 
+        ur.user_id,
+        COALESCE(u.name, 'Citizen #' || SUBSTRING(ur.user_id, 1, 4)) as user_name,
+        COALESCE(ur.last_area, 'Peshawar') as area_name,
+        ur.rep_count,
+        ur.ver_count,
+        COALESCE(uc.conf_count, 0)::int as conf_count,
+        (ur.rep_count * 50 + COALESCE(uc.conf_count, 0) * 20 + ur.ver_count * 100)::int as total_points
+      FROM user_reports ur
+      LEFT JOIN "user" u ON u.id = ur.user_id
+      LEFT JOIN user_confirms uc ON uc.user_id = ur.user_id
+      ORDER BY total_points DESC
+      LIMIT 10;
+    `);
 
-    // Dynamic community guardians representing active Peshawar sectors
-    const defaultGuardians: GuardianItem[] = [
-      {
-        id: "g-1",
-        name: "Tariq K. (Citizen #104)",
-        area: "Kohati Gate, Peshawar",
-        badge: "guardian",
-        badgeTitle: "Peshawar Guardian",
-        badgeTitleUr: "محافظ پشاور",
-        badgeTitlePs: "د پیښور ساتونکی",
-        points: 480,
-        reportsCount: 6,
-        confirmationsCount: 14,
-        verifiedCount: 3,
-      },
-      {
-        id: "g-2",
-        name: "Dr. Farooq (Town Watch)",
-        area: "University Town",
-        badge: "guardian",
-        badgeTitle: "Peshawar Guardian",
-        badgeTitleUr: "محافظ پشاور",
-        badgeTitlePs: "د پیښور ساتونکی",
-        points: 390,
-        reportsCount: 5,
-        confirmationsCount: 9,
-        verifiedCount: 2,
-      },
-      {
-        id: "g-3",
-        name: "Sajjad Ahmad",
-        area: "Hayatabad Phase-2",
-        badge: "watchdog",
-        badgeTitle: "Drainage Watchdog",
-        badgeTitleUr: "سیلاب واچ ڈاگ",
-        badgeTitlePs: "د نالو څارونکی",
-        points: 260,
-        reportsCount: 4,
-        confirmationsCount: 8,
-        verifiedCount: 1,
-      },
-      {
-        id: "g-4",
-        name: "Zia-ur-Rehman",
-        area: "Gulbahar No. 2",
-        badge: "watchdog",
-        badgeTitle: "Drainage Watchdog",
-        badgeTitleUr: "سیلاب واچ ڈاگ",
-        badgeTitlePs: "د نالو څارونکی",
-        points: 210,
-        reportsCount: 3,
-        confirmationsCount: 6,
-        verifiedCount: 1,
-      },
-      {
-        id: "g-5",
-        name: "Bilal Shinwari",
-        area: "Charsadda Road",
-        badge: "scout",
-        badgeTitle: "Mohallah Scout",
-        badgeTitleUr: "محلہ اسکاؤٹ",
-        badgeTitlePs: "د کلي څارونکی",
-        points: 150,
-        reportsCount: 2,
-        confirmationsCount: 5,
-        verifiedCount: 0,
-      },
-      {
-        id: "g-6",
-        name: "Usman Ali",
-        area: "Saddar Cantonment",
-        badge: "scout",
-        badgeTitle: "Mohallah Scout",
-        badgeTitleUr: "محلہ اسکاؤٹ",
-        badgeTitlePs: "د کلي څارونکی",
-        points: 120,
-        reportsCount: 2,
-        confirmationsCount: 3,
-        verifiedCount: 0,
-      },
-    ];
+    const rows = (queryResult as any)?.rows || (Array.isArray(queryResult) ? queryResult : []);
+
+    const guardians: GuardianItem[] = rows.map((row: any, idx: number) => {
+      const points = Number(row.total_points) || 0;
+      const verCount = Number(row.ver_count) || 0;
+      const repCount = Number(row.rep_count) || 0;
+
+      let badge: "guardian" | "watchdog" | "scout" = "scout";
+      let badgeTitle = "Mohallah Scout";
+      let badgeTitleUr = "محلہ اسکاؤٹ";
+      let badgeTitlePs = "د کلي څارونکی";
+
+      if (verCount >= 1 || points >= 300) {
+        badge = "guardian";
+        badgeTitle = "Peshawar Guardian";
+        badgeTitleUr = "محافظ پشاور";
+        badgeTitlePs = "د پیښور ساتونکی";
+      } else if (repCount >= 2 || points >= 100) {
+        badge = "watchdog";
+        badgeTitle = "Drainage Watchdog";
+        badgeTitleUr = "سیلاب واچ ڈاگ";
+        badgeTitlePs = "د نالو څارونکی";
+      }
+
+      return {
+        id: row.user_id || `citizen-${idx + 1}`,
+        name: row.user_name || `Citizen #${idx + 1}`,
+        area: row.area_name || "Peshawar",
+        badge,
+        badgeTitle,
+        badgeTitleUr,
+        badgeTitlePs,
+        points,
+        reportsCount: repCount,
+        confirmationsCount: Number(row.conf_count) || 0,
+        verifiedCount: verCount,
+      };
+    });
+
+    const totalPoints = guardians.reduce((acc, g) => acc + g.points, 0);
 
     return NextResponse.json({
-      guardians: defaultGuardians,
-      totalCivicPointsAwarded: 1610,
-      activeGuardiansCount: 42,
+      guardians,
+      totalCivicPointsAwarded: totalPoints,
+      activeGuardiansCount: guardians.length,
     });
   } catch (err: any) {
-    console.error("Guardians API error:", err);
+    console.error("Real Guardians API error:", err);
     return NextResponse.json({
       guardians: [],
       totalCivicPointsAwarded: 0,
