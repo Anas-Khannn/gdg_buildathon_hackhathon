@@ -31,6 +31,8 @@ const notoArabic = Noto_Naskh_Arabic({
   display: "swap",
 });
 
+import { MobileNav } from "@/components/mobile-nav";
+
 export const metadata: Metadata = {
   title: "Naali Watch | Peshawar Drain & Flood Map",
   description:
@@ -52,9 +54,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-  themeColor: "#0E6B73",
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#12263A",
 };
 
 export default function RootLayout({
@@ -67,10 +69,11 @@ export default function RootLayout({
       lang="en"
       className={`${bricolage.variable} ${atkinson.variable} ${notoArabic.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#EAF0F2] text-[#12263A]">
+      <body className="min-h-full flex flex-col bg-[#EAF0F2] text-[#12263A] pb-[env(safe-area-inset-bottom)]">
         <Providers>
           <LanguageProvider>
             {children}
+            <MobileNav />
             <PwaRegister />
           </LanguageProvider>
         </Providers>

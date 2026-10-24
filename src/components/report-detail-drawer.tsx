@@ -201,34 +201,34 @@ export function ReportDetailDrawer({
   const citizenWarningUrl = generateCitizenWarningShareUrl(report, language);
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full sm:max-w-md bg-white shadow-2xl border-l border-[#C9D4DA] flex flex-col overflow-hidden animate-in slide-in-from-right duration-300">
+    <div className="fixed inset-y-0 right-0 z-50 w-full sm:max-w-md bg-white shadow-2xl border-l border-[#C9D4DA] flex flex-col overflow-hidden animate-in slide-in-from-right duration-300 overscroll-contain">
       {/* Drawer Header */}
-      <div className="p-4 bg-gradient-to-r from-[#12263A] to-[#183652] text-white flex items-center justify-between border-b border-white/10">
-        <div className="flex items-center gap-2.5">
+      <div className="p-3.5 sm:p-4 bg-gradient-to-r from-[#12263A] to-[#183652] text-white flex items-center justify-between border-b border-white/10 shrink-0">
+        <div className="flex items-center gap-2.5 min-w-0">
           <DropletPin
             severity={isVerifiedFixed ? "fixed" : report.severity}
             size={26}
           />
-          <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#C9D4DA] block">
+          <div className="min-w-0">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#C9D4DA] block truncate">
               {areaName} • NW-{report.id.slice(0, 6).toUpperCase()}
             </span>
-            <h3 className="font-heading text-base font-bold leading-tight text-white">
+            <h3 className="font-heading text-base font-bold leading-tight text-white truncate">
               {t.types[report.type] || report.type}
             </h3>
           </div>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={handleShare}
             title="Copy report link"
-            className="p-2 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition"
+            className="p-2 min-w-[36px] min-h-[36px] rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition flex items-center justify-center"
           >
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4" />}
           </button>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition"
+            className="p-2 min-w-[36px] min-h-[36px] rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition flex items-center justify-center"
           >
             <X className="w-5 h-5" />
           </button>
@@ -236,7 +236,7 @@ export function ReportDetailDrawer({
       </div>
 
       {/* Drawer Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-5">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5 pb-[calc(2rem+env(safe-area-inset-bottom))]">
         {/* ===================================================================
             BEFORE & AFTER PHOTO COMPARISON VIEWER
            =================================================================== */}

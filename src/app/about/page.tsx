@@ -34,9 +34,9 @@ export default function AboutPage() {
     <div className="min-h-screen flex flex-col bg-[#EAF0F2] text-[#12263A]">
       <Header />
 
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-3.5 sm:px-6 py-6 sm:py-12 space-y-8 sm:space-y-12 pb-24 md:pb-12">
         {/* HERO SECTION WITH EMBEDDED AUTH WIDGET */}
-        <section className="bg-gradient-to-br from-[#12263A] via-[#16334f] to-[#0E6B73] rounded-3xl p-6 sm:p-10 lg:p-12 text-white shadow-2xl relative overflow-hidden border border-white/10">
+        <section className="bg-gradient-to-br from-[#12263A] via-[#16334f] to-[#0E6B73] rounded-3xl p-5 sm:p-10 lg:p-12 text-white shadow-2xl relative overflow-hidden border border-white/10">
           <div className="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-[#0E6B73]/40 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-1/3 -mb-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 

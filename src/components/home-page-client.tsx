@@ -129,7 +129,7 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
   ).length;
 
   return (
-    <div className="flex flex-col h-screen w-full overflow-hidden bg-[#EAF0F2]">
+    <div className="flex flex-col h-[100dvh] w-full overflow-hidden bg-[#EAF0F2]">
       {/* Top Header */}
       <Header />
 
@@ -347,7 +347,7 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
            =================================================================== */}
         <div className="flex-1 relative h-full min-h-0">
           {/* Mobile Top Floating Filter Chips */}
-          <div className="md:hidden absolute top-3 inset-x-3 z-20 flex items-center gap-1.5 overflow-x-auto no-scrollbar pointer-events-auto py-1">
+          <div className="md:hidden absolute top-2 inset-x-2 z-20 flex items-center gap-1.5 overflow-x-auto no-scrollbar pointer-events-auto py-1 px-0.5">
             {filterChips.map((chip) => (
               <button
                 key={chip.id}
@@ -393,11 +393,11 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
           />
 
           {/* ===================================================================
-              MOBILE BOTTOM SHEET (24px top radius) & 64px Button (DESIGN 6.1)
+              MOBILE BOTTOM SHEET (Docked cleanly above Mobile Bottom Nav)
              =================================================================== */}
           <div
-            className={`md:hidden absolute inset-x-0 bottom-0 z-30 bg-white rounded-t-[28px] shadow-[0_-10px_35px_rgba(18,38,58,0.2)] border-t border-[#C9D4DA] transition-all duration-300 flex flex-col ${
-              bottomSheetExpanded ? "max-h-[75vh]" : "max-h-[145px]"
+            className={`md:hidden absolute inset-x-0 bottom-[calc(56px+env(safe-area-inset-bottom))] z-30 bg-white rounded-t-[24px] shadow-[0_-8px_30px_rgba(18,38,58,0.22)] border-t border-[#C9D4DA] transition-all duration-300 flex flex-col ${
+              bottomSheetExpanded ? "max-h-[62dvh]" : "max-h-[135px]"
             }`}
           >
             {/* Drag Handle & Summary Pill */}
@@ -423,7 +423,7 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
 
             {/* Expanded List on Mobile */}
             {bottomSheetExpanded && (
-              <div className="flex-1 overflow-y-auto px-4 divide-y divide-[#C9D4DA]/40 max-h-[50vh] p-2 space-y-2">
+              <div className="flex-1 overflow-y-auto px-4 divide-y divide-[#C9D4DA]/40 max-h-[45dvh] p-2 space-y-2">
                 {filteredReports.length === 0 ? (
                   <div className="p-6 text-center text-xs text-[#4B6073] space-y-1.5">
                     <p className="font-bold text-[#12263A]">No active reports in Peshawar</p>
@@ -437,7 +437,7 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
                       setSelectedReport(report);
                       setBottomSheetExpanded(false);
                     }}
-                    className="p-3 rounded-xl bg-slate-50 flex items-center justify-between gap-2.5"
+                    className="p-3 rounded-xl bg-slate-50 flex items-center justify-between gap-2.5 active:bg-slate-100 transition"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <DropletPin
@@ -462,14 +462,14 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
               </div>
             )}
 
-            {/* Signature 64px Primary Report Button (DESIGN Section 4 & 6.1) */}
-            <div className="p-3.5 bg-white border-t border-[#C9D4DA]/50 flex items-center justify-center">
+            {/* Primary Report Button */}
+            <div className="p-2.5 sm:p-3 bg-white border-t border-[#C9D4DA]/50 flex items-center justify-center">
               <button
                 onClick={() => setIsReportModalOpen(true)}
-                className="w-full max-w-sm h-14 bg-gradient-to-r from-[#0E6B73] to-[#095259] active:scale-98 text-white rounded-2xl font-heading font-bold text-base shadow-lg shadow-[#0E6B73]/30 flex items-center justify-center gap-3 transition-transform"
+                className="w-full max-w-sm h-12 sm:h-14 bg-gradient-to-r from-[#0E6B73] to-[#095259] active:scale-98 text-white rounded-2xl font-heading font-bold text-sm sm:text-base shadow-lg shadow-[#0E6B73]/30 flex items-center justify-center gap-2.5 transition-transform"
               >
-                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                  <Camera className="w-5 h-5 fill-white text-white" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <Camera className="w-4 h-4 sm:w-5 sm:h-5 fill-white text-white" />
                 </div>
                 <span className="text-white font-bold">{t.reportProblem}</span>
               </button>

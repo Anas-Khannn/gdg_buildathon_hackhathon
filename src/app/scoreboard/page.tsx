@@ -74,12 +74,12 @@ export default function ScoreboardPage() {
     <div className="min-h-screen flex flex-col bg-[#EAF0F2] text-[#12263A]">
       <Header />
 
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-3.5 sm:px-6 py-5 sm:py-8 space-y-6 sm:space-y-8 pb-24 md:pb-8">
         {/* Hero Pitch Banner */}
-        <div className="bg-gradient-to-br from-[#12263A] via-[#16334f] to-[#0E6B73] rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden border border-white/10">
+        <div className="bg-gradient-to-br from-[#12263A] via-[#16334f] to-[#0E6B73] rounded-3xl p-5 sm:p-8 text-white shadow-xl relative overflow-hidden border border-white/10">
           <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-white/5 rounded-full blur-2xl pointer-events-none" />
           
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
             <div className="space-y-2 max-w-2xl">
               <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-emerald-300">
                 <Link href="/" className="hover:underline flex items-center gap-1 text-[#C9D4DA] hover:text-white transition">
@@ -97,31 +97,31 @@ export default function ScoreboardPage() {
               </p>
             </div>
 
-            {/* Quick Metrics Badges */}
-            <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-              <div className="bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/15 text-center min-w-[95px]">
-                <span className="text-[10px] font-bold text-[#C9D4DA] uppercase block tracking-wider">
+            {/* Quick Metrics Badges (Grid on Mobile, Flex on Desktop) */}
+            <div className="grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-3 w-full sm:w-auto shrink-0">
+              <div className="bg-white/10 backdrop-blur-md px-2.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/15 text-center min-w-0">
+                <span className="text-[9px] sm:text-[10px] font-bold text-[#C9D4DA] uppercase block tracking-wider truncate">
                   Complaints
                 </span>
-                <span className="font-heading text-2xl font-bold text-white block mt-0.5">
+                <span className="font-heading text-xl sm:text-2xl font-bold text-white block mt-0.5">
                   {summary.totalReports}
                 </span>
               </div>
 
-              <div className="bg-emerald-500/20 backdrop-blur-md px-4 py-3 rounded-2xl border border-emerald-400/30 text-center min-w-[95px]">
-                <span className="text-[10px] font-bold text-emerald-200 uppercase block tracking-wider">
+              <div className="bg-emerald-500/20 backdrop-blur-md px-2.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-emerald-400/30 text-center min-w-0">
+                <span className="text-[9px] sm:text-[10px] font-bold text-emerald-200 uppercase block tracking-wider truncate">
                   Verified Fixed
                 </span>
-                <span className="font-heading text-2xl font-bold text-emerald-300 block mt-0.5">
+                <span className="font-heading text-xl sm:text-2xl font-bold text-emerald-300 block mt-0.5">
                   {summary.totalFixed}
                 </span>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/15 text-center min-w-[95px]">
-                <span className="text-[10px] font-bold text-[#C9D4DA] uppercase block tracking-wider">
+              <div className="bg-white/10 backdrop-blur-md px-2.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl border border-white/15 text-center min-w-0">
+                <span className="text-[9px] sm:text-[10px] font-bold text-[#C9D4DA] uppercase block tracking-wider truncate">
                   City Avg
                 </span>
-                <span className="font-heading text-2xl font-bold text-white block mt-0.5">
+                <span className="font-heading text-xl sm:text-2xl font-bold text-white block mt-0.5">
                   {summary.overallAvgDays} d
                 </span>
               </div>
@@ -227,7 +227,7 @@ export default function ScoreboardPage() {
         </section>
 
         {/* SECTION 3: RECHARTS MONTHLY VOLUME CHART */}
-        <section className="bg-white p-6 sm:p-7 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-4">
+        <section className="bg-white p-4 sm:p-7 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-4 overflow-hidden">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h3 className="font-heading text-lg font-bold text-[#12263A] flex items-center gap-2">
@@ -239,7 +239,7 @@ export default function ScoreboardPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-4 text-xs font-bold">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-bold">
               <span className="flex items-center gap-1.5">
                 <span className="w-3.5 h-3.5 rounded-md bg-[#0E6B73]" />
                 <span>Reported ({summary.totalReports})</span>
@@ -251,7 +251,7 @@ export default function ScoreboardPage() {
             </div>
           </div>
 
-          <div className="h-64 sm:h-80 w-full pt-4">
+          <div className="h-64 sm:h-80 w-full pt-4 min-w-0">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#EAF0F2" />

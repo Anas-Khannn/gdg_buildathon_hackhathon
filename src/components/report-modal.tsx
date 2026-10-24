@@ -465,8 +465,8 @@ export function ReportModal({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div className="w-full max-w-lg bg-white rounded-t-[24px] sm:rounded-2xl max-h-[92vh] overflow-y-auto shadow-2xl border border-[#C9D4DA] flex flex-col">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 overscroll-contain">
+      <div className="w-full max-w-lg bg-white rounded-t-[24px] sm:rounded-2xl max-h-[90dvh] sm:max-h-[88vh] overflow-y-auto shadow-2xl border border-[#C9D4DA] flex flex-col pb-[env(safe-area-inset-bottom)]">
         {/* Modal Header */}
         <div className="sticky top-0 bg-white border-b border-[#C9D4DA]/60 px-5 py-4 flex items-center justify-between z-10">
           <div>

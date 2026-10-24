@@ -99,7 +99,7 @@ function AuthSignInContent() {
 
 export default function SignInPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#12263A] via-[#16334f] to-[#0E6B73] flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen min-h-[100dvh] bg-gradient-to-br from-[#12263A] via-[#16334f] to-[#0E6B73] flex items-center justify-center p-3 sm:p-4 pb-24 md:pb-6 relative overflow-hidden">
       {/* Decorative background glows */}
       <div className="absolute top-1/4 -left-20 w-80 h-80 bg-[#0E6B73]/30 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />

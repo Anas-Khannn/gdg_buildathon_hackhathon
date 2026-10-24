@@ -137,7 +137,7 @@ export default function AdminPage() {
     <div className="min-h-screen flex flex-col bg-[#EAF0F2] text-[#12263A]">
       <Header />
 
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-3.5 sm:px-6 py-5 sm:py-8 space-y-6 pb-24 md:pb-8">
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#C9D4DA]/70 pb-4">
           <div className="space-y-1">
@@ -165,8 +165,79 @@ export default function AdminPage() {
           </button>
         </div>
 
-        {/* Complaints Table */}
-        <div className="bg-white rounded-2xl border border-[#C9D4DA] shadow-xs overflow-hidden">
+        {/* Mobile Complaints Cards (< md) */}
+        <div className="md:hidden space-y-3">
+          {reports.length === 0 ? (
+            <div className="bg-white p-8 rounded-2xl text-center text-xs text-[#4B6073] border border-[#C9D4DA]">
+              No active reports to moderate.
+            </div>
+          ) : (
+            reports.map((report) => (
+              <div key={report.id} className="bg-white p-4 rounded-2xl border border-[#C9D4DA] shadow-xs space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <DropletPin severity={report.status === "verified_fixed" ? "fixed" : report.severity} size={26} />
+                    <div>
+                      <div className="font-bold text-[#12263A] text-sm">
+                        {report.areaName || "Peshawar"}
+                      </div>
+                      <div className="text-xs text-[#0E6B73] font-semibold">
+                        {t.types[report.type] || report.type}
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    className={`inline-block px-2.5 py-0.5 rounded-full font-bold text-[10px] shrink-0 ${
+                      report.status === "verified_fixed"
+                        ? "bg-[#2E7D4F]/15 text-[#2E7D4F]"
+                        : report.status === "marked_fixed"
+                        ? "bg-amber-100 text-amber-800"
+                        : report.status === "sent"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-slate-100 text-[#4B6073]"
+                    }`}
+                  >
+                    {t.status[report.status]}
+                  </span>
+                </div>
+
+                {report.complaintText && (
+                  <p className="text-xs text-[#4B6073] line-clamp-2">
+                    {report.complaintText}
+                  </p>
+                )}
+
+                <div className="flex items-center justify-between pt-2 border-t border-[#C9D4DA]/40 text-xs">
+                  <span className="text-[#4B6073] font-semibold">
+                    👥 {report.confirmationsCount} confirmations
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {report.status !== "marked_fixed" && report.status !== "verified_fixed" && (
+                      <button
+                        onClick={() => handleMarkFixed(report.id)}
+                        disabled={actionLoading === report.id}
+                        className="px-3 py-1.5 rounded-lg bg-[#2E7D4F] text-white font-semibold text-xs hover:bg-[#256640] transition"
+                      >
+                        Mark Fixed
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleToggleHide(report.id, false)}
+                      disabled={actionLoading === report.id}
+                      className="p-1.5 rounded-lg bg-red-100 text-red-800 hover:bg-red-200 transition"
+                      title="Hide report"
+                    >
+                      <EyeOff className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop Complaints Table (md and above) */}
+        <div className="hidden md:block bg-white rounded-2xl border border-[#C9D4DA] shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
