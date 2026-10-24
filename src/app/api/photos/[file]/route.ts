@@ -8,10 +8,14 @@ export async function GET(
 ) {
   try {
     const { file } = await params;
-    // Security check: prevent directory traversal
     const safeFilename = path.basename(file);
-    const uploadsDir = path.join(process.cwd(), "uploads");
-    const filePath = path.join(uploadsDir, safeFilename);
+    const primaryDir = path.join(process.cwd(), "uploads");
+    const tmpDir = path.join("/tmp", "uploads");
+
+    let filePath = path.join(primaryDir, safeFilename);
+    if (!fs.existsSync(filePath)) {
+      filePath = path.join(tmpDir, safeFilename);
+    }
 
     if (!fs.existsSync(filePath)) {
       return NextResponse.json({ error: "Photo not found" }, { status: 404 });

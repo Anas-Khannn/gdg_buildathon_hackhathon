@@ -14,19 +14,35 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No image file provided" }, { status: 400 });
     }
 
-    // 1. Save photo to ./uploads
-    const uploadsDir = path.join(process.cwd(), "uploads");
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
+    // 1. Save photo to ./uploads (with /tmp fallback for Vercel serverless functions)
+    let uploadsDir = path.join(process.cwd(), "uploads");
+    try {
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+    } catch {
+      uploadsDir = path.join("/tmp", "uploads");
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
     }
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const fileExtension = path.extname(file.name) || ".jpg";
     const filename = `report_${Date.now()}_${crypto.randomBytes(4).toString("hex")}${fileExtension}`;
-    const filePath = path.join(uploadsDir, filename);
+    let filePath = path.join(uploadsDir, filename);
 
-    fs.writeFileSync(filePath, buffer);
+    try {
+      fs.writeFileSync(filePath, buffer);
+    } catch {
+      uploadsDir = path.join("/tmp", "uploads");
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+      filePath = path.join(uploadsDir, filename);
+      fs.writeFileSync(filePath, buffer);
+    }
 
     // 2. Analyze with Gemini Vision if API key is provided in env or request
     const apiKey = clientKey || process.env.GEMINI_API_KEY;
