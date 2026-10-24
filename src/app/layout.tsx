@@ -34,6 +34,12 @@ export const metadata: Metadata = {
   title: "Naali Watch | Peshawar Drain & Flood Map",
   description:
     "Peshawar waterlogging, flooded roads, blocked drains and open manholes live citizen map. See it. Snap it. Make them fix it.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/icon.svg",
+  },
 };
 
 export const viewport: Viewport = {
