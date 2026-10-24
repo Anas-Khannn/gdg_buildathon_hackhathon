@@ -1,15 +1,17 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Droplet, Sparkles, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { AuthWidget } from "@/components/auth/auth-widget";
 import { useLanguage } from "@/components/language-provider";
+import { useSession } from "@/components/providers";
 import { Language } from "@/lib/i18n";
 
 function AuthSignInContent() {
   const searchParams = useSearchParams();
+  const { data: session } = useSession();
   const initialRole = searchParams.get("role") === "admin" ? "admin" : "user";
   const initialTab =
     searchParams.get("tab") === "forgot"
@@ -17,6 +19,12 @@ function AuthSignInContent() {
       : searchParams.get("tab") === "signin"
       ? "signin"
       : "signup";
+
+  useEffect(() => {
+    if (session?.user) {
+      window.location.replace(session.user.role === "admin" ? "/admin" : "/");
+    }
+  }, [session]);
 
   const { language, setLanguage } = useLanguage();
 

@@ -127,14 +127,27 @@ export function Providers({ children }: { children: React.ReactNode }) {
           if (data.user) {
             setSession({ user: data.user });
             setStatus("authenticated");
+            if (typeof document !== "undefined") {
+              const val = encodeURIComponent(JSON.stringify(data.user));
+              const isHttps = typeof window !== "undefined" && window.location.protocol === "https:";
+              document.cookie = `naali_session=${val}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax${isHttps ? "; Secure" : ""}`;
+              try {
+                localStorage.setItem("naali_session", JSON.stringify(data.user));
+              } catch {}
+            }
           }
+          const destination = data.url || callbackUrl;
           if (typeof window !== "undefined") {
-            window.location.href = data.url || callbackUrl;
+            window.location.replace(destination);
           }
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || "Failed to create account");
         }
       } catch (err) {
         console.error("Sign-up error:", err);
         setStatus("unauthenticated");
+        throw err;
       }
     },
     []
@@ -210,6 +223,18 @@ export function useSession() {
   return useContext(SessionContext);
 }
 
+// Helper to sync client-side auth cookies directly
+function syncClientSession(user: any) {
+  if (typeof document !== "undefined" && user) {
+    const val = encodeURIComponent(JSON.stringify(user));
+    const isHttps = typeof window !== "undefined" && window.location.protocol === "https:";
+    document.cookie = `naali_session=${val}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax${isHttps ? "; Secure" : ""}`;
+    try {
+      localStorage.setItem("naali_session", JSON.stringify(user));
+    } catch {}
+  }
+}
+
 // Client signIn
 export async function signIn(provider?: string, options?: { role?: "user" | "admin"; email?: string; password?: string; callbackUrl?: string }) {
   const role = options?.role || "user";
@@ -229,9 +254,17 @@ export async function signIn(provider?: string, options?: { role?: "user" | "adm
 
   if (res.ok) {
     const data = await res.json();
-    if (typeof window !== "undefined") {
-      window.location.href = data.url || callbackUrl;
+    if (data.user) {
+      syncClientSession(data.user);
     }
+    const destination = data.url || callbackUrl;
+    if (typeof window !== "undefined") {
+      window.location.replace(destination);
+    }
+    return data;
+  } else {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || "Failed to sign in");
   }
 }
 
@@ -255,9 +288,17 @@ export async function signUp(options: { name: string; email: string; password?: 
 
   if (res.ok) {
     const data = await res.json();
-    if (typeof window !== "undefined") {
-      window.location.href = data.url || callbackUrl;
+    if (data.user) {
+      syncClientSession(data.user);
     }
+    const destination = data.url || callbackUrl;
+    if (typeof window !== "undefined") {
+      window.location.replace(destination);
+    }
+    return data;
+  } else {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || "Failed to create account");
   }
 }
 
@@ -280,9 +321,17 @@ export async function resetPassword(options: { email: string; newPassword: strin
 
   if (res.ok) {
     const data = await res.json();
-    if (typeof window !== "undefined") {
-      window.location.href = data.url || callbackUrl;
+    if (data.user) {
+      syncClientSession(data.user);
     }
+    const destination = data.url || callbackUrl;
+    if (typeof window !== "undefined") {
+      window.location.replace(destination);
+    }
+    return data;
+  } else {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || "Failed to reset password");
   }
 }
 

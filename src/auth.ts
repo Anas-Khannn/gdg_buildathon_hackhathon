@@ -27,7 +27,18 @@ export async function auth(): Promise<Session | null> {
       return null;
     }
 
-    const parsed = JSON.parse(decodeURIComponent(sessionCookie.value)) as SessionUser;
+    let val = sessionCookie.value;
+    for (let i = 0; i < 2; i++) {
+      if (val.includes("%")) {
+        try {
+          val = decodeURIComponent(val);
+        } catch {
+          break;
+        }
+      }
+    }
+
+    const parsed = JSON.parse(val) as SessionUser;
     if (parsed && parsed.email && parsed.role) {
       return { user: parsed };
     }
@@ -40,11 +51,13 @@ export async function auth(): Promise<Session | null> {
 
 // Helper to set session cookie on a NextResponse
 export function setSessionCookie(res: NextResponse, user: SessionUser) {
+  const isProd = process.env.NODE_ENV === "production";
   res.cookies.set(SESSION_COOKIE, encodeURIComponent(JSON.stringify(user)), {
     path: "/",
     httpOnly: false, // Accessible on client so useSession hydrates immediately
     maxAge: 60 * 60 * 24 * 30, // 30 days
     sameSite: "lax",
+    secure: isProd,
   });
 }
 

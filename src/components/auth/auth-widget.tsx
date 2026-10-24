@@ -141,10 +141,12 @@ export function AuthWidget({
         role,
         callbackUrl: targetUrl,
       });
-    } catch (err) {
+      if (typeof window !== "undefined") {
+        window.location.replace(targetUrl);
+      }
+    } catch (err: any) {
       console.error(err);
-      setError("Failed to create account. Please try again.");
-    } finally {
+      setError(err?.message || "Failed to create account. Please try again.");
       setLoading(null);
     }
   };
@@ -169,10 +171,12 @@ export function AuthWidget({
         role,
         callbackUrl: targetUrl,
       });
-    } catch (err) {
+      if (typeof window !== "undefined") {
+        window.location.replace(targetUrl);
+      }
+    } catch (err: any) {
       console.error(err);
-      setError("Failed to sign in. Please verify your credentials.");
-    } finally {
+      setError(err?.message || "Failed to sign in. Please verify your credentials.");
       setLoading(null);
     }
   };
@@ -186,9 +190,11 @@ export function AuthWidget({
         role: targetRole,
         callbackUrl: targetUrl,
       });
+      if (typeof window !== "undefined") {
+        window.location.replace(targetUrl);
+      }
     } catch (err) {
       console.error(err);
-    } finally {
       setLoading(null);
     }
   };
