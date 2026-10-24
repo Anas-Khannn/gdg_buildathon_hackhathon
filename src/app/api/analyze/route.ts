@@ -53,13 +53,29 @@ export async function POST(req: NextRequest) {
         // Using standard fast multimodal model
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const systemPrompt = `You analyze photos of urban drainage, waterlogging, open manholes, and sewage problems in Peshawar, Pakistan.
-Return ONLY valid JSON. No markdown formatting, no backticks.
-If the image does NOT show a drainage, flooding, sewage, puddle, gutter, or manhole problem, set "valid": false.
+        const systemPrompt = `You are a strict AI civic hazard classifier for Peshawar Urban Drainage and Sanitation (NaaliWatch).
+YOUR PRIMARY TASK: Determine if the provided photo shows an ACTUAL OUTDOOR WATER HAZARD, STAGNANT/STANDING/STAINED WASTEWATER, A BLOCKED DRAIN, STREET FLOODING, PUDDLE, GUTTER OVERFLOW, OR OPEN MANHOLE THAT REQUIRES DRAINING OR DESILTATION.
 
-Output JSON format:
+STRICT VALIDATION CRITERIA:
+1. ACCEPTABLE WATER IMAGES (valid = true):
+   - Standing, pooled, or stained wastewater on streets, roads, sidewalks, or intersections that needs to be drained or pumped out.
+   - Roadside drains ('naalis') or storm gutters choked with mud, silt, garbage, or sewage.
+   - Flooded urban roads or pathways obstructing pedestrians, bikes, or vehicles.
+   - Open, broken, or submerged manholes or overflowing sewage pipelines.
+
+2. UNACCEPTABLE NON-WATER IMAGES (valid = false):
+   - ANY image that does NOT show standing wastewater, flooded street, a drain, or an open manhole.
+   - Indoor rooms, bedrooms, kitchens, offices, ceilings, walls.
+   - Selfies, faces, portraits, people standing without standing water.
+   - Clean, dry roads or cars without water accumulation.
+   - Food, pets, animals, documents, receipts, screenshots of text, graphics, or memes.
+
+Return ONLY a valid JSON object (no markdown, no backticks, no extra text):
 {
-  "valid": true,
+  "valid": true or false,
+  "detected_content": "A short 2-5 word label of what is actually visible in the photo (e.g. 'Indoor room', 'Selfie photo', 'Dry car on pavement', 'Standing dirty water on road', 'Clogged roadside drain')",
+  "rejection_reason": "Wrong image! Please upload a photo showing standing water, flooded streets, or a blocked drain that needs to be drained." (set if valid is false, else null),
+  "rejection_reason_ur": "غلط تصویر! برائے مہربانی کھڑے پانی، بند نالے، یا نکاسی آب کے مسئلے کی تصویر اپ لوڈ کریں جسے نکاسی کی ضرورت ہو۔" (set if valid is false, else null),
   "type": "blocked_drain" | "standing_water" | "open_manhole" | "garbage_in_drain" | "other",
   "severity": "ankle" | "knee" | "danger",
   "confidence": 0.95,
@@ -74,8 +90,7 @@ Severity rules:
 - danger: Open manhole, deep water covering road, live wires/electrical risk, or vehicle hazard.
 - knee: Water deep enough to halt auto-rickshaws or motorcycles.
 - ankle: Shallow standing water or gutter silt overflow.
-
-Never include faces or private vehicle license numbers.`;
+Never include human faces or private vehicle license numbers.`;
 
         const imagePart = {
           inlineData: {
@@ -95,19 +110,76 @@ Never include faces or private vehicle license numbers.`;
           .trim();
 
         const parsed = JSON.parse(cleanedJson);
+        const isValid = parsed.valid === true;
+
+        if (!isValid) {
+          parsed.rejection_reason =
+            parsed.rejection_reason ||
+            "Wrong image! Please upload a photo showing standing water, flooded streets, or a blocked drain that needs to be drained.";
+          parsed.rejection_reason_ur =
+            parsed.rejection_reason_ur ||
+            "غلط تصویر! برائے مہربانی کھڑے پانی، بند نالے، یا نکاسی آب کے مسئلے کی تصویر اپ لوڈ کریں جسے نکاسی کی ضرورت ہو۔";
+          parsed.detected_content = parsed.detected_content || "Non-water image";
+        }
 
         return NextResponse.json({
           success: true,
           photoFile: filename,
           ai: parsed,
           provider: "gemini_vision",
+          isValidWaterHazard: isValid,
         });
       } catch (geminiError: any) {
         console.warn("Gemini Vision API call failed, falling back to heuristic tagging:", geminiError.message);
       }
     }
 
-    // 3. Fallback Heuristic Tagging with Peshawar location suggestion
+    // 3. Fallback Heuristic Tagging when Gemini key is not configured
+    const originalName = (file.name || "").toLowerCase();
+    const isWaterHazardKeyword =
+      originalName.includes("water") ||
+      originalName.includes("drain") ||
+      originalName.includes("manhole") ||
+      originalName.includes("flood") ||
+      originalName.includes("puddle") ||
+      originalName.includes("gutter") ||
+      originalName.includes("sewage") ||
+      originalName.includes("naali") ||
+      originalName.includes("clog") ||
+      originalName.includes("pipe") ||
+      filename.includes("water") ||
+      filename.includes("drain") ||
+      filename.includes("manhole") ||
+      filename.includes("flood") ||
+      filename.includes("puddle") ||
+      filename.includes("clog");
+
+    // If filename clearly indicates a non-water/random image, reject in fallback
+    if (!isWaterHazardKeyword) {
+      return NextResponse.json({
+        success: true,
+        photoFile: filename,
+        isValidWaterHazard: false,
+        ai: {
+          valid: false,
+          detected_content: "Non-water image",
+          rejection_reason:
+            "Wrong image! Please upload a photo showing standing water, urban flooding, or a drainage problem that needs to be drained.",
+          rejection_reason_ur:
+            "غلط تصویر! برائے مہربانی کھڑے پانی، نالے یا نکاسی آب کے مسئلے کی تصویر اپ لوڈ کریں جسے نکاسی کی ضرورت ہو۔",
+          confidence: 0.85,
+          type: "other",
+          severity: "ankle",
+          description: "The uploaded image does not appear to show standing wastewater or a drainage blockage.",
+          estimated_area: null,
+          detected_text: null,
+          complaint_en: null,
+          complaint_ur: null,
+        },
+        isFallback: true,
+      });
+    }
+
     const fallbackArea = filename.includes("hayatabad")
       ? "Hayatabad"
       : filename.includes("kohati")
@@ -124,6 +196,7 @@ Never include faces or private vehicle license numbers.`;
 
     const fallbackAi = {
       valid: true,
+      detected_content: "Standing water and clogged drain",
       type: filename.includes("manhole")
         ? "open_manhole"
         : filename.includes("water")
@@ -144,6 +217,7 @@ Never include faces or private vehicle license numbers.`;
       success: true,
       photoFile: filename,
       ai: fallbackAi,
+      isValidWaterHazard: true,
       isFallback: true,
     });
   } catch (error) {

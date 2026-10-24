@@ -9,6 +9,7 @@ import {
   Upload,
   X,
   AlertTriangle,
+  AlertOctagon,
   CheckCircle,
   MapPin,
   RefreshCw,
@@ -49,8 +50,13 @@ export function ReportModal({
   const { t, language } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Flow steps: 'photo' | 'analyzing' | 'review' | 'duplicate_warning' | 'success'
-  const [step, setStep] = useState<"photo" | "analyzing" | "review" | "duplicate_warning" | "success">("photo");
+  // Flow steps: 'photo' | 'analyzing' | 'review' | 'duplicate_warning' | 'success' | 'invalid_image'
+  const [step, setStep] = useState<"photo" | "analyzing" | "review" | "duplicate_warning" | "success" | "invalid_image">("photo");
+  const [invalidImageDetails, setInvalidImageDetails] = useState<{
+    detectedContent: string;
+    reason: string;
+    reasonUr: string;
+  } | null>(null);
 
   // Form State
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -275,6 +281,21 @@ export function ReportModal({
       const data = await res.json();
       setPhotoFilename(data.photoFile);
 
+      // STRICT VALIDATION: Check if image meets the standing water / drainage hazard criteria
+      if (data.isValidWaterHazard === false || data.ai?.valid === false) {
+        setInvalidImageDetails({
+          detectedContent: data.ai?.detected_content || "Non-water photo",
+          reason:
+            data.ai?.rejection_reason ||
+            "Wrong image! Please upload a photo showing standing water, flooded streets, or a blocked drain that needs to be drained.",
+          reasonUr:
+            data.ai?.rejection_reason_ur ||
+            "غلط تصویر! برائے مہربانی کھڑے پانی، بند نالے، یا نکاسی آب کے مسئلے کی تصویر اپ لوڈ کریں جسے نکاسی کی ضرورت ہو۔",
+        });
+        setStep("invalid_image");
+        return;
+      }
+
       if (data.ai) {
         if (data.ai.type) setProblemType(data.ai.type);
         if (data.ai.severity) setSeverity(data.ai.severity);
@@ -418,11 +439,13 @@ export function ReportModal({
               {step === "photo" && t.reportProblem}
               {step === "analyzing" && "Analyzing Drain Issue"}
               {step === "review" && "Review Report & Location"}
+              {step === "invalid_image" && (language === "ur" || language === "ps" ? "غلط تصویر مسترد" : "Wrong Image Detected")}
               {step === "duplicate_warning" && t.duplicateTitle}
               {step === "success" && "Report Submitted"}
             </h3>
             <span className="text-xs text-[#4B6073]">
               {step === "photo" && t.photoStepSubtitle}
+              {step === "invalid_image" && (language === "ur" || language === "ps" ? "برائے مہربانی صرف پانی یا نالے کی تصویر اپ لوڈ کریں" : "Only standing water and urban drainage problems can be reported")}
               {step === "review" && "Check details and location before sending to WSSP"}
             </span>
           </div>
@@ -768,6 +791,93 @@ export function ReportModal({
                       <ChevronRight className="w-4 h-4 text-white" />
                     </>
                   )}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* -------------------------------------------------------------
+              STEP: INVALID IMAGE REJECTED (NON-WATER PHOTO)
+             ------------------------------------------------------------- */}
+          {step === "invalid_image" && (
+            <div className="space-y-4 py-2">
+              <div className="p-5 rounded-2xl bg-red-50 border-2 border-red-300 space-y-3 text-center">
+                <div className="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                  <AlertOctagon className="w-8 h-8" />
+                </div>
+
+                <div className="space-y-1">
+                  <h4 className="font-heading text-lg font-bold text-red-900">
+                    {language === "ur" || language === "ps"
+                      ? "غلط تصویر! برائے مہربانی کھڑے پانی کی تصویر اپ لوڈ کریں"
+                      : "Wrong Image! Please Upload a Water Image"}
+                  </h4>
+                  <p className="text-xs text-red-700 leading-relaxed font-medium max-w-sm mx-auto">
+                    {language === "ur" || language === "ps"
+                      ? (invalidImageDetails?.reasonUr || "تصویر میں کھڑا پانی یا نکاسی آب کا کوئی مسئلہ نظر نہیں آیا۔")
+                      : (invalidImageDetails?.reason || "No standing water, flooded streets, or blocked drains were detected.")}
+                  </p>
+                </div>
+
+                {/* AI Classification breakdown badge */}
+                <div className="bg-white/90 p-3.5 rounded-xl border border-red-200 text-xs text-[#12263A] text-left space-y-1.5 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#4B6073]">
+                      AI Classification:
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md bg-red-100 text-red-800 text-[10px] font-bold">
+                      Not a Drainage Hazard
+                    </span>
+                  </div>
+                  <p className="font-semibold text-xs text-[#12263A]">
+                    Detected: <span className="text-red-700 font-bold">{invalidImageDetails?.detectedContent || "Non-water content"}</span>
+                  </p>
+                  <p className="text-[11px] text-[#4B6073] leading-relaxed">
+                    Required: Photos must clearly show pooled/standing wastewater, flooded roads, blocked drains (naalis), or open manholes needing municipal drainage.
+                  </p>
+                </div>
+
+                {/* Thumbnail of rejected photo */}
+                {photoPreview && (
+                  <div className="relative w-36 h-28 mx-auto rounded-xl overflow-hidden border-2 border-red-400 shadow-sm group">
+                    <img
+                      src={photoPreview}
+                      alt="Rejected non-water upload"
+                      className="w-full h-full object-cover grayscale opacity-75"
+                    />
+                    <div className="absolute inset-0 bg-red-900/40 flex items-center justify-center">
+                      <span className="bg-red-600 text-white text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow">
+                        Rejected
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Action buttons */}
+              <div className="space-y-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep("photo");
+                    setTimeout(() => fileInputRef.current?.click(), 150);
+                  }}
+                  className="w-full py-3.5 px-4 rounded-xl bg-[#0E6B73] hover:bg-[#0a545a] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2"
+                >
+                  <Camera className="w-4 h-4 text-white" />
+                  <span>
+                    {language === "ur" || language === "ps"
+                      ? "نئی تصویر اپ لوڈ کریں (پانی / نالہ)"
+                      : "Take / Upload Valid Water Photo"}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setStep("photo")}
+                  className="w-full py-2.5 px-4 rounded-xl border border-[#C9D4DA] text-xs font-bold text-[#4B6073] hover:bg-[#EAF0F2] transition text-center"
+                >
+                  Choose Different Photo
                 </button>
               </div>
             </div>
