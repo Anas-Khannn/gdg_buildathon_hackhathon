@@ -7,6 +7,7 @@ import { useLanguage } from "@/components/language-provider";
 import { Language } from "@/lib/i18n";
 import { useSession, signOut } from "@/components/providers";
 import { Droplet, BarChart3, ShieldAlert, LogIn, LogOut, UserCheck, Info } from "lucide-react";
+import { WeatherAlertBanner } from "@/components/weather-alert-banner";
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
@@ -23,7 +24,9 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-[#12263A] text-white border-b border-[#4B6073]/30 shadow-lg">
+    <div className="sticky top-0 z-40 w-full">
+      <WeatherAlertBanner />
+      <header className="bg-[#12263A] text-white border-b border-[#4B6073]/30 shadow-lg">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
         {/* Brand & Logo with Water Drop Signature */}
         <Link
@@ -155,5 +158,6 @@ export function Header() {
         </div>
       </div>
     </header>
+    </div>
   );
 }

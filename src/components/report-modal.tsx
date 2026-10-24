@@ -22,6 +22,7 @@ import {
   WifiOff,
 } from "lucide-react";
 import { saveReportOffline } from "@/lib/offline-queue";
+import { VoiceRecorder } from "@/components/voice-recorder";
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -789,6 +790,28 @@ export function ReportModal({
                 </div>
               </div>
 
+              {/* AI Voice Note Input */}
+              <div className="space-y-1">
+                <VoiceRecorder
+                  customKey={geminiApiKey}
+                  onVoiceExtracted={(data) => {
+                    if (data.complaintText) setComplaintText(data.complaintText);
+                    if (data.detectedType) setProblemType(data.detectedType);
+                    if (data.detectedSeverity) setSeverity(data.detectedSeverity);
+                    if (data.detectedArea) {
+                      const matched = PESHAWAR_QUICK_AREAS.find(
+                        (a) => a.name.toLowerCase() === data.detectedArea?.toLowerCase()
+                      );
+                      if (matched) {
+                        setLocation({ lat: matched.lat, lng: matched.lng });
+                        setLocationAddress(matched.name + " (Voice Detected)");
+                        setLocationSource("chip");
+                      }
+                    }
+                  }}
+                />
+              </div>
+
               {/* Complaint Text */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-[#12263A] uppercase tracking-wide">
@@ -799,7 +822,7 @@ export function ReportModal({
                   onChange={(e) => setComplaintText(e.target.value)}
                   rows={3}
                   className="w-full text-xs p-3 rounded-xl border border-[#C9D4DA] focus:outline-none focus:ring-2 focus:ring-[#0E6B73] text-[#12263A] bg-white"
-                  placeholder="Describe the blocked drain or flooded street..."
+                  placeholder="Describe the blocked drain or flooded street, or use the voice note button above..."
                 />
               </div>
 

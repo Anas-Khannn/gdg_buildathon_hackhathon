@@ -27,7 +27,9 @@ import {
   Upload,
   ArrowRight,
   RefreshCw,
+  FileText,
 } from "lucide-react";
+import { WsspLetterModal } from "@/components/wssp-letter-modal";
 
 interface ReportDetailDrawerProps {
   report: ReportItem | null;
@@ -47,6 +49,7 @@ export function ReportDetailDrawer({
   const [fixCheckLoading, setFixCheckLoading] = useState(false);
   const [adminLoading, setAdminLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isLetterOpen, setIsLetterOpen] = useState(false);
 
   // Before & After comparison state
   const [activePhotoTab, setActivePhotoTab] = useState<"before" | "after">("before");
@@ -377,6 +380,16 @@ export function ReportDetailDrawer({
                 <span className="text-[9px] text-[#C9D4DA] font-normal">Family / Groups</span>
               </div>
             </a>
+
+            {/* Official WSSP Grievance Dossier (Printable / PDF) */}
+            <button
+              type="button"
+              onClick={() => setIsLetterOpen(true)}
+              className="py-2.5 px-3 rounded-2xl bg-white hover:bg-slate-50 border border-[#C9D4DA] text-[#12263A] font-bold text-xs flex items-center justify-center gap-2 shadow-2xs transition active:scale-98 col-span-1 sm:col-span-2"
+            >
+              <FileText className="w-4 h-4 text-[#0E6B73]" />
+              <span>Official WSSP Grievance Letter (Print / PDF)</span>
+            </button>
           </div>
         </div>
 
@@ -593,6 +606,13 @@ export function ReportDetailDrawer({
           </div>
         )}
       </div>
+
+      {/* Official WSSP Grievance Dossier Modal */}
+      <WsspLetterModal
+        isOpen={isLetterOpen}
+        onClose={() => setIsLetterOpen(false)}
+        report={report}
+      />
     </div>
   );
 }

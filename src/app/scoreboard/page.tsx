@@ -23,6 +23,10 @@ import {
   MapPin,
   Sparkles,
   BarChart2,
+  Trophy,
+  Award,
+  Medal,
+  Shield,
 } from "lucide-react";
 
 interface AreaStat {
@@ -48,6 +52,7 @@ export default function ScoreboardPage() {
     overallAvgDays: "5.0",
   });
   const [monthlyData, setMonthlyData] = useState<any[]>([]);
+  const [guardians, setGuardians] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -60,6 +65,12 @@ export default function ScoreboardPage() {
           setWorstAreas(data.worstThreeAreas || []);
           setSummary(data.summary || {});
           setMonthlyData(data.monthlyData || []);
+        }
+
+        const gRes = await fetch("/api/guardians");
+        if (gRes.ok) {
+          const gData = await gRes.json();
+          setGuardians(gData.guardians || []);
         }
       } catch (err) {
         console.error(err);
@@ -273,6 +284,82 @@ export default function ScoreboardPage() {
                 <Bar dataKey="fixed" fill="#2E7D4F" radius={[8, 8, 0, 0]} name="Verified Fixed" />
               </BarChart>
             </ResponsiveContainer>
+          </div>
+        </section>
+
+        {/* SECTION 4: MOHALLAH GUARDIANS & CIVIC IMPACT LEADERBOARD */}
+        <section className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+            <div>
+              <h2 className="font-heading text-xl sm:text-2xl font-bold text-[#12263A] flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-amber-500" />
+                <span>Peshawar Mohallah Guardians</span>
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-800">
+                  Civic Karma
+                </span>
+              </h2>
+              <p className="text-xs text-[#4B6073] mt-0.5">
+                Active community members reporting hazards, confirming nearby blocked drains, and verifying fixed naalis across Peshawar.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 text-[11px] font-bold text-[#0E6B73]">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Report (+50) • Confirm (+20) • Verify Fix (+100)</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {guardians.map((g, idx) => {
+              const badgeLabel =
+                language === "ur"
+                  ? g.badgeTitleUr
+                  : language === "ps"
+                  ? g.badgeTitlePs
+                  : g.badgeTitle;
+
+              return (
+                <div
+                  key={g.id}
+                  className="bg-white p-4 sm:p-5 rounded-2xl border border-[#C9D4DA] shadow-xs relative overflow-hidden group hover:border-[#0E6B73] transition space-y-3"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-white font-heading font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0">
+                        #{idx + 1}
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="font-heading text-sm font-bold text-[#12263A] truncate">
+                          {g.name}
+                        </h4>
+                        <span className="text-[11px] text-[#4B6073] block truncate">
+                          📍 {g.area}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <span className="font-heading text-lg font-extrabold text-[#0E6B73] block leading-none">
+                        {g.points}
+                      </span>
+                      <span className="text-[9px] font-bold uppercase text-[#4B6073] tracking-wider block mt-0.5">
+                        Karma Pts
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-[#C9D4DA]/50 text-xs">
+                    <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[10px] font-extrabold border border-amber-200">
+                      {badgeLabel}
+                    </span>
+
+                    <span className="text-[11px] text-[#4B6073] font-medium">
+                      📸 {g.reportsCount} • 👥 {g.confirmationsCount} • ✓ {g.verifiedCount}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
       </main>
