@@ -1,0 +1,45 @@
+{
+  "name": "naali-watch",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:push": "drizzle-kit push",
+    "db:seed": "npx tsx src/db/seed.ts"
+  },
+  "dependencies": {
+    "@auth/drizzle-adapter": "^1.7.4",
+    "@google/generative-ai": "^0.24.1",
+    "browser-image-compression": "^2.0.2",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.38.4",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.475.0",
+    "next": "^15.2.1",
+    "next-auth": "5.0.0-beta.25",
+    "nodemailer": "^8.0.5",
+    "pg": "^8.13.3",
+    "puppeteer-core": "^25.16.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^2.15.1",
+    "tailwind-merge": "^3.0.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/leaflet": "^1.9.16",
+    "@types/node": "^22",
+    "@types/nodemailer": "^7",
+    "@types/pg": "^8.11.11",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "drizzle-kit": "^0.30.4",
+    "postcss": "^8",
+    "tailwindcss": "^4.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5"
+  }
+}
