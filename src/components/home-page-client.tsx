@@ -201,13 +201,23 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
           {/* Feed List with Photo Cards */}
           <div className="flex-1 overflow-y-auto divide-y divide-[#C9D4DA]/40 p-2 space-y-2">
             {filteredReports.length === 0 ? (
-              <div className="p-10 text-center text-xs text-[#4B6073] space-y-2">
-                <p>{t.noProblemsNear}</p>
+              <div className="p-8 text-center text-xs text-[#4B6073] flex flex-col items-center justify-center space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-[#EAF0F2] flex items-center justify-center text-[#0E6B73]">
+                  <DropletPin severity="ankle" size={28} />
+                </div>
+                <div className="space-y-1">
+                  <p className="font-heading font-bold text-sm text-[#12263A]">
+                    No Active Reports in Peshawar
+                  </p>
+                  <p className="text-[11px] text-[#4B6073] max-w-[220px] mx-auto leading-relaxed">
+                    {t.noProblemsNear}
+                  </p>
+                </div>
                 <button
                   onClick={() => setIsReportModalOpen(true)}
-                  className="text-xs font-bold text-[#0E6B73] underline"
+                  className="px-4 py-2 rounded-xl bg-[#0E6B73] hover:bg-[#095259] text-white text-xs font-bold transition shadow-xs"
                 >
-                  Report a new problem now
+                  {t.reportProblem}
                 </button>
               </div>
             ) : (
@@ -394,7 +404,13 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
             {/* Expanded List on Mobile */}
             {bottomSheetExpanded && (
               <div className="flex-1 overflow-y-auto px-4 divide-y divide-[#C9D4DA]/40 max-h-[50vh] p-2 space-y-2">
-                {filteredReports.map((report) => (
+                {filteredReports.length === 0 ? (
+                  <div className="p-6 text-center text-xs text-[#4B6073] space-y-1.5">
+                    <p className="font-bold text-[#12263A]">No active reports in Peshawar</p>
+                    <p className="text-[11px] leading-relaxed">{t.noProblemsNear}</p>
+                  </div>
+                ) : (
+                  filteredReports.map((report) => (
                   <div
                     key={report.id}
                     onClick={() => {
@@ -421,7 +437,8 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
                       View →
                     </span>
                   </div>
-                ))}
+                ))
+              )}
               </div>
             )}
 

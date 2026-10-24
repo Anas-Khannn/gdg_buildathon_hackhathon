@@ -133,14 +133,9 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error: any) {
     console.error("Auth POST error:", error);
-    const fallbackUser: SessionUser = {
-      id: "citizen-ali-id",
-      name: "Ali (Peshawar Citizen)",
-      email: "ali.citizen@peshawar.local",
-      role: "user",
-    };
-    const res = NextResponse.json({ url: "/", user: fallbackUser });
-    setSessionCookie(res, fallbackUser);
-    return res;
+    return NextResponse.json(
+      { error: error?.message || "Authentication request failed. Please check your inputs and try again." },
+      { status: 400 }
+    );
   }
 }

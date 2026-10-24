@@ -25,17 +25,7 @@ export async function GET(req: NextRequest) {
               THEN EXTRACT(EPOCH FROM (r.marked_fixed_at - r.created_at)) / 86400.0
             END
           ), 
-          -- Default gauge heuristic if not yet fixed
-          CASE 
-            WHEN a.name = 'Hayatabad' THEN 3.2
-            WHEN a.name = 'University Town' THEN 5.1
-            WHEN a.name = 'Saddar Cantt' THEN 5.8
-            WHEN a.name = 'Kohati Gate' THEN 11.4
-            WHEN a.name = 'Gulbahar' THEN 9.2
-            WHEN a.name = 'Hashtnagri' THEN 14.6
-            WHEN a.name = 'Rehman Baba Square' THEN 12.8
-            ELSE 8.0
-          END
+          0.0
         )::numeric, 1)::float as avg_days_to_fix
       FROM ${schema.areas} a
       LEFT JOIN ${schema.reports} r ON r.area_id = a.id AND r.hidden = false
@@ -46,8 +36,9 @@ export async function GET(req: NextRequest) {
     const areasStatsResult = await db.execute(areasStatsQuery);
     const areas = areasStatsResult.rows;
 
-    // 2. Determine worst 3 areas (highest days to fix)
+    // 2. Determine worst 3 areas (highest days to fix with active reports)
     const worstThreeAreas = [...areas]
+      .filter((a: any) => (a.total_reports || 0) > 0)
       .sort((a: any, b: any) => b.avg_days_to_fix - a.avg_days_to_fix)
       .slice(0, 3);
 
@@ -56,15 +47,35 @@ export async function GET(req: NextRequest) {
     const totalFixed = areas.reduce((acc: number, curr: any) => acc + (curr.fixed_reports || 0), 0);
     const totalOpen = areas.reduce((acc: number, curr: any) => acc + (curr.open_reports || 0), 0);
 
-    // 4. Monthly chart data (Simulated past 6 months comparison for Peshawar)
-    const monthlyData = [
-      { month: "May", reported: 18, fixed: 14 },
-      { month: "Jun", reported: 25, fixed: 19 },
-      { month: "Jul", reported: 42, fixed: 28 }, // Monsoon peaks
-      { month: "Aug", reported: 56, fixed: 39 }, // Monsoon peaks
-      { month: "Sep", reported: 31, fixed: 27 },
-      { month: "Oct", reported: totalReports, fixed: totalFixed },
-    ];
+    const activeAreas = areas.filter((a: any) => (a.total_reports || 0) > 0 && a.avg_days_to_fix > 0);
+    const overallAvgDays = activeAreas.length > 0
+      ? (activeAreas.reduce((acc: number, curr: any) => acc + curr.avg_days_to_fix, 0) / activeAreas.length).toFixed(1)
+      : "0.0";
+
+    // 4. Monthly chart data aggregated from real database reports
+    const monthlyStatsQuery = sql`
+      SELECT 
+        TO_CHAR(r.created_at, 'Mon') as month,
+        DATE_TRUNC('month', r.created_at) as month_date,
+        COUNT(r.id)::int as reported,
+        COUNT(CASE WHEN r.status = 'verified_fixed' THEN 1 END)::int as fixed
+      FROM ${schema.reports} r
+      WHERE r.hidden = false
+      GROUP BY TO_CHAR(r.created_at, 'Mon'), DATE_TRUNC('month', r.created_at)
+      ORDER BY month_date ASC;
+    `;
+
+    const monthlyResult = await db.execute(monthlyStatsQuery);
+    let monthlyData = (monthlyResult.rows as any[]).map((row) => ({
+      month: row.month,
+      reported: Number(row.reported) || 0,
+      fixed: Number(row.fixed) || 0,
+    }));
+
+    if (monthlyData.length === 0) {
+      const currentMonth = new Date().toLocaleString("en-US", { month: "short" });
+      monthlyData = [{ month: currentMonth, reported: totalReports, fixed: totalFixed }];
+    }
 
     return NextResponse.json({
       areas,
@@ -73,10 +84,7 @@ export async function GET(req: NextRequest) {
         totalReports,
         totalFixed,
         totalOpen,
-        overallAvgDays: (
-          areas.reduce((acc: number, curr: any) => acc + curr.avg_days_to_fix, 0) /
-          (areas.length || 1)
-        ).toFixed(1),
+        overallAvgDays,
       },
       monthlyData,
     });
