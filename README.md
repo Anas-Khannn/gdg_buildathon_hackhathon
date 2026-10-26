@@ -100,6 +100,7 @@ Citizen feed showing real-time community upvotes, photo previews, verification b
 | 👥 **Civic Proof-of-Work** | Community-driven upvoting and citizen-led resolution verification (`Is this really fixed?`) |
 | 🏆 **Accountability Scoreboard** | Data-driven ranking of Peshawar municipal zones by response time and resolution rate |
 | 🚨 **Severity Gauge** | Color-coded indicators (`Ankle-Deep`, `Knee-Deep`, `Danger / Open Manhole`) |
+| 🗺️ **محفوظ راستہ (Safe Route)** | AI Safe-Route & Manhole Avoidance Navigator routing commuters around flood choke points with Gemini safety advisories |
 | 📨 **Automated WSSP Dispatch** | Real-time email dispatch integration with Water & Sanitation Services Peshawar |
 | 🔐 **RBAC Security** | Next-Auth v5 role-based access control separating citizen reporters from municipal dispatchers |
 
