@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import React from "react";
 import type { ReportItem } from "@/types/report";
+import type { SafeRouteResponse } from "@/types/route";
 
 const DynamicLiveMap = dynamic(
   () => import("./live-map").then((mod) => mod.LiveMap),
@@ -25,6 +26,9 @@ export function MapWrapper(props: {
   pickedLocation: { lat: number; lng: number } | null;
   onPickLocation?: (coords: { lat: number; lng: number }) => void;
   isPickingLocation?: boolean;
+  activeRoute?: SafeRouteResponse | null;
+  radarActive?: boolean;
+  onProximityAlert?: (hazardText: string | null) => void;
 }) {
   return <DynamicLiveMap {...props} />;
 }

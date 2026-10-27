@@ -63,6 +63,16 @@ export interface Translations {
   daysToFix: string;
   worstAreas: string;
   reportedVsFixed: string;
+  safeRoute: string;
+  planSafeRoute: string;
+  startLocation: string;
+  endLocation: string;
+  calculateSafeRoute: string;
+  radarActive: string;
+  radarProximityAlert: string;
+  routeSafeTitle: string;
+  routeDirectTitle: string;
+  avoidedHazardsLabel: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -129,6 +139,16 @@ export const translations: Record<Language, Translations> = {
     daysToFix: "avg days to fix",
     worstAreas: "Worst 3 areas this month",
     reportedVsFixed: "Reported vs Fixed comparison",
+    safeRoute: "Safe Route",
+    planSafeRoute: "Plan Safe Route (محفوظ راستہ)",
+    startLocation: "Starting Point",
+    endLocation: "Destination",
+    calculateSafeRoute: "Calculate Safe Route",
+    radarActive: "Manhole Radar Active",
+    radarProximityAlert: "Warning: Active open manhole or flood nearby!",
+    routeSafeTitle: "Safe Diversion (0 Choke Points)",
+    routeDirectTitle: "Direct Path (Hazard Clashes)",
+    avoidedHazardsLabel: "Hazards Avoided",
   },
   ur: {
     appName: "نالی واچ",
@@ -193,6 +213,16 @@ export const translations: Record<Language, Translations> = {
     daysToFix: "حل ہونے کا اوسط وقت (دن)",
     worstAreas: "سب سے زیادہ متاثرہ 3 علاقے",
     reportedVsFixed: "رپورٹ بمقابلہ حل شدہ موازنہ",
+    safeRoute: "محفوظ راستہ",
+    planSafeRoute: "محفوظ راستہ تلاش کریں",
+    startLocation: "روانگی کا مقام",
+    endLocation: "منزل کا مقام",
+    calculateSafeRoute: "محفوظ راستہ بنائیں",
+    radarActive: "مین ہول ریڈار الرٹ فعال ہے",
+    radarProximityAlert: "⚠️ ہوشیار: چند میٹر میں کھلا مین ہول یا سیلابی پانی ہے!",
+    routeSafeTitle: "محفوظ راستہ (کوئی خطرہ نہیں)",
+    routeDirectTitle: "براہِ راست راستہ (خطرناک رکاوٹیں)",
+    avoidedHazardsLabel: "بچے ہوئے خطرات",
   },
   ps: {
     appName: "نالۍ واچ",
@@ -257,5 +287,15 @@ export const translations: Record<Language, Translations> = {
     daysToFix: "د حل اوسط وخت (ورځې)",
     worstAreas: "۳ تر ټولو ځنډېدلې سیمې",
     reportedVsFixed: "د ثبت شوو او حل شوو پرتله",
+    safeRoute: "خوندي لاره",
+    planSafeRoute: "خوندي لاره وټاکئ",
+    startLocation: "د حرکت ځای",
+    endLocation: "منزل",
+    calculateSafeRoute: "خوندي لاره پیدا کړئ",
+    radarActive: "د مین هول خبرداری فعال دی",
+    radarProximityAlert: "⚠️ خبرداری: نږدې خلاص مین هول یا ولاړې اوبه شته!",
+    routeSafeTitle: "خوندي لاره (له خطره پاکه)",
+    routeDirectTitle: "مستقيمه لاره (خطرناکه)",
+    avoidedHazardsLabel: "مخنیوی شوي خطرونه",
   },
 };

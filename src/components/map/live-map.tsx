@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import { getDropletSvgString, SeverityType } from "@/components/droplet-pin";
 import { useLanguage } from "@/components/language-provider";
 import type { ReportItem } from "@/types/report";
+import type { SafeRouteResponse } from "@/types/route";
 
 interface LiveMapProps {
   reports: ReportItem[];
@@ -15,6 +16,9 @@ interface LiveMapProps {
   pickedLocation: { lat: number; lng: number } | null;
   onPickLocation?: (coords: { lat: number; lng: number }) => void;
   isPickingLocation?: boolean;
+  activeRoute?: SafeRouteResponse | null;
+  radarActive?: boolean;
+  onProximityAlert?: (hazardText: string | null) => void;
 }
 
 export function LiveMap({
@@ -25,28 +29,33 @@ export function LiveMap({
   pickedLocation,
   onPickLocation,
   isPickingLocation = false,
+  activeRoute = null,
+  radarActive = false,
+  onProximityAlert,
 }: LiveMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const dangerCirclesLayerRef = useRef<L.LayerGroup | null>(null);
+  const routeLayerRef = useRef<L.LayerGroup | null>(null);
+  const radarLayerRef = useRef<L.LayerGroup | null>(null);
   const pickedMarkerRef = useRef<L.Marker | null>(null);
+  const lastAlertTimeRef = useRef<number>(0);
   const { language, t } = useLanguage();
 
-  // 1. Initialize Map with Modern CartoDB Voyager Tiles
+  // 1. Initialize Map with Modern OpenStreetMap Tiles
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
     // Centered on central Peshawar
     const map = L.map(mapContainerRef.current, {
-      center: [34.0125, 71.5540],
+      center: [34.0125, 71.554],
       zoom: 13,
       zoomControl: false,
       maxZoom: 19,
       minZoom: 11,
     });
 
-    // OpenStreetMap: Reliable, high-detail tiles showing all Peshawar roads & bazaars
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -54,11 +63,12 @@ export function LiveMap({
       maxZoom: 19,
     }).addTo(map);
 
-    // Zoom controls placed at bottom right with custom styling
     L.control.zoom({ position: "bottomright" }).addTo(map);
 
     markersLayerRef.current = L.layerGroup().addTo(map);
     dangerCirclesLayerRef.current = L.layerGroup().addTo(map);
+    routeLayerRef.current = L.layerGroup().addTo(map);
+    radarLayerRef.current = L.layerGroup().addTo(map);
 
     map.on("click", (e: L.LeafletMouseEvent) => {
       if (onPickLocation) {
@@ -89,7 +99,6 @@ export function LiveMap({
       const isFixed = report.status === "verified_fixed";
       const pinSeverity: SeverityType = isFixed ? "fixed" : report.severity;
 
-      // Unique identifier for SVG mask
       const uniquePinId = `pin-${report.id.slice(0, 6)}-${index}`;
       const iconHtml = getDropletSvgString(pinSeverity, uniquePinId);
 
@@ -103,7 +112,6 @@ export function LiveMap({
 
       const marker = L.marker([report.lat, report.lng], { icon: customIcon });
 
-      // Localized labels
       const typeLabel = t.types[report.type] || report.type;
       const severityLabel = isFixed ? t.severities.fixed : t.severities[report.severity];
       const areaDisplay =
@@ -113,7 +121,6 @@ export function LiveMap({
           ? report.areaNameUr
           : report.areaName || "Peshawar";
 
-      // Badge color configuration
       const badgeBg =
         pinSeverity === "danger"
           ? "#FEE2E2"
@@ -132,7 +139,6 @@ export function LiveMap({
           ? "#B45309"
           : "#15803D";
 
-      // Modern Pop-up Card HTML
       const popupDiv = document.createElement("div");
       popupDiv.className = "naali-custom-popup";
       popupDiv.style.width = "240px";
@@ -187,7 +193,6 @@ export function LiveMap({
 
       markersGroup.addLayer(marker);
 
-      // Avoid Road Danger Zones (Soft glowing red circles with animated feel)
       if (avoidRoadLayer && report.severity === "danger" && report.status !== "verified_fixed") {
         const radiusMeters = 45 + Math.min(report.confirmationsCount * 25, 220);
         const circle = L.circle([report.lat, report.lng], {
@@ -203,7 +208,240 @@ export function LiveMap({
     });
   }, [reports, avoidRoadLayer, language, t, onSelectReport]);
 
-  // 3. Pan and smooth zoom to selected report
+  // 3. Render Safe Route & Direct Route Polylines
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const routeGroup = routeLayerRef.current;
+    if (!map || !routeGroup) return;
+
+    routeGroup.clearLayers();
+
+    if (!activeRoute) return;
+
+    const bounds = L.latLngBounds([]);
+
+    // Draw Direct Risky Route (if hazards exist and routes differ)
+    if (
+      activeRoute.directRoute.hazards.length > 0 &&
+      activeRoute.directRoute.coordinates.length > 0
+    ) {
+      const directPoly = L.polyline(activeRoute.directRoute.coordinates, {
+        color: "#EF4444",
+        weight: 4,
+        opacity: 0.55,
+        dashArray: "8, 8",
+      });
+      routeGroup.addLayer(directPoly);
+
+      // Add hazard warning callouts on the direct path
+      activeRoute.directRoute.hazards.forEach((hazard) => {
+        const hazardPin = L.circleMarker([hazard.lat, hazard.lng], {
+          radius: 8,
+          fillColor: "#DC2626",
+          color: "#FFFFFF",
+          weight: 2,
+          fillOpacity: 0.9,
+        });
+        hazardPin.bindTooltip(`⚠️ Avoided: ${hazard.type.replace(/_/g, " ")}`, {
+          permanent: false,
+          direction: "top",
+        });
+        routeGroup.addLayer(hazardPin);
+      });
+    }
+
+    // Draw Safe Route (Glowing Emerald Solid Line)
+    if (activeRoute.safeRoute.coordinates.length > 0) {
+      // Glow under-layer
+      const glowPoly = L.polyline(activeRoute.safeRoute.coordinates, {
+        color: "#10B981",
+        weight: 9,
+        opacity: 0.35,
+        lineCap: "round",
+        lineJoin: "round",
+      });
+      routeGroup.addLayer(glowPoly);
+
+      // Main line
+      const mainPoly = L.polyline(activeRoute.safeRoute.coordinates, {
+        color: "#059669",
+        weight: 5,
+        opacity: 0.95,
+        lineCap: "round",
+        lineJoin: "round",
+      });
+      routeGroup.addLayer(mainPoly);
+
+      activeRoute.safeRoute.coordinates.forEach((coord) => {
+        bounds.extend(coord);
+      });
+    }
+
+    // Start Marker (Origin Pin "A")
+    const startIcon = L.divIcon({
+      html: `
+        <div style="position: relative; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;">
+          <div style="position: absolute; inset: 0; background: rgba(16, 185, 129, 0.3); border-radius: 9999px; animation: ping 2s infinite;"></div>
+          <div style="width: 28px; height: 28px; background: #059669; border: 2.5px solid #FFFFFF; border-radius: 9999px; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; box-shadow: 0 4px 10px rgba(0,0,0,0.35);">
+            A
+          </div>
+        </div>
+      `,
+      className: "safe-route-start-pin",
+      iconSize: [34, 34],
+      iconAnchor: [17, 17],
+    });
+
+    const startMarker = L.marker([activeRoute.start.lat, activeRoute.start.lng], {
+      icon: startIcon,
+    }).bindTooltip(`<b>Start:</b> ${activeRoute.start.name}`, { permanent: false, direction: "top" });
+    routeGroup.addLayer(startMarker);
+    bounds.extend([activeRoute.start.lat, activeRoute.start.lng]);
+
+    // Destination Marker (End Pin "B")
+    const endIcon = L.divIcon({
+      html: `
+        <div style="position: relative; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;">
+          <div style="width: 28px; height: 28px; background: #0E6B73; border: 2.5px solid #FFFFFF; border-radius: 9999px; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; box-shadow: 0 4px 10px rgba(0,0,0,0.35);">
+            B
+          </div>
+        </div>
+      `,
+      className: "safe-route-end-pin",
+      iconSize: [34, 34],
+      iconAnchor: [17, 17],
+    });
+
+    const endMarker = L.marker([activeRoute.end.lat, activeRoute.end.lng], {
+      icon: endIcon,
+    }).bindTooltip(`<b>Destination:</b> ${activeRoute.end.name}`, {
+      permanent: false,
+      direction: "top",
+    });
+    routeGroup.addLayer(endMarker);
+    bounds.extend([activeRoute.end.lat, activeRoute.end.lng]);
+
+    // Fit map bounds to encompass the entire route
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [60, 60], maxZoom: 16 });
+    }
+  }, [activeRoute]);
+
+  // 4. Manhole Proximity Radar & GPS Watcher
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const radarGroup = radarLayerRef.current;
+    if (!map || !radarGroup) return;
+
+    radarGroup.clearLayers();
+
+    if (!radarActive) {
+      if (onProximityAlert) onProximityAlert(null);
+      return;
+    }
+
+    let watchId: number | null = null;
+    let userMarker: L.Marker | null = null;
+
+    const playBeep = () => {
+      try {
+        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime); // 880 Hz alarm
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.25);
+      } catch {
+        // Audio synthesis fallback
+      }
+    };
+
+    const checkProximity = (userLat: number, userLng: number) => {
+      const dangerReports = reports.filter(
+        (r) => r.severity === "danger" && r.status !== "verified_fixed"
+      );
+
+      let closestDist = Infinity;
+      let closestReport: ReportItem | null = null;
+
+      dangerReports.forEach((r) => {
+        const dLat = ((r.lat - userLat) * Math.PI) / 180;
+        const dLng = ((r.lng - userLng) * Math.PI) / 180;
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos((userLat * Math.PI) / 180) *
+            Math.cos((r.lat * Math.PI) / 180) *
+            Math.sin(dLng / 2) *
+            Math.sin(dLng / 2);
+        const dist = 6371000 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestReport = r;
+        }
+      });
+
+      if (closestDist <= 75 && closestReport) {
+        const now = Date.now();
+        if (now - lastAlertTimeRef.current > 4000) {
+          playBeep();
+          lastAlertTimeRef.current = now;
+        }
+        if (onProximityAlert) {
+          onProximityAlert(
+            `⚠️ Alert: Open Manhole / Danger ${Math.round(closestDist)}m ahead near ${
+              (closestReport as any).areaName || "corridor"
+            }!`
+          );
+        }
+      } else {
+        if (onProximityAlert) onProximityAlert(null);
+      }
+    };
+
+    if ("geolocation" in navigator) {
+      watchId = navigator.geolocation.watchPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+
+          if (!userMarker) {
+            const userIcon = L.divIcon({
+              html: `
+                <div style="position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+                  <div style="position: absolute; inset: 0; background: rgba(220, 38, 38, 0.4); border-radius: 9999px; animation: ping 1.2s infinite;"></div>
+                  <div style="width: 16px; height: 16px; background: #DC2626; border: 2.5px solid #FFFFFF; border-radius: 9999px; box-shadow: 0 0 12px rgba(220,38,38,0.8);"></div>
+                </div>
+              `,
+              className: "live-radar-user-pin",
+              iconSize: [36, 36],
+              iconAnchor: [18, 18],
+            });
+
+            userMarker = L.marker([latitude, longitude], { icon: userIcon });
+            radarGroup.addLayer(userMarker);
+          } else {
+            userMarker.setLatLng([latitude, longitude]);
+          }
+
+          checkProximity(latitude, longitude);
+        },
+        () => {
+          // Fallback location near central Peshawar if user denies GPS
+          checkProximity(34.0125, 71.554);
+        },
+        { enableHighAccuracy: true, maximumAge: 3000 }
+      );
+    }
+
+    return () => {
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      radarGroup.clearLayers();
+    };
+  }, [radarActive, reports, onProximityAlert]);
+
+  // 5. Pan and smooth zoom to selected report
   useEffect(() => {
     if (selectedReport && mapInstanceRef.current) {
       mapInstanceRef.current.flyTo([selectedReport.lat, selectedReport.lng], 15, {
@@ -213,7 +451,7 @@ export function LiveMap({
     }
   }, [selectedReport]);
 
-  // 4. Update Picked Location Pin
+  // 6. Update Picked Location Pin
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;

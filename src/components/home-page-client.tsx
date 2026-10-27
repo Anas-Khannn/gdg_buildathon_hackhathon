@@ -4,8 +4,10 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Header } from "@/components/header";
 import { MapWrapper } from "@/components/map/map-wrapper";
 import type { ReportItem } from "@/types/report";
+import type { SafeRouteResponse } from "@/types/route";
 import { ReportModal } from "@/components/report-modal";
 import { ReportDetailDrawer } from "@/components/report-detail-drawer";
+import { SafeRouteModal } from "@/components/safe-route-modal";
 import { useLanguage } from "@/components/language-provider";
 import { DropletPin } from "@/components/droplet-pin";
 import {
@@ -18,6 +20,10 @@ import {
   Users,
   ShieldAlert,
   Search,
+  Navigation,
+  ShieldCheck,
+  Radio,
+  X,
 } from "lucide-react";
 
 interface HomePageClientProps {
@@ -43,6 +49,12 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isPickingLocation, setIsPickingLocation] = useState(false);
   const [pickedLocation, setPickedLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  // AI Safe Route & Manhole Radar State
+  const [isSafeRouteModalOpen, setIsSafeRouteModalOpen] = useState(false);
+  const [activeRoute, setActiveRoute] = useState<SafeRouteResponse | null>(null);
+  const [radarActive, setRadarActive] = useState(false);
+  const [proximityAlertText, setProximityAlertText] = useState<string | null>(null);
 
   // Mobile Bottom Sheet State
   const [bottomSheetExpanded, setBottomSheetExpanded] = useState(false);
@@ -330,13 +342,21 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
             )}
           </div>
 
-          {/* Desktop Report Button */}
-          <div className="p-3.5 border-t border-[#C9D4DA] bg-white">
+          {/* Desktop Action Buttons */}
+          <div className="p-3 border-t border-[#C9D4DA] bg-white space-y-2">
+            <button
+              onClick={() => setIsSafeRouteModalOpen(true)}
+              className="w-full h-11 rounded-xl bg-gradient-to-r from-emerald-600 via-[#0E6B73] to-[#095259] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
+            >
+              <Navigation className="w-4 h-4 fill-white" />
+              <span>{language === "ur" ? "محفوظ راستہ (AI Safe Route)" : "Plan Safe Route (محفوظ راستہ)"}</span>
+            </button>
+
             <button
               onClick={() => setIsReportModalOpen(true)}
-              className="w-full h-12 rounded-xl bg-gradient-to-r from-[#0E6B73] to-[#095259] hover:from-[#095259] hover:to-[#0E6B73] text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2.5 active:scale-98"
+              className="w-full h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#12263A] font-bold text-xs transition-all flex items-center justify-center gap-2 border border-slate-300 active:scale-98 cursor-pointer"
             >
-              <Camera className="w-5 h-5 fill-white" />
+              <Camera className="w-4 h-4 text-[#0E6B73]" />
               <span>{t.reportProblem}</span>
             </button>
           </div>
@@ -348,6 +368,14 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
         <div className="flex-1 relative h-full min-h-0">
           {/* Mobile Top Floating Filter Chips */}
           <div className="md:hidden absolute top-2 inset-x-2 z-20 flex items-center gap-1.5 overflow-x-auto no-scrollbar pointer-events-auto py-1 px-0.5">
+            <button
+              onClick={() => setIsSafeRouteModalOpen(true)}
+              className="shrink-0 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-md transition-all flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-[#0E6B73] text-white shadow-emerald-900/30"
+            >
+              <Navigation className="w-3.5 h-3.5 fill-white" />
+              <span>{language === "ur" ? "محفوظ راستہ" : "Safe Route"}</span>
+            </button>
+
             {filterChips.map((chip) => (
               <button
                 key={chip.id}
@@ -375,6 +403,55 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
             </button>
           </div>
 
+          {/* Real-time Proximity Radar Alert Banner */}
+          {proximityAlertText && (
+            <div className="absolute top-14 left-1/2 -translate-x-1/2 z-30 max-w-md w-[92%] bg-red-600 text-white px-4 py-2.5 rounded-2xl shadow-2xl border-2 border-white/30 text-xs font-bold flex items-center gap-2.5 backdrop-blur-md animate-bounce">
+              <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping shrink-0" />
+              <span className="flex-1">{proximityAlertText}</span>
+            </div>
+          )}
+
+          {/* Active Safe Route Floating Card */}
+          {activeRoute && (
+            <div className="absolute top-3 left-3 right-3 sm:left-4 sm:right-auto sm:max-w-md z-20 bg-[#12263A]/95 text-white p-3 rounded-2xl shadow-2xl border border-white/20 backdrop-blur-md flex items-center justify-between gap-3">
+              <div className="min-w-0 flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold truncate">
+                    {activeRoute.start.name.split(" ")[0]} ➔ {activeRoute.end.name.split(" ")[0]}
+                  </div>
+                  <div className="text-[10px] text-emerald-300 font-semibold flex items-center gap-1.5">
+                    <span>
+                      {activeRoute.safeRoute.distanceKm} km (~{activeRoute.safeRoute.durationMinutes}m)
+                    </span>
+                    <span>•</span>
+                    <span>{activeRoute.safeRoute.avoidedHazardsCount} hazards avoided</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => setIsSafeRouteModalOpen(true)}
+                  className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[10px] font-bold transition cursor-pointer"
+                >
+                  Details
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveRoute(null);
+                    setRadarActive(false);
+                  }}
+                  className="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-300 flex items-center justify-center transition cursor-pointer"
+                  title="Clear Route"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* The Leaflet Live Map */}
           <MapWrapper
             reports={filteredReports}
@@ -383,6 +460,9 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
             avoidRoadLayer={avoidRoadLayer}
             pickedLocation={pickedLocation}
             isPickingLocation={isPickingLocation}
+            activeRoute={activeRoute}
+            radarActive={radarActive}
+            onProximityAlert={(text) => setProximityAlertText(text)}
             onPickLocation={(coords) => {
               if (isPickingLocation) {
                 setPickedLocation(coords);
@@ -498,6 +578,18 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
           setReports((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
           setSelectedReport(updated);
         }}
+      />
+
+      {/* AI Safe Route & Manhole Radar Modal */}
+      <SafeRouteModal
+        isOpen={isSafeRouteModalOpen}
+        onClose={() => setIsSafeRouteModalOpen(false)}
+        onRouteCalculated={(route) => {
+          setActiveRoute(route);
+          setRadarActive(true);
+        }}
+        radarActive={radarActive}
+        onToggleRadar={(active) => setRadarActive(active)}
       />
     </div>
   );
