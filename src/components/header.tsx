@@ -1,18 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/components/language-provider";
 import { Language } from "@/lib/i18n";
 import { useSession, signOut } from "@/components/providers";
-import { Droplet, BarChart3, ShieldAlert, LogIn, LogOut, UserCheck, Info } from "lucide-react";
+import { Droplet, BarChart3, ShieldAlert, LogIn, LogOut, UserCheck, Info, PhoneCall } from "lucide-react";
 import { WeatherAlertBanner } from "@/components/weather-alert-banner";
+import { EmergencyModal } from "@/components/emergency-modal";
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { data: session } = useSession();
   const pathname = usePathname();
+  const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenEmergency = () => setIsEmergencyModalOpen(true);
+    window.addEventListener("naali-open-emergency", handleOpenEmergency);
+    return () => window.removeEventListener("naali-open-emergency", handleOpenEmergency);
+  }, []);
 
   const userRole = (session?.user as unknown as { role?: string })?.role || "user";
   const isAdmin = userRole === "admin";
@@ -104,8 +112,24 @@ export function Header() {
           )}
         </nav>
 
-        {/* Right Side: Language Switcher & Profile */}
+        {/* Right Side: Emergency SOS, Language Switcher & Profile */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Emergency Helplines SOS Button */}
+          <button
+            type="button"
+            onClick={() => setIsEmergencyModalOpen(true)}
+            title={t.emergencyHelplines}
+            className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl text-xs font-extrabold bg-gradient-to-r from-red-600 to-[#C8321F] hover:from-red-500 hover:to-red-600 text-white shadow-md shadow-red-900/30 border border-white/20 transition-all active:scale-95 cursor-pointer shrink-0"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+            </span>
+            <PhoneCall className="w-3.5 h-3.5" />
+            <span className="font-heading tracking-wide">SOS</span>
+            <span className="hidden lg:inline text-[11px] font-semibold opacity-95">Helplines</span>
+          </button>
+
           {/* Tri-Lingual Toggle Pill */}
           <div className="flex items-center bg-black/25 p-0.5 sm:p-1 rounded-xl border border-white/10 text-xs">
             {languages.map((item) => (
@@ -158,6 +182,10 @@ export function Header() {
         </div>
       </div>
     </header>
+    <EmergencyModal
+      isOpen={isEmergencyModalOpen}
+      onClose={() => setIsEmergencyModalOpen(false)}
+    />
     </div>
   );
 }
