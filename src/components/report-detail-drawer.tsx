@@ -28,6 +28,7 @@ import {
   ArrowRight,
   RefreshCw,
   FileText,
+  PhoneCall,
 } from "lucide-react";
 import { WsspLetterModal } from "@/components/wssp-letter-modal";
 
@@ -353,6 +354,35 @@ export function ReportDetailDrawer({
             Municipal & Community Dispatch
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {/* Urgent Life Hazard Emergency Hotline Alert */}
+            {(report.severity === "danger" || report.type === "open_manhole") && (
+              <div className="p-3 rounded-2xl bg-red-50 border border-red-300 flex items-center justify-between gap-2.5 col-span-1 sm:col-span-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping shrink-0" />
+                  <div className="min-w-0">
+                    <span className="text-xs font-bold text-red-900 block truncate">
+                      Imminent Life / Flood Hazard
+                    </span>
+                    <span className="text-[10px] text-red-700 block truncate">
+                      Submerged live wire, deep underpass or open manhole
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new CustomEvent("naali-open-emergency"));
+                    }
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition active:scale-95 shrink-0 cursor-pointer"
+                >
+                  <PhoneCall className="w-3.5 h-3.5" />
+                  <span>SOS 1122/1334</span>
+                </button>
+              </div>
+            )}
+
             {/* WSSP WhatsApp Dispatch */}
             <a
               href={wsspWhatsAppUrl}

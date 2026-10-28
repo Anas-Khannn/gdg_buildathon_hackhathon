@@ -73,6 +73,7 @@ export interface Translations {
   routeSafeTitle: string;
   routeDirectTitle: string;
   avoidedHazardsLabel: string;
+  emergencyHelplines: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -149,6 +150,7 @@ export const translations: Record<Language, Translations> = {
     routeSafeTitle: "Safe Diversion (0 Choke Points)",
     routeDirectTitle: "Direct Path (Hazard Clashes)",
     avoidedHazardsLabel: "Hazards Avoided",
+    emergencyHelplines: "Emergency Helplines (SOS)",
   },
   ur: {
     appName: "نالی واچ",
@@ -223,6 +225,7 @@ export const translations: Record<Language, Translations> = {
     routeSafeTitle: "محفوظ راستہ (کوئی خطرہ نہیں)",
     routeDirectTitle: "براہِ راست راستہ (خطرناک رکاوٹیں)",
     avoidedHazardsLabel: "بچے ہوئے خطرات",
+    emergencyHelplines: "ہنگامی ہیلپ لائنز (SOS)",
   },
   ps: {
     appName: "نالۍ واچ",
@@ -297,5 +300,6 @@ export const translations: Record<Language, Translations> = {
     routeSafeTitle: "خوندي لاره (له خطره پاکه)",
     routeDirectTitle: "مستقيمه لاره (خطرناکه)",
     avoidedHazardsLabel: "مخنیوی شوي خطرونه",
+    emergencyHelplines: "بېړنۍ شمېرې (SOS)",
   },
 };

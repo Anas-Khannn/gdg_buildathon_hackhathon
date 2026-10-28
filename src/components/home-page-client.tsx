@@ -24,6 +24,7 @@ import {
   ShieldCheck,
   Radio,
   X,
+  PhoneCall,
 } from "lucide-react";
 
 interface HomePageClientProps {
@@ -368,6 +369,18 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
         <div className="flex-1 relative h-full min-h-0">
           {/* Mobile Top Floating Filter Chips */}
           <div className="md:hidden absolute top-2 inset-x-2 z-20 flex items-center gap-1.5 overflow-x-auto no-scrollbar pointer-events-auto py-1 px-0.5">
+            <button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("naali-open-emergency"));
+                }
+              }}
+              className="shrink-0 px-2.5 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-md transition-all flex items-center gap-1 bg-red-600 text-white shadow-red-950/40 cursor-pointer active:scale-95"
+            >
+              <PhoneCall className="w-3.5 h-3.5" />
+              <span>SOS</span>
+            </button>
+
             <button
               onClick={() => setIsSafeRouteModalOpen(true)}
               className="shrink-0 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-md transition-all flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-[#0E6B73] text-white shadow-emerald-900/30"
