@@ -24,6 +24,26 @@ export function Header() {
 
   const userRole = (session?.user as unknown as { role?: string })?.role || "user";
   const isAdmin = userRole === "admin";
+  const isAboutPage = pathname === "/about";
+
+  const handleStaticNav = (targetId: string, e: React.MouseEvent) => {
+    if (isAboutPage) {
+      e.preventDefault();
+      const el = document.getElementById(targetId);
+      if (el) {
+        const offset = 110;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = el.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+        window.history.replaceState(null, "", `#${targetId}`);
+      }
+    }
+  };
 
   const languages: { code: Language; label: string; shortLabel: string }[] = [
     { code: "en", label: "English", shortLabel: "EN" },
@@ -64,6 +84,7 @@ export function Header() {
         <nav className="hidden md:flex items-center bg-black/25 p-1 rounded-xl border border-white/10 backdrop-blur-sm">
           <Link
             href="/"
+            onClick={(e) => handleStaticNav("gis-map", e)}
             className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
               pathname === "/"
                 ? "bg-[#0E6B73] text-white shadow-sm"
@@ -75,6 +96,7 @@ export function Header() {
 
           <Link
             href="/flood-simulator"
+            onClick={(e) => handleStaticNav("aquatwin", e)}
             className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
               pathname === "/flood-simulator"
                 ? "bg-[#0E6B73] text-white shadow-sm"
@@ -90,6 +112,7 @@ export function Header() {
 
           <Link
             href="/scoreboard"
+            onClick={(e) => handleStaticNav("scoreboard", e)}
             className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
               pathname === "/scoreboard"
                 ? "bg-[#0E6B73] text-white shadow-sm"
@@ -102,6 +125,7 @@ export function Header() {
 
           <Link
             href="/about"
+            onClick={(e) => handleStaticNav("crisis", e)}
             className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
               pathname === "/about"
                 ? "bg-[#0E6B73] text-white shadow-sm"
@@ -115,6 +139,7 @@ export function Header() {
           {isAdmin && (
             <Link
               href="/admin"
+              onClick={(e) => handleStaticNav("quorum", e)}
               className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
                 pathname === "/admin"
                   ? "bg-amber-600 text-white shadow-sm"

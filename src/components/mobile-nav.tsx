@@ -30,6 +30,25 @@ export function MobileNav() {
   const isAdminActive = pathname === "/admin";
   const isAuthActive = pathname.startsWith("/auth");
 
+  const handleStaticNav = (targetId: string, e: React.MouseEvent) => {
+    if (isAboutActive) {
+      e.preventDefault();
+      const el = document.getElementById(targetId);
+      if (el) {
+        const offset = 110;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = el.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+        window.history.replaceState(null, "", `#${targetId}`);
+      }
+    }
+  };
+
   const authLabel = session?.user?.name
     ? session.user.name.split(" ")[0]
     : language === "ur"
@@ -47,6 +66,7 @@ export function MobileNav() {
         {/* Map Tab */}
         <Link
           href="/"
+          onClick={(e) => handleStaticNav("gis-map", e)}
           className={`flex flex-col items-center justify-center gap-1 h-full py-1 text-center transition-colors relative ${
             isMapActive ? "text-emerald-400 font-bold" : "text-[#C9D4DA]/70 hover:text-white"
           }`}
@@ -63,6 +83,7 @@ export function MobileNav() {
         {/* Flood Sim Tab */}
         <Link
           href="/flood-simulator"
+          onClick={(e) => handleStaticNav("aquatwin", e)}
           className={`flex flex-col items-center justify-center gap-1 h-full py-1 text-center transition-colors relative ${
             isFloodSimActive ? "text-emerald-400 font-bold" : "text-[#C9D4DA]/70 hover:text-white"
           }`}
@@ -79,6 +100,7 @@ export function MobileNav() {
         {/* Scoreboard Tab */}
         <Link
           href="/scoreboard"
+          onClick={(e) => handleStaticNav("scoreboard", e)}
           className={`flex flex-col items-center justify-center gap-1 h-full py-1 text-center transition-colors relative ${
             isScoreboardActive ? "text-emerald-400 font-bold" : "text-[#C9D4DA]/70 hover:text-white"
           }`}
@@ -95,6 +117,7 @@ export function MobileNav() {
         {/* About / What We Solve Tab */}
         <Link
           href="/about"
+          onClick={(e) => handleStaticNav("crisis", e)}
           className={`flex flex-col items-center justify-center gap-1 h-full py-1 text-center transition-colors relative ${
             isAboutActive ? "text-emerald-400 font-bold" : "text-[#C9D4DA]/70 hover:text-white"
           }`}
@@ -112,6 +135,7 @@ export function MobileNav() {
         {isAdmin && (
           <Link
             href="/admin"
+            onClick={(e) => handleStaticNav("quorum", e)}
             className={`flex flex-col items-center justify-center gap-1 h-full py-1 text-center transition-colors relative ${
               isAdminActive ? "text-amber-400 font-bold" : "text-amber-300/70 hover:text-white"
             }`}
