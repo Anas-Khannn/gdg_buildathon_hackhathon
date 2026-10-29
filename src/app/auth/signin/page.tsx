@@ -105,8 +105,25 @@ export default function SignInPage() {
       <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-emerald-500/25 rounded-full blur-3xl pointer-events-none animate-pulse-subtle" />
       <div className="absolute -top-32 right-1/4 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl pointer-events-none" />
 
+      {/* Floating animated water bubbles */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute left-[12%] bottom-0 w-8 h-8 rounded-full bg-cyan-400/25 backdrop-blur-sm border border-cyan-300/30 animate-bubble-1" />
+        <div className="absolute left-[28%] bottom-0 w-12 h-12 rounded-full bg-emerald-400/20 backdrop-blur-sm border border-emerald-300/30 animate-bubble-2" />
+        <div className="absolute left-[54%] bottom-0 w-6 h-6 rounded-full bg-teal-300/30 backdrop-blur-sm border border-teal-200/40 animate-bubble-3" />
+        <div className="absolute left-[78%] bottom-0 w-10 h-10 rounded-full bg-cyan-300/20 backdrop-blur-sm border border-cyan-200/30 animate-bubble-4" />
+        <div className="absolute left-[90%] bottom-0 w-7 h-7 rounded-full bg-emerald-300/25 backdrop-blur-sm border border-emerald-200/30 animate-bubble-5" />
+      </div>
+
       {/* Floating subtle grid pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none opacity-40" />
+
+      {/* Undulating water wave at bottom */}
+      <div className="absolute bottom-0 inset-x-0 h-16 pointer-events-none overflow-hidden opacity-30">
+        <svg className="absolute bottom-0 w-[200%] h-full animate-wave-slide" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M0,40 C150,90 350,-20 500,40 C650,100 900,0 1200,40 L1200,120 L0,120 Z" fill="#22d3ee" fillOpacity="0.4" />
+          <path d="M0,60 C200,10 400,90 600,50 C800,10 1000,80 1200,60 L1200,120 L0,120 Z" fill="#34d399" fillOpacity="0.3" />
+        </svg>
+      </div>
 
       <Suspense
         fallback={

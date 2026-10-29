@@ -267,7 +267,10 @@ export function AuthWidget({
   };
 
   return (
-    <div className={`bg-white/95 backdrop-blur-xl rounded-3xl p-6 sm:p-7 shadow-2xl border border-white/60 text-[#12263A] space-y-5 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(14,107,115,0.2)] ${className}`}>
+    <div className={`bg-white/95 backdrop-blur-xl rounded-3xl p-6 sm:p-7 shadow-2xl border-2 text-[#12263A] space-y-5 transition-all duration-300 animate-glow-border relative overflow-hidden ${className}`}>
+      {/* Top subtle water ripple signature */}
+      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-teal-400 via-emerald-400 to-cyan-400 animate-shimmer" />
+
       {/* Tab Switcher: Sign Up vs Sign In vs Forgot Password */}
       <div className="flex p-1 bg-[#EAF0F2]/90 rounded-2xl border border-[#C9D4DA]/70 backdrop-blur-sm">
         <button

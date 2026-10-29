@@ -39,6 +39,9 @@ import {
   Sliders,
   Send,
   MessageCircle,
+  Crosshair,
+  Radar,
+  Award,
 } from "lucide-react";
 
 interface NavSection {
@@ -77,7 +80,7 @@ export function AboutShowcase() {
 
   // Interactive 1: Gemini Vision Scenario Explorer
   const [visionScenario, setVisionScenario] = useState<"clog" | "manhole" | "underpass">("clog");
-  const [isScanning, setIsScanning] = useState<boolean>(false);
+  const [isScanning, setIsScanning] = useState<boolean>(true);
 
   // Interactive 2: AquaTwin Live Hydrology Playground
   const [selectedCatchmentIndex, setSelectedCatchmentIndex] = useState<number>(0);
@@ -133,8 +136,8 @@ export function AboutShowcase() {
   // Run a quick scan trigger when changing vision scenarios
   const handleSelectScenario = (scenario: "clog" | "manhole" | "underpass") => {
     setVisionScenario(scenario);
-    setIsScanning(true);
-    setTimeout(() => setIsScanning(false), 600);
+    setIsScanning(false);
+    setTimeout(() => setIsScanning(true), 150);
   };
 
   // AquaTwin Dynamic Calculation
@@ -176,17 +179,35 @@ export function AboutShowcase() {
       {/* =========================================================================
           HERO SECTION WITH EMBEDDED AUTH WIDGET & ANIMATED GLOWS
           ========================================================================= */}
-      <section className="bg-gradient-to-br from-[#12263A] via-[#153450] to-[#0E6B73] rounded-3xl p-5 sm:p-10 lg:p-12 text-white shadow-2xl relative overflow-hidden border border-white/20">
+      <section className="bg-gradient-to-br from-[#12263A] via-[#153450] to-[#0E6B73] rounded-3xl p-5 sm:p-10 lg:p-12 text-white shadow-2xl relative overflow-hidden border-2 border-white/20 animate-glow-border">
         {/* Animated dynamic background glows */}
         <div className="absolute top-0 right-0 -mt-16 -mr-16 w-96 h-96 bg-[#0E6B73]/40 rounded-full blur-3xl pointer-events-none animate-float-slow" />
-        <div className="absolute bottom-0 left-1/4 -mb-20 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none animate-pulse-subtle" />
-        <div className="absolute top-1/2 left-0 w-64 h-64 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 -mb-20 w-80 h-80 bg-emerald-500/25 rounded-full blur-3xl pointer-events-none animate-pulse-subtle" />
+        <div className="absolute top-1/2 left-0 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Floating animated water bubbles */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute left-[10%] bottom-0 w-8 h-8 rounded-full bg-cyan-400/20 backdrop-blur-sm border border-cyan-300/30 animate-bubble-1" />
+          <div className="absolute left-[35%] bottom-0 w-12 h-12 rounded-full bg-emerald-400/20 backdrop-blur-sm border border-emerald-300/30 animate-bubble-2" />
+          <div className="absolute left-[65%] bottom-0 w-7 h-7 rounded-full bg-teal-300/25 backdrop-blur-sm border border-teal-200/40 animate-bubble-3" />
+          <div className="absolute left-[85%] bottom-0 w-10 h-10 rounded-full bg-cyan-300/20 backdrop-blur-sm border border-cyan-200/30 animate-bubble-4" />
+        </div>
+
+        {/* Subtle grid pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none opacity-40" />
+
+        {/* Undulating water wave at bottom of Hero */}
+        <div className="absolute bottom-0 inset-x-0 h-14 pointer-events-none overflow-hidden opacity-35">
+          <svg className="absolute bottom-0 w-[200%] h-full animate-wave-slide" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,40 C150,90 350,-20 500,40 C650,100 900,0 1200,40 L1200,120 L0,120 Z" fill="#22d3ee" fillOpacity="0.4" />
+            <path d="M0,60 C200,10 400,90 600,50 C800,10 1000,80 1200,60 L1200,120 L0,120 Z" fill="#34d399" fillOpacity="0.3" />
+          </svg>
+        </div>
 
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Column: Mission & Problem Pitch */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/25 text-emerald-300 text-xs font-extrabold uppercase tracking-widest backdrop-blur-md shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/25 text-emerald-300 text-xs font-extrabold uppercase tracking-widest backdrop-blur-md shadow-sm animate-wave-bob">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
@@ -208,19 +229,19 @@ export function AboutShowcase() {
 
             {/* Quick Metrics Bar */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-              <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 text-center transition-transform hover:scale-105">
+              <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 text-center transition-all duration-300 hover:scale-105 hover:bg-white/15 shadow-lg">
                 <div className="text-xl sm:text-2xl font-extrabold font-heading text-emerald-300">8 Basins</div>
                 <div className="text-[11px] text-[#C9D4DA] uppercase font-semibold tracking-wider">Hydrology Twin</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 text-center transition-transform hover:scale-105">
+              <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 text-center transition-all duration-300 hover:scale-105 hover:bg-white/15 shadow-lg">
                 <div className="text-xl sm:text-2xl font-extrabold font-heading text-cyan-300">&lt; 1.2s</div>
                 <div className="text-[11px] text-[#C9D4DA] uppercase font-semibold tracking-wider">Gemini Vision AI</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 text-center transition-transform hover:scale-105">
+              <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 text-center transition-all duration-300 hover:scale-105 hover:bg-white/15 shadow-lg">
                 <div className="text-xl sm:text-2xl font-extrabold font-heading text-amber-300">3-Citizen</div>
                 <div className="text-[11px] text-[#C9D4DA] uppercase font-semibold tracking-wider">Fix Quorum</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 text-center transition-transform hover:scale-105">
+              <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 text-center transition-all duration-300 hover:scale-105 hover:bg-white/15 shadow-lg">
                 <div className="text-xl sm:text-2xl font-extrabold font-heading text-rose-300">50m Radar</div>
                 <div className="text-[11px] text-[#C9D4DA] uppercase font-semibold tracking-wider">Manhole Alert</div>
               </div>
@@ -261,7 +282,6 @@ export function AboutShowcase() {
 
       {/* =========================================================================
           INTERACTIVE IN-PAGE STICKY NAVIGATION BAR
-          "in the static page the nave bar buttons should work and take you there in the static page where the navwork is in deatil"
           ========================================================================= */}
       <nav
         aria-label="In-page section navigator"
@@ -279,11 +299,11 @@ export function AboutShowcase() {
                   onClick={() => scrollToSection(section.id)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer ${
                     isActive
-                      ? "bg-[#0E6B73] text-white shadow-md shadow-[#0E6B73]/40 ring-1 ring-emerald-400/50"
+                      ? "bg-[#0E6B73] text-white shadow-md shadow-[#0E6B73]/40 ring-2 ring-emerald-400/60 scale-105"
                       : "text-[#C9D4DA] hover:text-white hover:bg-white/10"
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-emerald-300" : "text-[#C9D4DA]"}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-emerald-300 animate-pulse" : "text-[#C9D4DA]"}`} />
                   <span className="hidden md:inline">{section.label}</span>
                   <span className="md:hidden">{section.shortLabel}</span>
                   {section.badge && (
@@ -316,7 +336,7 @@ export function AboutShowcase() {
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#C8321F]">
-              <AlertTriangle className="w-4 h-4 text-[#C8321F]" />
+              <AlertTriangle className="w-4 h-4 text-[#C8321F] animate-pulse" />
               <span>Peshawar Municipal Reality</span>
             </div>
             <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-[#12263A]">
@@ -331,8 +351,8 @@ export function AboutShowcase() {
         {/* 5 Crisis Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {/* Card 1 */}
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs hover:border-[#0E6B73] hover:shadow-lg transition-all duration-300 space-y-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-red-50 text-[#C8321F] flex items-center justify-center font-heading font-extrabold text-lg group-hover:scale-110 transition-transform">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs hover:border-[#0E6B73] hover:shadow-xl transition-all duration-300 space-y-3 group hover:-translate-y-1">
+            <div className="w-12 h-12 rounded-2xl bg-red-50 text-[#C8321F] flex items-center justify-center font-heading font-extrabold text-lg group-hover:scale-110 transition-transform shadow-xs">
               <Waves className="w-6 h-6 text-[#C8321F]" />
             </div>
             <h3 className="font-heading text-lg font-bold text-[#12263A]">
@@ -342,14 +362,14 @@ export function AboutShowcase() {
               Just 30 minutes of 45mm/h cloudburst submerges arterial thoroughfares like <strong>Jamrud Road, Saddar, University Road, Kohati Gate underpasses, and Gulbahar</strong>. Decades of unexcavated silt restrict gravity flow, trapping knee-deep water.
             </p>
             <div className="pt-1 flex items-center gap-2 text-[11px] font-bold text-[#C8321F]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C8321F]" />
+              <span className="w-2 h-2 rounded-full bg-[#C8321F] animate-ping" />
               <span>Average Inundation Depth: 25cm – 60cm</span>
             </div>
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs hover:border-[#0E6B73] hover:shadow-lg transition-all duration-300 space-y-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-[#E0A100] flex items-center justify-center font-heading font-extrabold text-lg group-hover:scale-110 transition-transform">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs hover:border-[#0E6B73] hover:shadow-xl transition-all duration-300 space-y-3 group hover:-translate-y-1">
+            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-[#E0A100] flex items-center justify-center font-heading font-extrabold text-lg group-hover:scale-110 transition-transform shadow-xs">
               <FileQuestion className="w-6 h-6 text-[#E0A100]" />
             </div>
             <h3 className="font-heading text-lg font-bold text-[#12263A]">
@@ -359,14 +379,14 @@ export function AboutShowcase() {
               Sanitation contractors mark work-orders as &ldquo;Resolved&rdquo; on paper to clear billing, even when concrete slabs still conceal compacted mud and plastic waste. Citizens have had zero transparent counter-verification.
             </p>
             <div className="pt-1 flex items-center gap-2 text-[11px] font-bold text-[#E0A100]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#E0A100]" />
+              <span className="w-2 h-2 rounded-full bg-[#E0A100]" />
               <span>Solved by: 3-Citizen Quorum Protocol</span>
             </div>
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs hover:border-[#0E6B73] hover:shadow-lg transition-all duration-300 space-y-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center font-heading font-extrabold text-lg group-hover:scale-110 transition-transform">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs hover:border-[#0E6B73] hover:shadow-xl transition-all duration-300 space-y-3 group hover:-translate-y-1">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center font-heading font-extrabold text-lg group-hover:scale-110 transition-transform shadow-xs">
               <ShieldAlert className="w-6 h-6 text-rose-600" />
             </div>
             <h3 className="font-heading text-lg font-bold text-[#12263A]">
@@ -376,14 +396,14 @@ export function AboutShowcase() {
               When cloudy stormwater blankets streets, dislodged or missing manhole covers become submerged death traps. Pedestrians, children, and motorcyclists suffer critical injuries or drown in uncovered deep drainage conduits.
             </p>
             <div className="pt-1 flex items-center gap-2 text-[11px] font-bold text-rose-600">
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-600" />
+              <span className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" />
               <span>Solved by: Proximity Radar & Avoid Zones</span>
             </div>
           </div>
 
           {/* Card 4 */}
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs hover:border-[#0E6B73] hover:shadow-lg transition-all duration-300 space-y-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#0E6B73] flex items-center justify-center font-heading font-extrabold text-lg group-hover:scale-110 transition-transform">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs hover:border-[#0E6B73] hover:shadow-xl transition-all duration-300 space-y-3 group hover:-translate-y-1">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#0E6B73] flex items-center justify-center font-heading font-extrabold text-lg group-hover:scale-110 transition-transform shadow-xs">
               <Navigation className="w-6 h-6 text-[#0E6B73]" />
             </div>
             <h3 className="font-heading text-lg font-bold text-[#12263A]">
@@ -393,14 +413,14 @@ export function AboutShowcase() {
               Commercial navigation apps only calculate vehicle congestion, not flood depth. Vehicles unwittingly drive straight into waterlogged underpasses, hydro-locking engines and paralyzing vital emergency transit routes.
             </p>
             <div className="pt-1 flex items-center gap-2 text-[11px] font-bold text-[#0E6B73]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0E6B73]" />
+              <span className="w-2 h-2 rounded-full bg-[#0E6B73]" />
               <span>Solved by: AI Safe-Route Pathfinding</span>
             </div>
           </div>
 
           {/* Card 5 */}
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs hover:border-[#0E6B73] hover:shadow-lg transition-all duration-300 space-y-3 md:col-span-2 lg:col-span-2 group">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-[#2E7D4F] flex items-center justify-center font-heading font-extrabold text-lg group-hover:scale-110 transition-transform">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs hover:border-[#0E6B73] hover:shadow-xl transition-all duration-300 space-y-3 md:col-span-2 lg:col-span-2 group hover:-translate-y-1">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-[#2E7D4F] flex items-center justify-center font-heading font-extrabold text-lg group-hover:scale-110 transition-transform shadow-xs">
               <BarChart3 className="w-6 h-6 text-[#2E7D4F]" />
             </div>
             <h3 className="font-heading text-lg font-bold text-[#12263A]">
@@ -410,7 +430,7 @@ export function AboutShowcase() {
               Affluent cantonment zones often receive rapid vacuum trucks, while historic high-density Union Councils such as <strong>Yakatooth, Kohati Gate, Charsadda Road, and Gulbahar</strong> wait weeks for desiltation while raw wastewater enters courtyards.
             </p>
             <div className="pt-1 flex items-center gap-2 text-[11px] font-bold text-[#2E7D4F]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2E7D4F]" />
+              <span className="w-2 h-2 rounded-full bg-[#2E7D4F]" />
               <span>Solved by: Public River Staff Gauge Scoreboard</span>
             </div>
           </div>
@@ -419,7 +439,7 @@ export function AboutShowcase() {
         {/* Before vs After Comparison Card */}
         <div className="bg-[#12263A] text-white rounded-3xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-300">
-            <Zap className="w-4 h-4 text-emerald-400" />
+            <Zap className="w-4 h-4 text-emerald-400 animate-pulse" />
             <span>Civic Paradigm Shift</span>
           </div>
           <h3 className="font-heading text-xl sm:text-2xl font-bold">
@@ -473,12 +493,12 @@ export function AboutShowcase() {
       </section>
 
       {/* =========================================================================
-          SECTION 2: GEMINI 1.5 FLASH VISION AI PLAYGROUND
+          SECTION 2: GEMINI 1.5 FLASH VISION AI PLAYGROUND (ANIMATED LASER SCAN)
           ========================================================================= */}
       <section id="vision-ai" className="scroll-mt-28 space-y-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0E6B73]">
-            <Sparkles className="w-4 h-4 text-[#0E6B73]" />
+            <Sparkles className="w-4 h-4 text-[#0E6B73] animate-pulse" />
             <span>Multimodal Computer Vision Engine</span>
           </div>
           <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-[#12263A]">
@@ -533,27 +553,36 @@ export function AboutShowcase() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            {/* Visual Scan Frame */}
-            <div className="lg:col-span-5 relative rounded-2xl overflow-hidden bg-slate-950 p-6 text-white min-h-[260px] flex flex-col justify-between border border-white/10 shadow-lg">
-              {/* Animated Laser Scanning Beam */}
+            {/* Visual Scan Frame with Continuous Laser & Reticles */}
+            <div className="lg:col-span-5 relative rounded-2xl overflow-hidden bg-slate-950 p-6 text-white min-h-[280px] flex flex-col justify-between border-2 border-cyan-500/40 shadow-2xl">
+              {/* Continuous Laser Scanning Beam */}
               {isScanning && (
-                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_15px_#22d3ee] animate-bounce z-20" />
+                <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_20px_#22d3ee] animate-laser-scan z-20 pointer-events-none" />
               )}
 
-              <div className="flex items-center justify-between text-xs font-mono text-cyan-300">
+              {/* Target Corner Reticles */}
+              <div className="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-cyan-400" />
+              <div className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-cyan-400" />
+              <div className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-cyan-400" />
+              <div className="absolute bottom-3 right-3 w-5 h-5 border-b-2 border-r-2 border-cyan-400" />
+
+              <div className="flex items-center justify-between text-xs font-mono text-cyan-300 z-10">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span>FRAME_FEED: LIVE</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span>AI_OPTICAL_FEED: LIVE</span>
                 </span>
                 <span>GEO: 34.0151° N, 71.5249° E</span>
               </div>
 
-              <div className="py-6 text-center space-y-2">
-                <div className="w-16 h-16 rounded-2xl bg-white/10 mx-auto flex items-center justify-center border border-white/20">
-                  {visionScenario === "clog" && <Layers className="w-8 h-8 text-amber-400" />}
-                  {visionScenario === "manhole" && <ShieldAlert className="w-8 h-8 text-rose-500 animate-pulse" />}
-                  {visionScenario === "underpass" && <Waves className="w-8 h-8 text-cyan-400" />}
+              {/* Central Target Reticle */}
+              <div className="py-6 text-center space-y-2 relative z-10">
+                <div className="relative w-20 h-20 rounded-2xl bg-white/10 mx-auto flex items-center justify-center border border-white/20 shadow-inner">
+                  <div className="absolute inset-0 rounded-2xl border border-cyan-400/40 animate-ping opacity-30" />
+                  {visionScenario === "clog" && <Layers className="w-10 h-10 text-amber-400 animate-wave-bob" />}
+                  {visionScenario === "manhole" && <ShieldAlert className="w-10 h-10 text-rose-500 animate-pulse" />}
+                  {visionScenario === "underpass" && <Waves className="w-10 h-10 text-cyan-400 animate-pulse" />}
                 </div>
+
                 <div className="font-heading font-extrabold text-lg text-white">
                   {visionScenario === "clog" && "Saddar Bazar Drain Obstruction"}
                   {visionScenario === "manhole" && "Submerged Missing Manhole Cover"}
@@ -566,9 +595,12 @@ export function AboutShowcase() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] font-mono border-t border-white/10 pt-2 text-[#C9D4DA]">
+              <div className="flex items-center justify-between text-[11px] font-mono border-t border-white/10 pt-2 text-[#C9D4DA] z-10">
                 <span>Inference: gemini-1.5-flash</span>
-                <span className="text-emerald-400 font-bold">Confidence: 98.6%</span>
+                <span className="text-emerald-400 font-bold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Confidence: 98.6%</span>
+                </span>
               </div>
             </div>
 
@@ -622,9 +654,9 @@ export function AboutShowcase() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3 hover:border-red-400 hover:shadow-lg transition-all duration-300">
             <div className="w-10 h-10 rounded-xl bg-red-100 text-[#C8321F] flex items-center justify-center font-bold">
-              <ShieldAlert className="w-5 h-5 text-[#C8321F]" />
+              <ShieldAlert className="w-5 h-5 text-[#C8321F] animate-pulse" />
             </div>
             <h3 className="font-heading text-base font-bold text-[#12263A]">Pulsating Avoid-Road Perimeters</h3>
             <p className="text-xs sm:text-sm text-[#4B6073] leading-relaxed">
@@ -632,7 +664,7 @@ export function AboutShowcase() {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3 hover:border-[#0E6B73] hover:shadow-lg transition-all duration-300">
             <div className="w-10 h-10 rounded-xl bg-teal-100 text-[#0E6B73] flex items-center justify-center font-bold">
               <Users className="w-5 h-5 text-[#0E6B73]" />
             </div>
@@ -642,7 +674,7 @@ export function AboutShowcase() {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3 hover:border-emerald-500 hover:shadow-lg transition-all duration-300">
             <div className="w-10 h-10 rounded-xl bg-emerald-100 text-[#2E7D4F] flex items-center justify-center font-bold">
               <CheckCircle2 className="w-5 h-5 text-[#2E7D4F]" />
             </div>
@@ -665,7 +697,7 @@ export function AboutShowcase() {
       </section>
 
       {/* =========================================================================
-          SECTION 4: AI SAFE-ROUTE NAVIGATOR & RADAR
+          SECTION 4: AI SAFE-ROUTE NAVIGATOR & ROTATING RADAR
           ========================================================================= */}
       <section id="safe-route" className="scroll-mt-28 space-y-6">
         <div className="space-y-1">
@@ -696,7 +728,7 @@ export function AboutShowcase() {
               <div className="p-4 rounded-2xl bg-[#EAF0F2]/80 border border-[#C9D4DA] space-y-3">
                 <div className="flex items-center justify-between text-xs font-bold text-[#12263A]">
                   <span>Test Proximity Radar Distance:</span>
-                  <span className="font-mono text-[#0E6B73] bg-[#0E6B73]/10 px-2 py-0.5 rounded">
+                  <span className="font-mono text-[#0E6B73] bg-[#0E6B73]/10 px-2 py-0.5 rounded font-extrabold">
                     {radarDistance} meters from open hazard
                   </span>
                 </div>
@@ -735,38 +767,49 @@ export function AboutShowcase() {
               </div>
             </div>
 
-            {/* Radar Visual Display */}
-            <div className="lg:col-span-5 bg-[#12263A] text-white p-6 rounded-3xl border border-white/10 space-y-4 text-center">
-              <div className="relative w-36 h-36 mx-auto flex items-center justify-center">
+            {/* Radar Visual Display with Continuous Sweep Needle */}
+            <div className="lg:col-span-5 bg-[#12263A] text-white p-6 rounded-3xl border border-white/10 space-y-4 text-center relative overflow-hidden">
+              <div className="relative w-44 h-44 mx-auto flex items-center justify-center">
                 {/* Concentric Radar Rings */}
-                <div className="absolute inset-0 rounded-full border border-white/20" />
-                <div className="absolute inset-4 rounded-full border border-white/15" />
-                <div className="absolute inset-8 rounded-full border border-white/10" />
+                <div className="absolute inset-0 rounded-full border border-cyan-500/25" />
+                <div className="absolute inset-5 rounded-full border border-cyan-500/20" />
+                <div className="absolute inset-10 rounded-full border border-cyan-500/15" />
+                <div className="absolute inset-16 rounded-full border border-cyan-500/10" />
 
-                {/* Sweeping Radar Needle */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-emerald-500/20 to-transparent animate-spin" />
+                {/* Radar Grid Crosshairs */}
+                <div className="absolute inset-x-0 top-1/2 h-[1px] bg-cyan-500/20" />
+                <div className="absolute inset-y-0 left-1/2 w-[1px] bg-cyan-500/20" />
 
-                {/* Hazard Dot */}
+                {/* Continuously Sweeping Radar Beam */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-400/30 via-emerald-400/10 to-transparent animate-radar-spin origin-center pointer-events-none" />
+
+                {/* Animated Hazard Radar Blip */}
                 <div
-                  className={`absolute w-4 h-4 rounded-full transition-all duration-300 shadow-md ${
+                  className={`absolute w-5 h-5 rounded-full transition-all duration-300 flex items-center justify-center ${
                     radarDistance <= 30
-                      ? "bg-red-500 animate-ping"
+                      ? "bg-red-500 shadow-[0_0_15px_#ef4444]"
                       : radarDistance <= 60
-                      ? "bg-amber-400"
-                      : "bg-emerald-400"
+                      ? "bg-amber-400 shadow-[0_0_12px_#f59e0b]"
+                      : "bg-emerald-400 shadow-[0_0_10px_#10b981]"
                   }`}
                   style={{
-                    transform: `translate(${radarDistance > 50 ? 40 : 15}px, -${radarDistance > 50 ? 30 : 10}px)`,
+                    transform: `translate(${radarDistance > 50 ? 46 : 20}px, -${radarDistance > 50 ? 38 : 15}px)`,
                   }}
-                />
+                >
+                  <span className="w-full h-full rounded-full bg-white animate-ping opacity-75" />
+                </div>
 
-                <div className="w-8 h-8 rounded-full bg-white text-[#12263A] flex items-center justify-center font-bold text-xs shadow-md z-10">
-                  <Navigation className="w-4 h-4 text-[#0E6B73]" />
+                {/* Center User Pin */}
+                <div className="w-10 h-10 rounded-full bg-white text-[#12263A] flex items-center justify-center font-bold text-xs shadow-lg z-10 border-2 border-emerald-400">
+                  <Navigation className="w-5 h-5 text-[#0E6B73]" />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <h4 className="font-heading text-base font-bold">50m Manhole Proximity Radar</h4>
+                <h4 className="font-heading text-base font-bold flex items-center justify-center gap-1.5">
+                  <Radar className="w-4 h-4 text-emerald-400 animate-pulse" />
+                  <span>50m Manhole Proximity Radar</span>
+                </h4>
                 <p className="text-xs text-[#C9D4DA]">
                   Active scanning with hardware Web Audio chime alerts on mobile.
                 </p>
@@ -777,12 +820,12 @@ export function AboutShowcase() {
       </section>
 
       {/* =========================================================================
-          SECTION 5: AQUATWIN HYDROLOGICAL SIMULATOR PLAYGROUND
+          SECTION 5: AQUATWIN HYDROLOGICAL SIMULATOR (ANIMATED WATER TANK)
           ========================================================================= */}
       <section id="aquatwin" className="scroll-mt-28 space-y-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-emerald-600">
-            <Waves className="w-4 h-4 text-emerald-600" />
+            <Waves className="w-4 h-4 text-emerald-600 animate-pulse" />
             <span>Digital Twin Science</span>
           </div>
           <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-[#12263A]">
@@ -868,12 +911,12 @@ export function AboutShowcase() {
               </div>
             </div>
 
-            {/* Live Calculation Water Gauge Display */}
+            {/* Live Calculation with Visual Glass Hydrological Water Tank */}
             <div className="lg:col-span-5 bg-[#12263A] text-white p-6 rounded-3xl border border-white/10 space-y-4">
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <div className="font-mono text-xs text-emerald-300 font-bold">HYDROLOGICAL OUTPUT</div>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
-                  simulatedWaterDepth > 45 ? "bg-red-500/20 text-red-300" :
+                  simulatedWaterDepth > 45 ? "bg-red-500/20 text-red-300 animate-pulse" :
                   simulatedWaterDepth > 25 ? "bg-amber-500/20 text-amber-300" : "bg-emerald-500/20 text-emerald-300"
                 }`}>
                   {simulatedWaterDepth > 45 ? "Danger Level" : simulatedWaterDepth > 25 ? "Moderate Waterlogging" : "Safe Flow"}
@@ -896,23 +939,44 @@ export function AboutShowcase() {
                 </div>
               </div>
 
-              {/* Animated Water Column Bar */}
-              <div className="space-y-1 pt-1">
+              {/* Animated Visual Inundation Water Chamber Tank */}
+              <div className="space-y-1.5 pt-1">
                 <div className="flex justify-between text-[11px] text-[#C9D4DA]">
-                  <span>Water Inundation Gauge</span>
-                  <span>{simulatedWaterDepth} cm</span>
+                  <span>Basin Inundation Chamber</span>
+                  <span className="font-bold text-cyan-300">{simulatedWaterDepth} cm</span>
                 </div>
-                <div className="h-5 rounded-full bg-black/40 overflow-hidden p-0.5 border border-white/10">
+
+                <div className="relative h-20 rounded-2xl bg-black/50 border border-white/20 overflow-hidden">
+                  {/* Vertical measurement ticks */}
+                  <div className="absolute inset-y-0 right-2 flex flex-col justify-between text-[9px] font-mono text-[#C9D4DA]/60 pointer-events-none py-1 z-20">
+                    <span>80cm</span>
+                    <span>50cm</span>
+                    <span>20cm</span>
+                    <span>0cm</span>
+                  </div>
+
+                  {/* Water Body with Animated Wave Crest */}
                   <div
-                    className={`h-full rounded-full transition-all duration-500 ${
+                    className={`absolute bottom-0 inset-x-0 transition-all duration-500 overflow-hidden ${
                       simulatedWaterDepth > 45
-                        ? "bg-gradient-to-r from-red-600 to-rose-400 animate-pulse"
+                        ? "bg-gradient-to-t from-red-800 to-rose-600"
                         : simulatedWaterDepth > 25
-                        ? "bg-gradient-to-r from-amber-500 to-yellow-400"
-                        : "bg-gradient-to-r from-emerald-500 to-teal-400"
+                        ? "bg-gradient-to-t from-amber-700 to-yellow-600"
+                        : "bg-gradient-to-t from-teal-700 to-cyan-500"
                     }`}
-                    style={{ width: `${Math.min(100, (simulatedWaterDepth / 80) * 100)}%` }}
-                  />
+                    style={{ height: `${Math.min(95, Math.max(15, (simulatedWaterDepth / 80) * 100))}%` }}
+                  >
+                    {/* Undulating Wave Crest SVG */}
+                    <div className="absolute top-0 inset-x-0 h-4 overflow-hidden -mt-2">
+                      <svg className="w-[200%] h-full animate-wave-slide" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                        <path d="M0,40 C150,90 350,-20 500,40 C650,100 900,0 1200,40 L1200,120 L0,120 Z" fill="#ffffff" fillOpacity="0.3" />
+                      </svg>
+                    </div>
+
+                    {/* Rising Chamber Bubbles */}
+                    <div className="absolute left-6 bottom-0 w-2 h-2 rounded-full bg-white/40 animate-bubble-1" />
+                    <div className="absolute left-24 bottom-0 w-2.5 h-2.5 rounded-full bg-white/40 animate-bubble-3" />
+                  </div>
                 </div>
               </div>
 
@@ -948,7 +1012,7 @@ export function AboutShowcase() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3 hover:shadow-lg transition-all duration-300">
             <div className="w-10 h-10 rounded-xl bg-teal-100 text-[#0E6B73] flex items-center justify-center font-bold">
               <Activity className="w-5 h-5 text-[#0E6B73]" />
             </div>
@@ -958,7 +1022,7 @@ export function AboutShowcase() {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3 hover:shadow-lg transition-all duration-300">
             <div className="w-10 h-10 rounded-xl bg-red-100 text-[#C8321F] flex items-center justify-center font-bold">
               <AlertTriangle className="w-5 h-5 text-[#C8321F]" />
             </div>
@@ -968,7 +1032,7 @@ export function AboutShowcase() {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3">
+          <div className="bg-white p-6 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-3 hover:shadow-lg transition-all duration-300">
             <div className="w-10 h-10 rounded-xl bg-amber-100 text-[#E0A100] flex items-center justify-center font-bold">
               <Users className="w-5 h-5 text-[#E0A100]" />
             </div>
@@ -992,7 +1056,7 @@ export function AboutShowcase() {
       </section>
 
       {/* =========================================================================
-          SECTION 7: 3-CITIZEN QUORUM INTERACTIVE SIMULATOR
+          SECTION 7: 3-CITIZEN QUORUM INTERACTIVE CELEBRATION
           ========================================================================= */}
       <section id="quorum" className="scroll-mt-28 space-y-6">
         <div className="space-y-1">
@@ -1028,30 +1092,35 @@ export function AboutShowcase() {
             </button>
           </div>
 
-          {/* Ticket State Banner */}
-          <div className={`p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between ${
-            quorumStep === 0 ? "bg-red-50 border-red-200 text-red-900" :
-            quorumStep < 4 ? "bg-amber-50 border-amber-200 text-amber-900" :
-            "bg-emerald-50 border-emerald-300 text-emerald-950 shadow-md"
+          {/* Ticket State Banner with Animated Celebration */}
+          <div className={`p-5 rounded-2xl border-2 transition-all duration-500 relative overflow-hidden flex items-center justify-between ${
+            quorumStep === 0 ? "bg-red-50 border-red-300 text-red-900" :
+            quorumStep < 4 ? "bg-amber-50 border-amber-300 text-amber-900" :
+            "bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100 border-emerald-400 text-emerald-950 shadow-xl"
           }`}>
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white ${
-                quorumStep === 0 ? "bg-[#C8321F]" :
-                quorumStep < 4 ? "bg-[#E0A100]" : "bg-[#2E7D4F]"
+            {quorumStep === 4 && (
+              <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(52,211,153,0.2),transparent)] animate-shimmer pointer-events-none" />
+            )}
+
+            <div className="flex items-center gap-4 relative z-10">
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-md transition-transform duration-300 ${
+                quorumStep === 0 ? "bg-[#C8321F] animate-pulse" :
+                quorumStep < 4 ? "bg-[#E0A100]" :
+                "bg-[#2E7D4F] scale-110 ring-4 ring-emerald-300"
               }`}>
-                {quorumStep === 0 ? <AlertTriangle className="w-5 h-5" /> :
-                 quorumStep < 4 ? <Clock className="w-5 h-5" /> :
-                 <Check className="w-5 h-5" />}
+                {quorumStep === 0 ? <AlertTriangle className="w-6 h-6" /> :
+                 quorumStep < 4 ? <Clock className="w-6 h-6" /> :
+                 <Check className="w-6 h-6 animate-bounce" />}
               </div>
               <div>
-                <div className="text-xs font-extrabold uppercase">
-                  {quorumStep === 0 && "Status: Active Citizen Hazard (Red)"}
+                <div className="text-xs font-extrabold uppercase tracking-wide">
+                  {quorumStep === 0 && "Status: Active Citizen Hazard (Red Alert)"}
                   {quorumStep === 1 && "Status: Marked Fixed by WSSP (Amber Holding State)"}
                   {quorumStep === 2 && "Status: Quorum 1/3 Votes (Awaiting 2 More Neighbors)"}
                   {quorumStep === 3 && "Status: Quorum 2/3 Votes (Awaiting Final Verification)"}
-                  {quorumStep === 4 && "Status: VERIFIED GREEN BY DEMOCRATIC QUORUM (Clean)"}
+                  {quorumStep === 4 && "Status: VERIFIED GREEN BY 3-CITIZEN QUORUM (Clean)"}
                 </div>
-                <div className="text-xs text-opacity-90">
+                <div className="text-xs text-opacity-90 mt-0.5">
                   {quorumStep === 0 && "Citizen reported knee-deep water. WSSP has not dispatched."}
                   {quorumStep === 1 && "WSSP sanitation team claims desiltation complete. Quorum opened."}
                   {quorumStep === 2 && "Citizen Dawood verified on-ground. 2 more votes required."}
@@ -1061,9 +1130,9 @@ export function AboutShowcase() {
               </div>
             </div>
 
-            <div className="text-right">
-              <span className={`text-xs font-extrabold px-3 py-1 rounded-full ${
-                quorumStep === 4 ? "bg-emerald-600 text-white" : "bg-black/10 text-[#12263A]"
+            <div className="text-right relative z-10">
+              <span className={`text-xs font-extrabold px-3 py-1.5 rounded-full shadow-sm ${
+                quorumStep === 4 ? "bg-emerald-600 text-white animate-pulse" : "bg-black/10 text-[#12263A]"
               }`}>
                 {quorumStep <= 1 ? "0/3 Votes" : `${quorumStep - 1}/3 Votes`}
               </span>
@@ -1076,7 +1145,7 @@ export function AboutShowcase() {
               type="button"
               disabled={quorumStep !== 0}
               onClick={() => setQuorumStep(1)}
-              className="p-3.5 rounded-2xl border border-[#C9D4DA] hover:border-amber-500 bg-white text-left transition disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+              className="p-3.5 rounded-2xl border border-[#C9D4DA] hover:border-amber-500 bg-white text-left transition disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed hover:shadow-md"
             >
               <div className="text-[10px] font-bold uppercase text-amber-700">Step 1</div>
               <div className="text-xs font-bold text-[#12263A]">WSSP Crew Clears</div>
@@ -1087,7 +1156,7 @@ export function AboutShowcase() {
               type="button"
               disabled={quorumStep !== 1}
               onClick={() => setQuorumStep(2)}
-              className="p-3.5 rounded-2xl border border-[#C9D4DA] hover:border-[#0E6B73] bg-white text-left transition disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+              className="p-3.5 rounded-2xl border border-[#C9D4DA] hover:border-[#0E6B73] bg-white text-left transition disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed hover:shadow-md"
             >
               <div className="text-[10px] font-bold uppercase text-[#0E6B73]">Step 2</div>
               <div className="text-xs font-bold text-[#12263A]">Citizen 1: Dawood</div>
@@ -1098,7 +1167,7 @@ export function AboutShowcase() {
               type="button"
               disabled={quorumStep !== 2}
               onClick={() => setQuorumStep(3)}
-              className="p-3.5 rounded-2xl border border-[#C9D4DA] hover:border-[#0E6B73] bg-white text-left transition disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+              className="p-3.5 rounded-2xl border border-[#C9D4DA] hover:border-[#0E6B73] bg-white text-left transition disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed hover:shadow-md"
             >
               <div className="text-[10px] font-bold uppercase text-[#0E6B73]">Step 3</div>
               <div className="text-xs font-bold text-[#12263A]">Citizen 2: Asma</div>
@@ -1109,7 +1178,7 @@ export function AboutShowcase() {
               type="button"
               disabled={quorumStep !== 3}
               onClick={() => setQuorumStep(4)}
-              className="p-3.5 rounded-2xl border border-[#C9D4DA] hover:border-emerald-600 bg-white text-left transition disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+              className="p-3.5 rounded-2xl border border-[#C9D4DA] hover:border-emerald-600 bg-white text-left transition disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed hover:shadow-md"
             >
               <div className="text-[10px] font-bold uppercase text-emerald-700">Step 4 (Final)</div>
               <div className="text-xs font-bold text-[#12263A]">Citizen 3: Bilal</div>
@@ -1120,12 +1189,12 @@ export function AboutShowcase() {
       </section>
 
       {/* =========================================================================
-          SECTION 8: EMERGENCY BROADCASTS & AUDIO SIREN
+          SECTION 8: EMERGENCY BROADCASTS & AUDIO SIREN (ANIMATED SOUNDWAVES)
           ========================================================================= */}
       <section id="emergency" className="scroll-mt-28 space-y-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#C8321F]">
-            <Volume2 className="w-4 h-4 text-[#C8321F]" />
+            <Volume2 className="w-4 h-4 text-[#C8321F] animate-pulse" />
             <span>Crisis Audio & Rescue Dispatch</span>
           </div>
           <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-[#12263A]">
@@ -1139,19 +1208,36 @@ export function AboutShowcase() {
         {/* Live Audio Console */}
         <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#C9D4DA] shadow-xs space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            {/* Siren Card */}
-            <div className="p-6 rounded-2xl bg-red-50 border border-red-200 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-red-600 text-white flex items-center justify-center font-bold shadow-md">
-                  <Volume2 className="w-6 h-6" />
+            {/* Siren Card with Animated Equalizer Waves */}
+            <div className={`p-6 rounded-2xl border transition-all duration-300 space-y-4 ${
+              isSirenActive ? "bg-red-50 border-red-400 ring-2 ring-red-400 shadow-xl" : "bg-red-50/70 border-red-200"
+            }`}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-12 h-12 rounded-2xl bg-red-600 text-white flex items-center justify-center font-bold shadow-md ${
+                    isSirenActive ? "animate-pulse" : ""
+                  }`}>
+                    <Volume2 className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="font-heading text-base font-bold text-red-950">
+                      Dual-Tone Acoustic Web Siren
+                    </h3>
+                    <span className="text-xs text-red-700">800Hz / 1200Hz Frequency Modulation</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-heading text-base font-bold text-red-950">
-                    Dual-Tone Acoustic Web Siren
-                  </h3>
-                  <span className="text-xs text-red-700">800Hz / 1200Hz Frequency Modulation</span>
-                </div>
+
+                {/* Animated Soundwave Equalizer Bars */}
+                {isSirenActive && (
+                  <div className="flex items-end gap-1 h-8">
+                    <span className="w-1.5 bg-red-600 rounded-full animate-bounce h-7" />
+                    <span className="w-1.5 bg-red-500 rounded-full animate-ping h-5" />
+                    <span className="w-1.5 bg-red-600 rounded-full animate-bounce h-8" />
+                    <span className="w-1.5 bg-red-500 rounded-full animate-pulse h-6" />
+                  </div>
+                )}
               </div>
+
               <p className="text-xs text-red-900/80 leading-relaxed">
                 Synthesized directly using browser Web Audio API oscillators. Requires zero network MP3 downloads, functioning even with 0 kbps connection.
               </p>
@@ -1170,9 +1256,13 @@ export function AboutShowcase() {
             </div>
 
             {/* Mosque Loudspeaker TTS */}
-            <div className="p-6 rounded-2xl bg-teal-50 border border-teal-200 space-y-4">
+            <div className={`p-6 rounded-2xl border transition-all duration-300 space-y-4 ${
+              isSpeakingUrdu ? "bg-teal-100/70 border-[#0E6B73] ring-2 ring-[#0E6B73]" : "bg-teal-50 border-teal-200"
+            }`}>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-[#0E6B73] text-white flex items-center justify-center font-bold shadow-md">
+                <div className={`w-12 h-12 rounded-2xl bg-[#0E6B73] text-white flex items-center justify-center font-bold shadow-md ${
+                  isSpeakingUrdu ? "animate-pulse" : ""
+                }`}>
                   <Radio className="w-6 h-6" />
                 </div>
                 <div>
@@ -1244,7 +1334,7 @@ export function AboutShowcase() {
             { title: "Leaflet OpenStreetMap", tech: "GIS Cartography", color: "bg-amber-950 text-amber-200" },
             { title: "IndexedDB PWA", tech: "Offline Store", color: "bg-purple-950 text-purple-200" },
           ].map((item) => (
-            <div key={item.title} className={`${item.color} p-4 rounded-2xl border border-white/10 space-y-1 text-center shadow-sm`}>
+            <div key={item.title} className={`${item.color} p-4 rounded-2xl border border-white/10 space-y-1 text-center shadow-sm hover:scale-105 transition-transform duration-200`}>
               <div className="text-xs font-extrabold font-heading">{item.title}</div>
               <div className="text-[10px] opacity-80 uppercase tracking-wider">{item.tech}</div>
             </div>
@@ -1265,8 +1355,8 @@ export function AboutShowcase() {
       {/* =========================================================================
           CALL TO ACTION FOOTER BANNER
           ========================================================================= */}
-      <section className="bg-gradient-to-r from-[#12263A] via-[#163b5e] to-[#0E6B73] p-8 sm:p-12 rounded-3xl text-white text-center space-y-6 shadow-2xl border border-white/15 relative overflow-hidden">
-        <div className="absolute top-0 right-1/4 w-72 h-72 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
+      <section className="bg-gradient-to-r from-[#12263A] via-[#163b5e] to-[#0E6B73] p-8 sm:p-12 rounded-3xl text-white text-center space-y-6 shadow-2xl border-2 border-white/20 relative overflow-hidden animate-glow-border">
+        <div className="absolute top-0 right-1/4 w-72 h-72 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none animate-pulse-subtle" />
 
         <div className="max-w-2xl mx-auto space-y-3 relative z-10">
           <h3 className="font-heading text-2xl sm:text-4xl font-extrabold tracking-tight">

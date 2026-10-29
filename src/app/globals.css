@@ -282,13 +282,83 @@ textarea:focus-visible {
   animation: shimmer-sweep 3s infinite;
 }
 
+@keyframes laser-scan {
+  0% { top: 2%; opacity: 0.7; }
+  50% { top: 92%; opacity: 1; }
+  100% { top: 2%; opacity: 0.7; }
+}
+
+@keyframes wave-slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes radar-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bubble-up {
+  0% { transform: translateY(120%) scale(0.6); opacity: 0; }
+  25% { opacity: 0.5; }
+  75% { opacity: 0.3; }
+  100% { transform: translateY(-140%) scale(1.1); opacity: 0; }
+}
+
+@keyframes glow-border {
+  0%, 100% { border-color: rgba(14, 107, 115, 0.4); box-shadow: 0 0 20px rgba(14, 107, 115, 0.2); }
+  50% { border-color: rgba(52, 211, 153, 0.7); box-shadow: 0 0 35px rgba(52, 211, 153, 0.35); }
+}
+
+@keyframes wave-bob {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-4px) rotate(-1deg); }
+  75% { transform: translateY(4px) rotate(1deg); }
+}
+
+.animate-laser-scan {
+  animation: laser-scan 2.2s ease-in-out infinite;
+}
+
+.animate-wave-slide {
+  animation: wave-slide 12s linear infinite;
+}
+
+.animate-radar-spin {
+  animation: radar-spin 3s linear infinite;
+}
+
+.animate-bubble-1 { animation: bubble-up 7s ease-in infinite; }
+.animate-bubble-2 { animation: bubble-up 9s ease-in infinite 2.5s; }
+.animate-bubble-3 { animation: bubble-up 6s ease-in infinite 4s; }
+.animate-bubble-4 { animation: bubble-up 8s ease-in infinite 1.2s; }
+.animate-bubble-5 { animation: bubble-up 10s ease-in infinite 3s; }
+
+.animate-glow-border {
+  animation: glow-border 3.5s ease-in-out infinite;
+}
+
+.animate-wave-bob {
+  animation: wave-bob 3s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-pin-drop,
   .animate-ripple,
   .animate-pulse-danger,
   .animate-float-slow,
   .animate-pulse-subtle,
-  .animate-shimmer {
+  .animate-shimmer,
+  .animate-laser-scan,
+  .animate-wave-slide,
+  .animate-radar-spin,
+  .animate-bubble-1,
+  .animate-bubble-2,
+  .animate-bubble-3,
+  .animate-bubble-4,
+  .animate-bubble-5,
+  .animate-glow-border,
+  .animate-wave-bob {
     animation: none;
     opacity: 1;
   }
