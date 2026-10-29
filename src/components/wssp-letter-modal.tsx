@@ -104,7 +104,7 @@ Track Live: https://gdg-buildathon-hackhathon.vercel.app/`;
                   Khyber Pakhtunkhwa Municipal Citizen Audit
                 </span>
                 <h1 className="font-heading text-xl sm:text-2xl font-black text-[#12263A]">
-                  NAALI WATCH PESHAWAR
+                  AQUASENTINEL PESHAWAR
                 </h1>
                 <span className="text-xs text-[#0E6B73] font-bold">
                   Community Drainage Oversight & WSSP Desiltation Tracking
@@ -216,7 +216,7 @@ Track Live: https://gdg-buildathon-hackhathon.vercel.app/`;
             <div>
               <p className="font-bold text-[#12263A]">Submitted By:</p>
               <p className="text-[#4B6073]">Citizen Watch Delegation of {report.areaName || "Peshawar"}</p>
-              <p className="text-[10px] text-[#4B6073]">NaaliWatch Civic Community Network</p>
+              <p className="text-[10px] text-[#4B6073]">AquaSentinel Civic Intelligence Network</p>
             </div>
             <div className="text-right">
               <div className="w-32 h-0.5 bg-[#12263A] mb-1 ml-auto" />

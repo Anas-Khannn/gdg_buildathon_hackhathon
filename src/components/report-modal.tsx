@@ -602,7 +602,7 @@ export function ReportModal({
                       className="w-full text-xs p-2 rounded-lg border border-amber-300 bg-white font-mono"
                     />
                     <div className="text-[10px] text-[#4B6073]">
-                      Key is saved safely in your local browser storage. If left blank, Naali Watch uses automatic heuristic classification and free OpenStreetMap reverse geocoding.
+                      Key is saved safely in your local browser storage. If left blank, AquaSentinel uses automatic heuristic classification and free OpenStreetMap reverse geocoding.
                     </div>
                   </div>
                 )}

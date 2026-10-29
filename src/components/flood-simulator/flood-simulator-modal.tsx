@@ -172,7 +172,7 @@ export function FloodSimulatorModal({
   const handleShareWhatsApp = () => {
     if (!data) return;
     const advisory = data.aiAdvisory;
-    const text = `🚨 *NAALIWATCH PESHAWAR MONSOON FLOOD ALERT* 🚨\n\n🌧️ *Rainfall Intensity:* ${data.rainMmPerHour} mm/hr (${data.scenarioName})\n🌊 *Projected Storm Runoff:* ${data.totalRunoffMillionLiters} Million Liters\n⚠️ *Critical Inundated Basins:* ${data.criticalBasinsCount}\n\n📢 *CITIZEN TRAVEL ADVISORY:*\n${advisory.citizenAdvisoryEn}\n\n🇵🇰 *اردو الرٹ:*\n${advisory.citizenAdvisoryUr}\n\n🕌 *مسجد اعلان:*\n${advisory.mosqueBroadcastScriptUr}\n\n📞 *Emergency Helplines:* WSSP: 1334 | PDMA: 1700 | Rescue: 1122\n🌐 *Live Map:* https://naaliwatch-peshawar.gov.pk`;
+    const text = `🚨 *AQUASENTINEL PESHAWAR MONSOON FLOOD ALERT* 🚨\n\n🌧️ *Rainfall Intensity:* ${data.rainMmPerHour} mm/hr (${data.scenarioName})\n🌊 *Projected Storm Runoff:* ${data.totalRunoffMillionLiters} Million Liters\n⚠️ *Critical Inundated Basins:* ${data.criticalBasinsCount}\n\n📢 *CITIZEN TRAVEL ADVISORY:*\n${advisory.citizenAdvisoryEn}\n\n🇵🇰 *اردو الرٹ:*\n${advisory.citizenAdvisoryUr}\n\n🕌 *مسجد اعلان:*\n${advisory.mosqueBroadcastScriptUr}\n\n📞 *Emergency Helplines:* WSSP: 1334 | PDMA: 1700 | Rescue: 1122\n🌐 *Live Map:* https://gdg-buildathon-hackhathon.vercel.app`;
     const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
     window.open(url, "_blank");
   };
@@ -198,10 +198,10 @@ export function FloodSimulatorModal({
               <div className="flex items-center gap-2">
                 <h3 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-white leading-none">
                   {language === "ur"
-                    ? "نالی ٹوئن: اے آئی سیلاب پیش گوئی سمیلیٹر"
+                    ? "ایکوا ٹوئن: اے آئی سیلاب پیش گوئی سمیلیٹر"
                     : language === "ps"
-                    ? "نالي ټوین: د سېلاب د وړاندوینې AI سمیلیټر"
-                    : "NaaliTwin: AI Monsoon Inundation Simulator"}
+                    ? "ایکوا ټوین: د سېلاب د وړاندوینې AI سمیلیټر"
+                    : "AquaTwin: AI Monsoon Inundation Simulator"}
                 </h3>
                 <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
                   Hydro-Grid

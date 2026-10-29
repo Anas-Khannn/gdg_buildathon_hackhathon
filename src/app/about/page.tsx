@@ -24,9 +24,9 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "What We Solve & Project Mission | Naali Watch Peshawar",
+  title: "What We Solve & Project Mission | AquaSentinel Peshawar",
   description:
-    "Learn why Naali Watch was created for Peshawar, the civic waterlogging crisis it solves, and how AI-powered citizen reporting brings transparency to WSSP desiltation.",
+    "Learn why AquaSentinel was created for Peshawar, the civic waterlogging crisis it solves, and how AI-powered citizen reporting brings transparency to WSSP desiltation.",
 };
 
 export default function AboutPage() {
@@ -56,7 +56,7 @@ export default function AboutPage() {
               </h1>
 
               <p className="text-sm sm:text-base text-[#EAF0F2]/90 leading-relaxed font-normal">
-                <strong>Naali Watch</strong> is an open civic technology initiative designed specifically for the streets, underpasses, and mohallahs of Peshawar. We bridge the gap between frustrated citizens navigating flooded roads and municipal sanitation teams (WSSP) through AI-verified photo complaints, live hazard routing, and democratic fix verification.
+                <strong>AquaSentinel</strong> is an open civic technology initiative designed specifically for the streets, underpasses, and mohallahs of Peshawar. We bridge the gap between frustrated citizens navigating flooded roads and municipal sanitation teams (WSSP) through AI-verified photo complaints, live hazard routing, and democratic fix verification.
               </p>
 
               <div className="pt-2 flex flex-wrap items-center gap-4 text-xs font-semibold text-[#C9D4DA]">
@@ -94,10 +94,10 @@ export default function AboutPage() {
               <span>The Civic Drainage Challenge</span>
             </div>
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[#12263A]">
-              What Problems Does Naali Watch Solve?
+              What Problems Does AquaSentinel Solve?
             </h2>
             <p className="text-sm sm:text-base text-[#4B6073] max-w-2xl">
-              Every monsoon season, Peshawar faces severe municipal breakdown. Naali Watch tackles the five critical structural bottlenecks in the city&apos;s sanitation pipeline:
+              Every monsoon season, Peshawar faces severe municipal breakdown. AquaSentinel tackles the five critical structural bottlenecks in the city&apos;s sanitation pipeline:
             </p>
           </div>
 
@@ -177,7 +177,7 @@ export default function AboutPage() {
               <span>Project Vision & Capabilities</span>
             </div>
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[#12263A]">
-              What Naali Watch Aims To Do
+              What AquaSentinel Aims To Do
             </h2>
             <p className="text-sm sm:text-base text-[#4B6073] max-w-2xl">
               We replace closed bureaucratic black boxes with an open, intelligent, community-powered civic operating system:
@@ -235,7 +235,7 @@ export default function AboutPage() {
                 </div>
               </div>
               <p className="text-xs sm:text-sm text-[#4B6073] leading-relaxed">
-                Instead of bombarding WSSP with 50 duplicate reports for the same clogged drain, Naali Watch automatically groups nearby complaints within 30 meters into one single civic ticket, allowing neighbors to tap &ldquo;I See This Too&rdquo; to elevate priority.
+                Instead of bombarding WSSP with 50 duplicate reports for the same clogged drain, AquaSentinel automatically groups nearby complaints within 30 meters into one single civic ticket, allowing neighbors to tap &ldquo;I See This Too&rdquo; to elevate priority.
               </p>
             </div>
 
@@ -302,7 +302,7 @@ export default function AboutPage() {
               Simple 5-Step Lifecycle
             </span>
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[#12263A]">
-              How Naali Watch Works
+              How AquaSentinel Works
             </h2>
             <p className="text-xs sm:text-sm text-[#4B6073]">
               From the moment water begins accumulating on the road until the drain is verified clean.
@@ -317,7 +317,7 @@ export default function AboutPage() {
               </div>
               <h4 className="font-heading text-sm font-bold text-[#12263A]">Snap Photo</h4>
               <p className="text-xs text-[#4B6073] leading-relaxed">
-                Citizen spots water hazard or blocked naali and takes a photo. GPS auto-tags Peshawar coordinates.
+                Citizen spots water hazard or blocked drain and takes a photo. GPS auto-tags Peshawar coordinates.
               </p>
             </div>
 

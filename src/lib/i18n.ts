@@ -80,8 +80,8 @@ export interface Translations {
 
 export const translations: Record<Language, Translations> = {
   en: {
-    appName: "Naali Watch",
-    tagline: "See it. Snap it. Make them fix it.",
+    appName: "AquaSentinel",
+    tagline: "AI Urban Hazard & Flood Intelligence Sentinel",
     reportProblem: "Report a problem",
     photoStepTitle: "Take a photo of the problem",
     photoStepSubtitle: "Capture the drain, flooded street, or open manhole clearly.",
@@ -157,8 +157,8 @@ export const translations: Record<Language, Translations> = {
     floodSimTagline: "Predict urban storm runoff & simulate drain desilting across Peshawar",
   },
   ur: {
-    appName: "نالی واچ",
-    tagline: "دیکھیں۔ تصویر لیں۔ ٹھیک کروائیں۔",
+    appName: "ایکوا سینٹینل",
+    tagline: "پشاور کا خودکار اے آئی اربن ہیزرڈ و سیلاب انٹیلی جنس نظام",
     reportProblem: "مسئلہ رپورٹ کریں",
     photoStepTitle: "مسئلے کی تصویر لیں",
     photoStepSubtitle: "بند نالی، کھڑا پانی یا کھلا مین ہول واضح طور پر دکھائیں۔",
@@ -234,8 +234,8 @@ export const translations: Record<Language, Translations> = {
     floodSimTagline: "پشاور کے 8 طاسوں میں طوفانی بارش اور نالوں کی صفائی کا سائنسی تجزیہ",
   },
   ps: {
-    appName: "نالۍ واچ",
-    tagline: "وګورئ. انځور واخلئ. حل یې کړئ.",
+    appName: "ایکوا سینټینل",
+    tagline: "د پیښور د ښاري خطرونو او سېلابونو هوښیار نظام",
     reportProblem: "ستونزه ثبت کړئ",
     photoStepTitle: "د ستونزې انځور واخلئ",
     photoStepSubtitle: "بنده نالۍ، ولاړې اوبه یا خلاص مین هول په روښانه توګه وښایئ.",

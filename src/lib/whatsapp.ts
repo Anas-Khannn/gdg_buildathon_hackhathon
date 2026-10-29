@@ -36,9 +36,9 @@ export function generateWSSPDispatchUrl(report: ReportItem): string {
     timeStyle: "short",
   });
 
-  const text = `🚨 *NAALIWATCH PESHAWAR - MUNICIPAL DISPATCH TICKET* 🚨
+  const text = `🚨 *AQUASENTINEL PESHAWAR - MUNICIPAL DISPATCH TICKET* 🚨
 ━━━━━━━━━━━━━━━━━━━━━━
-📋 *Ticket ID:* NW-${shortId}
+📋 *Ticket ID:* AS-${shortId}
 📍 *Zone / Area:* ${report.areaName || "Peshawar"} (${report.lat.toFixed(5)}, ${report.lng.toFixed(5)})
 🗺️ *Google Maps Pin:* ${mapsUrl}
 ⚠️ *Hazard Type:* ${getProblemTypeLabel(report.type)}
@@ -48,7 +48,7 @@ export function generateWSSPDispatchUrl(report: ReportItem): string {
 ⏰ *Timestamp:* ${dateStr}
 ━━━━━━━━━━━━━━━━━━━━━━
 👉 *Live Ticket & Photo:* ${liveUrl}
-_Dispatched via NaaliWatch Civic Platform for immediate WSSP field cleanup._`;
+_Dispatched via AquaSentinel Civic Platform for immediate WSSP field cleanup._`;
 
   return `https://wa.me/${WSSP_PESHAWAR_WHATSAPP}?text=${encodeURIComponent(text)}`;
 }
@@ -61,7 +61,7 @@ export function generateCitizenWarningShareUrl(report: ReportItem, lang: Languag
   const liveUrl = typeof window !== "undefined" ? window.location.origin : "https://gdg-buildathon-hackhathon.vercel.app";
 
   const text = `⚠️ *PESHAWAR DRAINAGE HAZARD WARNING* ⚠️
-*نالی واچ پشاور - شہری احتیاطی اطلاع*
+*ایکوا سینٹینل پشاور - شہری احتیاطی اطلاع*
 ━━━━━━━━━━━━━━━━━━━━━━
 📍 *Location:* ${report.areaName || "Peshawar Area"}
 🌊 *Water Level:* ${getSeverityLabel(report.severity, lang)}
@@ -71,7 +71,7 @@ export function generateCitizenWarningShareUrl(report: ReportItem, lang: Languag
 🚗 *احتیاط:* اس سڑک پر گہرا پانی جمع ہے۔ متبادل راستہ اختیار کریں!
 👀 *Check Live Map:* ${liveUrl}
 ━━━━━━━━━━━━━━━━━━━━━━
-_Sent via NaaliWatch Peshawar Community Defense_`;
+_Sent via AquaSentinel Peshawar Community Defense_`;
 
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 }

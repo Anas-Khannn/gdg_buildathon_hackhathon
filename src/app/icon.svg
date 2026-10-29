@@ -1,83 +1,139 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
   <defs>
-    <!-- Background Gradient -->
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0B1A28" />
-      <stop offset="50%" stop-color="#12263A" />
-      <stop offset="100%" stop-color="#081420" />
+    <!-- Background Slate-Navy Shield Gradient -->
+    <linearGradient id="shieldBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F2033" />
+      <stop offset="50%" stop-color="#0A1826" />
+      <stop offset="100%" stop-color="#040C14" />
     </linearGradient>
 
-    <!-- Droplet Primary Vibrant Gradient -->
-    <linearGradient id="dropGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+    <!-- Outer Rim Accent Gradient -->
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#38BDF8" />
-      <stop offset="45%" stop-color="#0EA5E9" />
-      <stop offset="80%" stop-color="#0E6B73" />
+      <stop offset="40%" stop-color="#0EA5E9" />
+      <stop offset="80%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- Primary Hydro Wave Gradient (Cyber Teal & Emerald) -->
+    <linearGradient id="wavePrimary" x1="15%" y1="0%" x2="85%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="30%" stop-color="#06B6D4" />
+      <stop offset="70%" stop-color="#0E6B73" />
+      <stop offset="100%" stop-color="#044D54" />
+    </linearGradient>
+
+    <!-- Secondary Fluid Surge Gradient -->
+    <linearGradient id="waveSecondary" x1="85%" y1="0%" x2="15%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="45%" stop-color="#10B981" />
+      <stop offset="85%" stop-color="#059669" />
       <stop offset="100%" stop-color="#064E3B" />
     </linearGradient>
 
-    <!-- Inner Alert Core Glow -->
-    <linearGradient id="alertGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Dynamic AI Radar Pulse Spark -->
+    <linearGradient id="pulseGlow" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FDE047" />
-      <stop offset="60%" stop-color="#F59E0B" />
+      <stop offset="50%" stop-color="#F59E0B" />
       <stop offset="100%" stop-color="#EF4444" />
     </linearGradient>
 
-    <!-- Specular Highlight Gloss -->
-    <linearGradient id="glossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
+    <!-- Gloss Specular Highlight -->
+    <linearGradient id="specularGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85" />
+      <stop offset="60%" stop-color="#FFFFFF" stop-opacity="0.1" />
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.0" />
     </linearGradient>
 
-    <!-- Droplet Shadow Filter -->
-    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#00F2FE" flood-opacity="0.3" />
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.5" />
+    <!-- Shield Drop Shadow -->
+    <filter id="shieldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#06B6D4" flood-opacity="0.25" />
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+
+    <!-- Wave Core Shadow -->
+    <filter id="coreShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#040C14" flood-opacity="0.5" />
     </filter>
   </defs>
 
-  <!-- Squircle Base with Glow Border -->
-  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#bgGrad)" stroke="#14B8A6" stroke-width="1.5" stroke-opacity="0.6" />
-
-  <!-- Outer Ambient Water Ripple Ring -->
-  <circle cx="32" cy="38" r="18" fill="none" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.2" stroke-dasharray="3 2" />
-
-  <!-- Iconic Water Droplet Silhouette -->
-  <path
-    d="M 32 10 
-       C 32 10, 47 28, 47 38 
-       A 15 15 0 0 1 17 38 
-       C 17 28, 32 10, 32 10 Z"
-    fill="url(#dropGrad)"
-    filter="url(#dropShadow)"
+  <!-- 1. Geometric Outer Squircle Shield Plate -->
+  <rect
+    x="6"
+    y="6"
+    width="116"
+    height="116"
+    rx="32"
+    fill="url(#shieldBg)"
+    stroke="url(#rimGrad)"
+    stroke-width="3"
+    filter="url(#shieldGlow)"
   />
 
-  <!-- Top-Left Gloss Highlight Curve -->
+  <!-- 2. Subtle Concentric Sonar / Radar Rings in Background -->
+  <circle cx="64" cy="64" r="44" fill="none" stroke="#38BDF8" stroke-width="1.2" stroke-opacity="0.18" stroke-dasharray="4 4" />
+  <circle cx="64" cy="64" r="32" fill="none" stroke="#10B981" stroke-width="1" stroke-opacity="0.2" />
+
+  <!-- 3. Primary Droplet & Fluid Surge Crest (The Wing of Safety) -->
   <path
-    d="M 32 13 
-       C 30 18, 21 28, 20 37 
-       C 19.5 33, 22 25, 32 13 Z"
-    fill="url(#glossGrad)"
+    d="M 64 20
+       C 64 20, 94 48, 94 74
+       C 94 92, 80 106, 64 106
+       C 48 106, 34 92, 34 74
+       C 34 48, 64 20, 64 20 Z"
+    fill="url(#wavePrimary)"
+    filter="url(#coreShadow)"
   />
 
-  <!-- Inner Sentinel Eye / Radar Wave Arc (The "Watch" element) -->
+  <!-- 4. Interlocking Reverse Dynamic Wave (Civic Shield / Protection Wing) -->
   <path
-    d="M 23 38 Q 32 30 41 38"
+    d="M 64 34
+       C 76 50, 88 64, 88 76
+       C 88 89, 78 98, 64 98
+       C 52 98, 48 88, 52 78
+       C 55 70, 60 62, 64 34 Z"
+    fill="url(#waveSecondary)"
+    opacity="0.95"
+  />
+
+  <!-- 5. Internal Flow Channel (Modern Abstracted Water Current) -->
+  <path
+    d="M 64 42
+       C 58 56, 54 68, 56 76
+       C 58 84, 68 86, 72 80
+       C 76 74, 74 64, 64 42 Z"
+    fill="#FFFFFF"
+    opacity="0.18"
+  />
+
+  <!-- 6. Specular Curved Gloss Highlight (Glass Finish) -->
+  <path
+    d="M 64 24
+       C 61 34, 44 54, 42 72
+       C 40 64, 45 48, 64 24 Z"
+    fill="url(#specularGloss)"
+  />
+
+  <!-- 7. Gemini AI Pulse Sentinel Beacon (Active Hazard Radar & Intelligence) -->
+  <circle cx="64" cy="74" r="8" fill="#0A1826" stroke="#FFFFFF" stroke-width="2" />
+  <circle cx="64" cy="74" r="5.5" fill="url(#pulseGlow)" />
+  <circle cx="65.5" cy="72.5" r="1.8" fill="#FFFFFF" />
+
+  <!-- 8. Upward Radiating Sentinel Wave Rings (The "Watch" Eye) -->
+  <path
+    d="M 52 64 C 59 58, 69 58, 76 64"
     fill="none"
     stroke="#FFFFFF"
     stroke-width="2.5"
     stroke-linecap="round"
-    stroke-opacity="0.95"
+    stroke-opacity="0.9"
   />
   <path
-    d="M 25.5 42 Q 32 37 38.5 42"
+    d="M 46 56 C 56 48, 72 48, 82 56"
     fill="none"
-    stroke="#E0F2FE"
-    stroke-width="1.8"
+    stroke="#38BDF8"
+    stroke-width="2"
     stroke-linecap="round"
     stroke-opacity="0.75"
   />
-
-  <!-- Hazard Alert Beacon / Pupil -->
-  <circle cx="32" cy="33" r="3.8" fill="url(#alertGrad)" />
-  <circle cx="33" cy="32" r="1.2" fill="#FFFFFF" />
 </svg>

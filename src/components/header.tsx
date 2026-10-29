@@ -42,7 +42,7 @@ export function Header() {
           className="flex items-center gap-2.5 sm:gap-3 group focus:outline-none select-none shrink-0"
         >
           <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#0E6B73] to-[#095259] flex items-center justify-center text-white shadow-md shadow-[#0E6B73]/20 transition-transform group-hover:scale-105 border border-white/10 shrink-0">
-            <Droplet className="w-5 h-5 sm:w-6 sm:h-6 fill-white text-white" />
+            <img src="/icon.svg" alt="App Logo" className="w-full h-full object-contain p-0.5" />
             <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-400 rounded-full border-2 border-[#12263A]" />
           </div>
           <div>

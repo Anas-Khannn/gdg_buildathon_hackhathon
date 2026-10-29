@@ -1,7 +1,7 @@
 <div align="center">
 
-# 🌊 NaaliWatch (نالی واچ)
-### AI-Powered Civic Hazard Intelligence & Urban Drainage Monitoring Platform
+# 🌊 AquaSentinel (ایکوا سینٹینل)
+### AI-Powered Civic Hazard Intelligence & Urban Flood Resilience Platform
 **Built for the Google Developer Groups (GDG) Buildathon / Hackathon 2026**
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -33,9 +33,9 @@ During torrential rains and flash monsoon seasons in Khyber Pakhtunkhwa, Peshawa
 
 ---
 
-## 💡 The Solution: NaaliWatch
+## 💡 The Solution: AquaSentinel
 
-**NaaliWatch** bridges the divide between citizens and municipal authorities with an intelligent, crowdsourced civic tech ecosystem:
+**AquaSentinel** bridges the divide between citizens and municipal authorities with an intelligent, crowdsourced civic tech ecosystem:
 
 1. **Multimodal Gemini Vision Triage**: Citizens take a photo of a clogged drain or puddle. Google's **Gemini 1.5 Flash** instantly classifies the hazard type, detects Urdu/English landmark signage, calculates flood depth severity (`ankle`, `knee`, `danger`), and auto-writes a formal bilingual municipal complaint in both English and Urdu.
 2. **Interactive Real-Time Leaflet Map**: Reports are projected onto an interactive live map of Peshawar with custom animated droplet pins color-coded by hazard urgency.
@@ -108,9 +108,9 @@ Citizen feed showing real-time community upvotes, photo previews, verification b
 
 ---
 
-## 🌊 NaaliTwin: AI Monsoon Inundation & Hydrological Simulator
+## 🌊 AquaTwin: AI Monsoon Inundation & Hydrological Simulator
 
-Traditional civic apps are **reactive**—they wait for citizens to report after streets have already flooded. **NaaliTwin transforms NaaliWatch into a PREDICTIVE Urban Hydrology Command Center.**
+Traditional civic apps are **reactive**—they wait for citizens to report after streets have already flooded. **AquaTwin transforms AquaSentinel into a PREDICTIVE Urban Hydrology Command Center.**
 
 ### 🔬 Scientific Hydrological Engine:
 - **Rational Method Modeling**: Computes real-time peak storm discharge across Peshawar's 8 major hydrological catchments:

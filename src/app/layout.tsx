@@ -34,14 +34,14 @@ const notoArabic = Noto_Naskh_Arabic({
 import { MobileNav } from "@/components/mobile-nav";
 
 export const metadata: Metadata = {
-  title: "Naali Watch | Peshawar Drain & Flood Map",
+  title: "AquaSentinel | AI Urban Hazard & Flood Intelligence Platform",
   description:
-    "Peshawar waterlogging, flooded roads, blocked drains and open manholes live citizen map. See it. Snap it. Make them fix it.",
+    "Peshawar AI-powered urban flood prediction, blocked drain triage, and open manhole hazard intelligence. Autonomous civic defense for Peshawar.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "NaaliWatch",
+    title: "AquaSentinel",
   },
   icons: {
     icon: [

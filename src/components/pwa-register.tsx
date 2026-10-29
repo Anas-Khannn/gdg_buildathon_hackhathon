@@ -113,7 +113,7 @@ export function PwaRegister() {
               <Download className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold leading-tight">Install NaaliWatch</div>
+              <div className="text-xs font-bold leading-tight">Install AquaSentinel</div>
               <div className="text-[10px] text-[#C9D4DA] leading-tight">Add to Home Screen for fast offline reporting</div>
             </div>
           </div>

@@ -132,7 +132,7 @@ export default function FloodSimulatorPage() {
   const handleShareWhatsApp = () => {
     if (!data) return;
     const advisory = data.aiAdvisory;
-    const text = `🚨 *NAALIWATCH PESHAWAR MONSOON FLOOD ALERT* 🚨\n\n🌧️ *Rainfall Intensity:* ${data.rainMmPerHour} mm/hr (${data.scenarioName})\n🌊 *Projected Storm Runoff:* ${data.totalRunoffMillionLiters} Million Liters/hr\n⚠️ *Critical Inundated Basins:* ${data.criticalBasinsCount}\n\n📢 *CITIZEN TRAVEL ADVISORY:*\n${advisory.citizenAdvisoryEn}\n\n🇵🇰 *اردو الرٹ:*\n${advisory.citizenAdvisoryUr}\n\n🕌 *مسجد اعلان:*\n${advisory.mosqueBroadcastScriptUr}\n\n📞 *Emergency Helplines:* WSSP: 1334 | PDMA: 1700 | Rescue: 1122\n🌐 *Live Map:* https://naaliwatch-peshawar.gov.pk`;
+    const text = `🚨 *AQUASENTINEL PESHAWAR MONSOON FLOOD ALERT* 🚨\n\n🌧️ *Rainfall Intensity:* ${data.rainMmPerHour} mm/hr (${data.scenarioName})\n🌊 *Projected Storm Runoff:* ${data.totalRunoffMillionLiters} Million Liters/hr\n⚠️ *Critical Inundated Basins:* ${data.criticalBasinsCount}\n\n📢 *CITIZEN TRAVEL ADVISORY:*\n${advisory.citizenAdvisoryEn}\n\n🇵🇰 *اردو الرٹ:*\n${advisory.citizenAdvisoryUr}\n\n🕌 *مسجد اعلان:*\n${advisory.mosqueBroadcastScriptUr}\n\n📞 *Emergency Helplines:* WSSP: 1334 | PDMA: 1700 | Rescue: 1122\n🌐 *Live Map:* https://gdg-buildathon-hackhathon.vercel.app`;
     const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
     window.open(url, "_blank");
   };
@@ -160,10 +160,10 @@ export default function FloodSimulatorPage() {
               <div>
                 <h1 className="font-heading text-2xl sm:text-3xl font-bold text-[#12263A] tracking-tight leading-none">
                   {language === "ur"
-                    ? "نالی ٹوئن: اے آئی سیلاب پیش گوئی سمیلیٹر"
+                    ? "ایکوا ٹوئن: اے آئی سیلاب پیش گوئی سمیلیٹر"
                     : language === "ps"
-                    ? "نالي ټوین: د سېلاب وړاندوینې سمیلیټر"
-                    : "NaaliTwin: AI Monsoon Inundation Simulator"}
+                    ? "ایکوا ټوین: د سېلاب وړاندوینې سمیلیټر"
+                    : "AquaTwin: AI Monsoon Inundation Simulator"}
                 </h1>
                 <p className="text-xs sm:text-sm text-[#4B6073] mt-0.5">
                   Urban Hydrological Digital Twin for Peshawar • Powered by Google Gemini 1.5 Flash

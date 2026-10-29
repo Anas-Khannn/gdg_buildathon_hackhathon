@@ -1,7 +1,7 @@
 {
-  "name": "Naali Watch Peshawar",
-  "short_name": "NaaliWatch",
-  "description": "Real-time civic drainage hazard mapping & citizen reporting for Peshawar",
+  "name": "AquaSentinel Peshawar",
+  "short_name": "AquaSentinel",
+  "description": "AI-Powered Civic Hazard Intelligence & Urban Flood Resilience Platform for Peshawar",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#12263A",

@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         // Using standard fast multimodal model
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const systemPrompt = `You are a strict AI civic hazard classifier for Peshawar Urban Drainage and Sanitation (NaaliWatch).
+        const systemPrompt = `You are a strict AI civic hazard classifier for Peshawar Urban Drainage and Sanitation (AquaSentinel).
 YOUR PRIMARY TASK: Determine if the provided photo shows an ACTUAL OUTDOOR WATER HAZARD, STAGNANT/STANDING/STAINED WASTEWATER, A BLOCKED DRAIN, STREET FLOODING, PUDDLE, GUTTER OVERFLOW, OR OPEN MANHOLE THAT REQUIRES DRAINING OR DESILTATION.
 
 STRICT VALIDATION CRITERIA:
