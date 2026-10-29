@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import React from "react";
 import type { ReportItem } from "@/types/report";
 import type { SafeRouteResponse } from "@/types/route";
+import type { SimulationResponse, BasinSimulationResult } from "@/types/simulation";
 
 const DynamicLiveMap = dynamic(
   () => import("./live-map").then((mod) => mod.LiveMap),
@@ -29,6 +30,9 @@ export function MapWrapper(props: {
   activeRoute?: SafeRouteResponse | null;
   radarActive?: boolean;
   onProximityAlert?: (hazardText: string | null) => void;
+  floodSimActive?: boolean;
+  simulationData?: SimulationResponse | null;
+  onSelectBasin?: (basin: BasinSimulationResult) => void;
 }) {
   return <DynamicLiveMap {...props} />;
 }

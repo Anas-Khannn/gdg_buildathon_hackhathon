@@ -94,6 +94,8 @@ Citizen feed showing real-time community upvotes, photo previews, verification b
 
 | Feature | Description |
 |---|---|
+| 🌊 **NaaliTwin AI Hydrological Simulator** | Real-time monsoon inundation digital twin predicting storm runoff ($Q = CIA / 360$), surface waterlogging depths (cm), and culvert backpressure across Peshawar's 8 catchments with interactive "What-If" desilting mitigation |
+| 📢 **Mosque & Loudspeaker Voice Broadcast** | Dual-tone municipal emergency siren synthesis + bilingual Urdu/Pashto voice broadcaster for local mosques and WhatsApp crisis alerts |
 | 🤖 **Gemini 1.5 Flash Vision** | Multimodal AI that detects open manholes, standing water, and blocked drains with high confidence |
 | 📍 **Live Geolocation Mapping** | Leaflet-powered Peshawar map with interactive droplet markers, area clustering, and GPS locate-me |
 | 🌐 **Bilingual (English / اردو)** | Complete RTL support with localized Urdu and Pashto area nomenclature |
@@ -103,6 +105,21 @@ Citizen feed showing real-time community upvotes, photo previews, verification b
 | 🗺️ **محفوظ راستہ (Safe Route)** | AI Safe-Route & Manhole Avoidance Navigator routing commuters around flood choke points with Gemini safety advisories |
 | 📨 **Automated WSSP Dispatch** | Real-time email dispatch integration with Water & Sanitation Services Peshawar |
 | 🔐 **RBAC Security** | Next-Auth v5 role-based access control separating citizen reporters from municipal dispatchers |
+
+---
+
+## 🌊 NaaliTwin: AI Monsoon Inundation & Hydrological Simulator
+
+Traditional civic apps are **reactive**—they wait for citizens to report after streets have already flooded. **NaaliTwin transforms NaaliWatch into a PREDICTIVE Urban Hydrology Command Center.**
+
+### 🔬 Scientific Hydrological Engine:
+- **Rational Method Modeling**: Computes real-time peak storm discharge across Peshawar's 8 major hydrological catchments:
+  $$Q = \frac{C \cdot I \cdot A}{360} \quad (\text{m}^3/\text{s})$$
+  *(Where $C$ is impervious surface coefficient $0.65 - 0.89$, $I$ is rainfall intensity $\text{mm/hr}$, and $A$ is catchment area in hectares)*
+- **Real-Time Choke Penalty**: Dynamically factors in active, unresolved drain blockages and garbage clogs from PostgreSQL, decreasing culvert capacity by up to $75\%$ and predicting surface waterlogging depths ($\text{cm}$).
+- **Interactive "What-If" Desilting Sandbox**: Municipal commissioners and citizens can toggle "Simulate Desilting" on any choked basin to immediately see flood water levels plummet and calculate millions of liters of flood damage averted!
+- **Gemini Autonomous Emergency Orders**: Google Gemini 1.5 Flash synthesizes real-time runoff and chokepoints to generate prioritized machine dispatch orders (Super Sucker gully emptiers, excavators, dewatering pumps) for WSSP Zones 1 to 4.
+- **Mosque Loudspeaker & Audio Broadcast**: Synthesizes a realistic dual-tone municipal warning siren using the Web Audio API, followed by natural Urdu and Pashto speech announcements ready for local mosque loudspeakers, mobile megaphones, and WhatsApp community distribution.
 
 ---
 

@@ -12,6 +12,7 @@ import {
   User,
   ShieldAlert,
   LogIn,
+  Waves,
 } from "lucide-react";
 
 export function MobileNav() {
@@ -23,6 +24,7 @@ export function MobileNav() {
   const isAdmin = userRole === "admin";
 
   const isMapActive = pathname === "/";
+  const isFloodSimActive = pathname === "/flood-simulator";
   const isScoreboardActive = pathname === "/scoreboard";
   const isAboutActive = pathname === "/about";
   const isAdminActive = pathname === "/admin";
@@ -41,7 +43,7 @@ export function MobileNav() {
       aria-label="Mobile Bottom Navigation"
       className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#12263A]/95 backdrop-blur-md border-t border-white/10 pb-[env(safe-area-inset-bottom)] select-none shadow-[0_-4px_20px_rgba(0,0,0,0.3)]"
     >
-      <div className={`grid ${isAdmin ? "grid-cols-5" : "grid-cols-4"} h-14 max-w-md mx-auto items-center px-1`}>
+      <div className={`grid ${isAdmin ? "grid-cols-6" : "grid-cols-5"} h-14 max-w-md mx-auto items-center px-1`}>
         {/* Map Tab */}
         <Link
           href="/"
@@ -55,6 +57,22 @@ export function MobileNav() {
           <Droplet className={`w-5 h-5 ${isMapActive ? "fill-emerald-400 text-emerald-400" : ""}`} />
           <span className="text-[10px] leading-none truncate max-w-[64px]">
             {t.mapView}
+          </span>
+        </Link>
+
+        {/* Flood Sim Tab */}
+        <Link
+          href="/flood-simulator"
+          className={`flex flex-col items-center justify-center gap-1 h-full py-1 text-center transition-colors relative ${
+            isFloodSimActive ? "text-emerald-400 font-bold" : "text-[#C9D4DA]/70 hover:text-white"
+          }`}
+        >
+          {isFloodSimActive && (
+            <span className="absolute top-0 w-8 h-0.5 bg-emerald-400 rounded-full" />
+          )}
+          <Waves className="w-5 h-5" />
+          <span className="text-[10px] leading-none truncate max-w-[64px]">
+            {language === "ur" ? "سمیلیٹر" : "Flood Sim"}
           </span>
         </Link>
 

@@ -10,6 +10,8 @@ import { ReportDetailDrawer } from "@/components/report-detail-drawer";
 import { SafeRouteModal } from "@/components/safe-route-modal";
 import { useLanguage } from "@/components/language-provider";
 import { DropletPin } from "@/components/droplet-pin";
+import { FloodSimulatorModal } from "@/components/flood-simulator/flood-simulator-modal";
+import type { SimulationResponse } from "@/types/simulation";
 import {
   Camera,
   AlertTriangle,
@@ -25,6 +27,7 @@ import {
   Radio,
   X,
   PhoneCall,
+  Waves,
 } from "lucide-react";
 
 interface HomePageClientProps {
@@ -56,6 +59,11 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
   const [activeRoute, setActiveRoute] = useState<SafeRouteResponse | null>(null);
   const [radarActive, setRadarActive] = useState(false);
   const [proximityAlertText, setProximityAlertText] = useState<string | null>(null);
+
+  // AI Flood Simulator State (NaaliTwin)
+  const [isFloodSimModalOpen, setIsFloodSimModalOpen] = useState(false);
+  const [isFloodSimActive, setIsFloodSimActive] = useState(false);
+  const [simulationData, setSimulationData] = useState<SimulationResponse | null>(null);
 
   // Mobile Bottom Sheet State
   const [bottomSheetExpanded, setBottomSheetExpanded] = useState(false);
@@ -346,6 +354,14 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
           {/* Desktop Action Buttons */}
           <div className="p-3 border-t border-[#C9D4DA] bg-white space-y-2">
             <button
+              onClick={() => setIsFloodSimModalOpen(true)}
+              className="w-full h-11 rounded-xl bg-gradient-to-r from-blue-700 via-[#0E6B73] to-teal-700 hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
+            >
+              <Waves className="w-4 h-4 text-emerald-300 animate-pulse" />
+              <span>{language === "ur" ? "سیلاب پیش گوئی (AI Flood Sim)" : "AI Flood Predictor (سیلاب سمیلیٹر)"}</span>
+            </button>
+
+            <button
               onClick={() => setIsSafeRouteModalOpen(true)}
               className="w-full h-11 rounded-xl bg-gradient-to-r from-emerald-600 via-[#0E6B73] to-[#095259] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
             >
@@ -387,6 +403,14 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
             >
               <Navigation className="w-3.5 h-3.5 fill-white" />
               <span>{language === "ur" ? "محفوظ راستہ" : "Safe Route"}</span>
+            </button>
+
+            <button
+              onClick={() => setIsFloodSimModalOpen(true)}
+              className="shrink-0 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-md transition-all flex items-center gap-1.5 bg-gradient-to-r from-blue-700 to-[#0E6B73] text-white shadow-blue-900/30 cursor-pointer"
+            >
+              <Waves className="w-3.5 h-3.5 text-emerald-300" />
+              <span>{language === "ur" ? "سیلاب سمیلیٹر" : "Flood Sim"}</span>
             </button>
 
             {filterChips.map((chip) => (
@@ -465,6 +489,42 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
             </div>
           )}
 
+          {/* Active Flood Simulation Floating Card (NaaliTwin) */}
+          {isFloodSimActive && simulationData && (
+            <div className="absolute top-16 sm:top-20 left-3 right-3 sm:left-4 sm:right-auto sm:max-w-md z-20 bg-[#12263A]/95 text-white p-3 rounded-2xl shadow-2xl border border-blue-400/40 backdrop-blur-md flex items-center justify-between gap-3 animate-fadeIn">
+              <div className="min-w-0 flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-400/30 flex items-center justify-center shrink-0">
+                  <Waves className="w-4 h-4 text-emerald-300 animate-pulse" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold truncate">
+                    🌧️ {simulationData.rainMmPerHour} mm/hr • {simulationData.criticalBasinsCount} Critical Basins
+                  </div>
+                  <div className="text-[10px] text-blue-200 font-semibold flex items-center gap-1.5">
+                    <span>Runoff: {simulationData.totalRunoffMillionLiters}M L/hr</span>
+                    <span>•</span>
+                    <span>Risk: {simulationData.cityRiskIndex}/100</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => setIsFloodSimModalOpen(true)}
+                  className="px-2.5 py-1 rounded-lg bg-[#0E6B73] hover:bg-[#095259] text-[10px] font-bold text-white transition cursor-pointer"
+                >
+                  Studio
+                </button>
+                <button
+                  onClick={() => setIsFloodSimActive(false)}
+                  className="w-6 h-6 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-300 flex items-center justify-center transition cursor-pointer"
+                  title="Hide Flood Layer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* The Leaflet Live Map */}
           <MapWrapper
             reports={filteredReports}
@@ -476,6 +536,8 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
             activeRoute={activeRoute}
             radarActive={radarActive}
             onProximityAlert={(text) => setProximityAlertText(text)}
+            floodSimActive={isFloodSimActive}
+            simulationData={simulationData}
             onPickLocation={(coords) => {
               if (isPickingLocation) {
                 setPickedLocation(coords);
@@ -603,6 +665,16 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
         }}
         radarActive={radarActive}
         onToggleRadar={(active) => setRadarActive(active)}
+      />
+
+      {/* AI Flood Simulator Modal (NaaliTwin) */}
+      <FloodSimulatorModal
+        isOpen={isFloodSimModalOpen}
+        onClose={() => setIsFloodSimModalOpen(false)}
+        onApplyToMap={(simResp) => {
+          setSimulationData(simResp);
+          setIsFloodSimActive(true);
+        }}
       />
     </div>
   );
