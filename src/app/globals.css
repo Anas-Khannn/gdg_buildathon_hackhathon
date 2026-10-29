@@ -341,25 +341,3 @@ textarea:focus-visible {
 .animate-wave-bob {
   animation: wave-bob 3s ease-in-out infinite;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-pin-drop,
-  .animate-ripple,
-  .animate-pulse-danger,
-  .animate-float-slow,
-  .animate-pulse-subtle,
-  .animate-shimmer,
-  .animate-laser-scan,
-  .animate-wave-slide,
-  .animate-radar-spin,
-  .animate-bubble-1,
-  .animate-bubble-2,
-  .animate-bubble-3,
-  .animate-bubble-4,
-  .animate-bubble-5,
-  .animate-glow-border,
-  .animate-wave-bob {
-    animation: none;
-    opacity: 1;
-  }
-}
