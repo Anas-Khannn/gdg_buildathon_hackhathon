@@ -90,7 +90,7 @@ function AuthSignInContent() {
           className="inline-flex items-center gap-1.5 text-xs text-emerald-300 hover:text-white transition font-semibold"
         >
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Learn what Naali Watch solves & our civic vision for Peshawar</span>
+          <span>Learn what AquaSentinel solves & our civic vision for Peshawar</span>
         </Link>
       </div>
     </div>
@@ -100,14 +100,18 @@ function AuthSignInContent() {
 export default function SignInPage() {
   return (
     <div className="min-h-screen min-h-[100dvh] bg-gradient-to-br from-[#12263A] via-[#16334f] to-[#0E6B73] flex items-center justify-center p-3 sm:p-4 pb-24 md:pb-6 relative overflow-hidden">
-      {/* Decorative background glows */}
-      <div className="absolute top-1/4 -left-20 w-80 h-80 bg-[#0E6B73]/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
+      {/* Decorative animated background glows */}
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#0E6B73]/35 rounded-full blur-3xl pointer-events-none animate-float-slow" />
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-emerald-500/25 rounded-full blur-3xl pointer-events-none animate-pulse-subtle" />
+      <div className="absolute -top-32 right-1/4 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Floating subtle grid pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none opacity-40" />
 
       <Suspense
         fallback={
-          <div className="w-full max-w-md bg-white rounded-3xl p-8 text-center text-[#12263A] font-bold">
-            Loading Naali Watch Auth...
+          <div className="w-full max-w-md bg-white/95 backdrop-blur-xl rounded-3xl p-8 text-center text-[#12263A] font-bold shadow-2xl border border-white/20 animate-pulse">
+            Loading AquaSentinel Auth...
           </div>
         }
       >

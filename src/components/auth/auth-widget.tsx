@@ -62,10 +62,10 @@ export function AuthWidget({
   if (session?.user) {
     const isWSSP = session.user.role === "admin";
     return (
-      <div className={`bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-white/20 text-[#12263A] space-y-5 ${className}`}>
+      <div className={`bg-white/95 backdrop-blur-xl rounded-3xl p-6 sm:p-7 shadow-2xl border border-white/60 text-[#12263A] space-y-5 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(14,107,115,0.25)] ${className}`}>
         <div className="flex items-center gap-3">
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-md ${
-            isWSSP ? "bg-[#2E7D4F]" : "bg-[#0E6B73]"
+          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-md transition-transform duration-300 hover:scale-105 ${
+            isWSSP ? "bg-gradient-to-br from-[#2E7D4F] to-emerald-700" : "bg-gradient-to-br from-[#0E6B73] to-[#095259]"
           }`}>
             {isWSSP ? <Shield className="w-6 h-6" /> : <User className="w-6 h-6" />}
           </div>
@@ -76,17 +76,17 @@ export function AuthWidget({
             <h3 className="font-heading text-lg font-bold text-[#12263A] leading-tight">
               {session.user.name}
             </h3>
-            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5 ${
-              isWSSP ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"
+            <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full inline-block mt-0.5 border ${
+              isWSSP ? "bg-amber-100 text-amber-900 border-amber-300" : "bg-emerald-100 text-emerald-900 border-emerald-300"
             }`}>
               {isWSSP ? "WSSP Official (Admin)" : "Peshawar Citizen (User)"}
             </span>
           </div>
         </div>
 
-        <div className="bg-[#EAF0F2]/70 p-4 rounded-2xl border border-[#C9D4DA]/70 space-y-2 text-xs text-[#4B6073]">
+        <div className="bg-[#EAF0F2]/80 backdrop-blur-sm p-4 rounded-2xl border border-[#C9D4DA]/70 space-y-2 text-xs text-[#4B6073]">
           <div className="flex items-center gap-2 font-bold text-[#12263A]">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Authenticated & System Access Granted</span>
           </div>
           <p>
@@ -97,7 +97,7 @@ export function AuthWidget({
         <div className="space-y-2 pt-1">
           <Link
             href={isWSSP ? "/admin" : "/"}
-            className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#0E6B73] to-[#095259] hover:from-[#095259] hover:to-[#06383d] text-white font-bold text-sm transition shadow-lg shadow-[#0E6B73]/25 flex items-center justify-center gap-2 group"
+            className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-[#0E6B73] via-[#0b5c63] to-[#095259] hover:from-[#095259] hover:to-[#06383d] text-white font-bold text-sm transition-all duration-200 hover:shadow-lg hover:shadow-[#0E6B73]/30 active:scale-[0.98] flex items-center justify-center gap-2 group cursor-pointer"
           >
             <span>Enter Real Working Dashboard & Map</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -106,7 +106,7 @@ export function AuthWidget({
           <button
             type="button"
             onClick={() => signOut({ callbackUrl: "/about" })}
-            className="w-full py-2.5 px-4 rounded-xl border border-[#C9D4DA] hover:bg-slate-50 text-xs font-bold text-[#4B6073] transition flex items-center justify-center gap-1.5"
+            className="w-full py-2.5 px-4 rounded-xl border border-[#C9D4DA] hover:bg-slate-50 text-xs font-bold text-[#4B6073] hover:text-[#12263A] transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Sign Out & Switch Account</span>
@@ -267,9 +267,9 @@ export function AuthWidget({
   };
 
   return (
-    <div className={`bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-white/20 text-[#12263A] space-y-5 ${className}`}>
+    <div className={`bg-white/95 backdrop-blur-xl rounded-3xl p-6 sm:p-7 shadow-2xl border border-white/60 text-[#12263A] space-y-5 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(14,107,115,0.2)] ${className}`}>
       {/* Tab Switcher: Sign Up vs Sign In vs Forgot Password */}
-      <div className="flex p-1 bg-[#EAF0F2] rounded-2xl border border-[#C9D4DA]/70">
+      <div className="flex p-1 bg-[#EAF0F2]/90 rounded-2xl border border-[#C9D4DA]/70 backdrop-blur-sm">
         <button
           type="button"
           onClick={() => {
@@ -277,10 +277,10 @@ export function AuthWidget({
             setError(null);
             setSuccessMsg(null);
           }}
-          className={`flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer ${
             tab === "signup"
-              ? "bg-[#12263A] text-white shadow-sm"
-              : "text-[#4B6073] hover:text-[#12263A]"
+              ? "bg-[#12263A] text-white shadow-md shadow-[#12263A]/20"
+              : "text-[#4B6073] hover:text-[#12263A] hover:bg-white/50"
           }`}
         >
           <UserPlus className="w-3.5 h-3.5" />
@@ -294,10 +294,10 @@ export function AuthWidget({
             setError(null);
             setSuccessMsg(null);
           }}
-          className={`flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer ${
             tab === "signin"
-              ? "bg-[#12263A] text-white shadow-sm"
-              : "text-[#4B6073] hover:text-[#12263A]"
+              ? "bg-[#12263A] text-white shadow-md shadow-[#12263A]/20"
+              : "text-[#4B6073] hover:text-[#12263A] hover:bg-white/50"
           }`}
         >
           <LogIn className="w-3.5 h-3.5" />
@@ -312,10 +312,10 @@ export function AuthWidget({
             setSuccessMsg(null);
             setResetStep("request");
           }}
-          className={`px-3 py-2 text-xs font-bold rounded-xl transition flex items-center justify-center gap-1 ${
+          className={`px-3 py-2 text-xs font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-1 active:scale-95 cursor-pointer ${
             tab === "forgot"
-              ? "bg-[#12263A] text-white shadow-sm"
-              : "text-[#4B6073] hover:text-[#12263A]"
+              ? "bg-[#12263A] text-white shadow-md shadow-[#12263A]/20"
+              : "text-[#4B6073] hover:text-[#12263A] hover:bg-white/50"
           }`}
         >
           <KeyRound className="w-3.5 h-3.5" />
@@ -332,18 +332,20 @@ export function AuthWidget({
           <button
             type="button"
             onClick={() => setRole("user")}
-            className={`p-3 rounded-2xl border-2 text-left transition flex items-center gap-2.5 relative ${
+            className={`p-3 rounded-2xl border-2 text-left transition-all duration-200 flex items-center gap-2.5 relative cursor-pointer active:scale-95 ${
               role === "user"
-                ? "border-[#0E6B73] bg-[#0E6B73]/10 ring-2 ring-[#0E6B73]/20"
-                : "border-[#C9D4DA]/70 bg-white hover:border-[#C9D4DA]"
+                ? "border-[#0E6B73] bg-[#0E6B73]/10 ring-2 ring-[#0E6B73]/25 shadow-sm"
+                : "border-[#C9D4DA]/70 bg-white/70 hover:border-[#0E6B73]/50 hover:bg-white"
             }`}
           >
-            <div className="w-8 h-8 rounded-lg bg-[#0E6B73] text-white flex items-center justify-center shrink-0">
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-transform ${
+              role === "user" ? "bg-[#0E6B73] text-white scale-105 shadow-sm" : "bg-slate-200 text-[#4B6073]"
+            }`}>
               <User className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-extrabold text-[#12263A] leading-tight">
-                Citizen (عوام)
+              <div className="text-xs font-extrabold text-[#12263A] leading-tight flex items-center gap-1">
+                <span>Citizen (عوام)</span>
               </div>
               <div className="text-[10px] text-[#4B6073]">Report & vote fixes</div>
             </div>
@@ -352,18 +354,20 @@ export function AuthWidget({
           <button
             type="button"
             onClick={() => setRole("admin")}
-            className={`p-3 rounded-2xl border-2 text-left transition flex items-center gap-2.5 relative ${
+            className={`p-3 rounded-2xl border-2 text-left transition-all duration-200 flex items-center gap-2.5 relative cursor-pointer active:scale-95 ${
               role === "admin"
-                ? "border-emerald-600 bg-emerald-50 ring-2 ring-emerald-600/20"
-                : "border-[#C9D4DA]/70 bg-white hover:border-[#C9D4DA]"
+                ? "border-emerald-600 bg-emerald-50 ring-2 ring-emerald-600/25 shadow-sm"
+                : "border-[#C9D4DA]/70 bg-white/70 hover:border-emerald-500/50 hover:bg-white"
             }`}
           >
-            <div className="w-8 h-8 rounded-lg bg-[#2E7D4F] text-white flex items-center justify-center shrink-0">
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-transform ${
+              role === "admin" ? "bg-[#2E7D4F] text-white scale-105 shadow-sm" : "bg-slate-200 text-[#4B6073]"
+            }`}>
               <Shield className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-extrabold text-[#12263A] leading-tight">
-                WSSP Admin
+              <div className="text-xs font-extrabold text-[#12263A] leading-tight flex items-center gap-1">
+                <span>WSSP Admin</span>
               </div>
               <div className="text-[10px] text-[#4B6073]">Staff desiltation</div>
             </div>
@@ -439,7 +443,7 @@ export function AuthWidget({
           <button
             type="submit"
             disabled={loading !== null}
-            className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#0E6B73] to-[#095259] hover:from-[#095259] hover:to-[#06383d] text-white font-bold text-xs sm:text-sm transition shadow-lg shadow-[#0E6B73]/25 flex items-center justify-center gap-2 group disabled:opacity-60 mt-2"
+            className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#0E6B73] via-[#0b5c63] to-[#095259] hover:from-[#095259] hover:to-[#06383d] text-white font-bold text-xs sm:text-sm transition-all duration-200 shadow-lg shadow-[#0E6B73]/25 hover:shadow-[#0E6B73]/40 active:scale-[0.98] flex items-center justify-center gap-2 group disabled:opacity-60 mt-2 cursor-pointer"
           >
             <span>{loading === "signup" ? "Creating Account..." : "Create Account & Go to Sign In"}</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -459,7 +463,7 @@ export function AuthWidget({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="citizen@peshawar.local"
-                className="w-full px-3.5 py-2 rounded-xl border border-[#C9D4DA] text-xs sm:text-sm text-[#12263A] focus:outline-none focus:ring-2 focus:ring-[#0E6B73]"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#C9D4DA] text-xs sm:text-sm text-[#12263A] bg-white/90 focus:outline-none focus:ring-2 focus:ring-[#0E6B73] focus:border-transparent transition-all"
               />
             </div>
 
@@ -472,7 +476,7 @@ export function AuthWidget({
                     setTab("forgot");
                     setError(null);
                   }}
-                  className="text-[11px] font-semibold text-[#0E6B73] hover:underline"
+                  className="text-[11px] font-semibold text-[#0E6B73] hover:text-[#095259] hover:underline cursor-pointer"
                 >
                   Forgot Password?
                 </button>
@@ -482,14 +486,14 @@ export function AuthWidget({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-3.5 py-2 rounded-xl border border-[#C9D4DA] text-xs sm:text-sm text-[#12263A] focus:outline-none focus:ring-2 focus:ring-[#0E6B73]"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#C9D4DA] text-xs sm:text-sm text-[#12263A] bg-white/90 focus:outline-none focus:ring-2 focus:ring-[#0E6B73] focus:border-transparent transition-all"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading !== null}
-              className="w-full py-3 px-4 rounded-2xl bg-[#12263A] hover:bg-[#1a3854] text-white font-bold text-xs sm:text-sm transition shadow-md flex items-center justify-center gap-2 group disabled:opacity-60"
+              className="w-full py-3 px-4 rounded-2xl bg-[#12263A] hover:bg-[#1a3854] text-white font-bold text-xs sm:text-sm transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group disabled:opacity-60 cursor-pointer"
             >
               <span>{loading === "signin" ? "Signing In..." : "Log In & Enter Dashboard"}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -511,7 +515,7 @@ export function AuthWidget({
                 type="button"
                 onClick={() => handle1ClickDemo("user")}
                 disabled={loading !== null}
-                className="p-2.5 rounded-xl border border-[#0E6B73]/30 hover:border-[#0E6B73] bg-[#0E6B73]/5 hover:bg-[#0E6B73]/10 text-left transition group"
+                className="p-2.5 rounded-xl border border-[#0E6B73]/30 hover:border-[#0E6B73] bg-[#0E6B73]/5 hover:bg-[#0E6B73]/15 text-left transition-all duration-200 group active:scale-95 cursor-pointer"
               >
                 <div className="text-[11px] font-bold text-[#12263A] flex items-center justify-between">
                   <span>Citizen (Ali)</span>
@@ -524,7 +528,7 @@ export function AuthWidget({
                 type="button"
                 onClick={() => handle1ClickDemo("admin")}
                 disabled={loading !== null}
-                className="p-2.5 rounded-xl border border-emerald-500/30 hover:border-emerald-600 bg-emerald-50 hover:bg-emerald-100/60 text-left transition group"
+                className="p-2.5 rounded-xl border border-emerald-500/30 hover:border-emerald-600 bg-emerald-50 hover:bg-emerald-100 text-left transition-all duration-200 group active:scale-95 cursor-pointer"
               >
                 <div className="text-[11px] font-bold text-[#12263A] flex items-center justify-between">
                   <span>Admin (Fatima)</span>
@@ -562,7 +566,7 @@ export function AuthWidget({
 
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-2xl bg-[#0E6B73] hover:bg-[#095259] text-white font-bold text-xs sm:text-sm transition shadow-md flex items-center justify-center gap-2 group"
+                className="w-full py-3 px-4 rounded-2xl bg-[#0E6B73] hover:bg-[#095259] text-white font-bold text-xs sm:text-sm transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group cursor-pointer"
               >
                 <span>Send Reset Code</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -572,7 +576,7 @@ export function AuthWidget({
                 <button
                   type="button"
                   onClick={() => setTab("signin")}
-                  className="text-xs text-[#4B6073] hover:underline font-semibold"
+                  className="text-xs text-[#4B6073] hover:text-[#12263A] hover:underline font-semibold cursor-pointer"
                 >
                   Remembered your password? Back to Sign In
                 </button>
@@ -584,7 +588,7 @@ export function AuthWidget({
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-[#12263A] block">6-Digit Code</label>
                   {generatedCode && (
-                    <span className="text-[10px] font-mono font-bold text-[#0E6B73] bg-[#0E6B73]/10 px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] font-mono font-bold text-[#0E6B73] bg-[#0E6B73]/10 px-1.5 py-0.5 rounded border border-[#0E6B73]/20">
                       Code: {generatedCode}
                     </span>
                   )}
@@ -595,7 +599,7 @@ export function AuthWidget({
                   value={enteredCode}
                   onChange={(e) => setEnteredCode(e.target.value)}
                   placeholder="e.g. 742918"
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#C9D4DA] text-xs sm:text-sm text-[#12263A] font-mono tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-[#0E6B73]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[#C9D4DA] text-xs sm:text-sm text-[#12263A] font-mono tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-[#0E6B73] transition-all"
                 />
               </div>
 
@@ -607,14 +611,14 @@ export function AuthWidget({
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter at least 4 characters"
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#C9D4DA] text-xs sm:text-sm text-[#12263A] focus:outline-none focus:ring-2 focus:ring-[#0E6B73]"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[#C9D4DA] text-xs sm:text-sm text-[#12263A] focus:outline-none focus:ring-2 focus:ring-[#0E6B73] transition-all"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading !== null}
-                className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#0E6B73] to-[#095259] hover:from-[#095259] text-white font-bold text-xs sm:text-sm transition shadow-md flex items-center justify-center gap-2 group disabled:opacity-60"
+                className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-[#0E6B73] to-[#095259] hover:from-[#095259] text-white font-bold text-xs sm:text-sm transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group disabled:opacity-60 cursor-pointer"
               >
                 <span>{loading === "resetting" ? "Resetting & Entering..." : "Reset Password & Enter Dashboard"}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -624,7 +628,7 @@ export function AuthWidget({
                 <button
                   type="button"
                   onClick={() => setResetStep("request")}
-                  className="text-xs text-[#4B6073] hover:underline font-semibold"
+                  className="text-xs text-[#4B6073] hover:text-[#12263A] hover:underline font-semibold cursor-pointer"
                 >
                   Change email address
                 </button>
