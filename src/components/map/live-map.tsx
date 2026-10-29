@@ -7,6 +7,7 @@ import { getDropletSvgString, SeverityType } from "@/components/droplet-pin";
 import { useLanguage } from "@/components/language-provider";
 import type { ReportItem } from "@/types/report";
 import type { SafeRouteResponse } from "@/types/route";
+import type { SimulationResponse, BasinSimulationResult } from "@/types/simulation";
 
 interface LiveMapProps {
   reports: ReportItem[];
@@ -19,6 +20,9 @@ interface LiveMapProps {
   activeRoute?: SafeRouteResponse | null;
   radarActive?: boolean;
   onProximityAlert?: (hazardText: string | null) => void;
+  floodSimActive?: boolean;
+  simulationData?: SimulationResponse | null;
+  onSelectBasin?: (basin: BasinSimulationResult) => void;
 }
 
 export function LiveMap({
@@ -32,6 +36,9 @@ export function LiveMap({
   activeRoute = null,
   radarActive = false,
   onProximityAlert,
+  floodSimActive = false,
+  simulationData = null,
+  onSelectBasin,
 }: LiveMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -39,6 +46,7 @@ export function LiveMap({
   const dangerCirclesLayerRef = useRef<L.LayerGroup | null>(null);
   const routeLayerRef = useRef<L.LayerGroup | null>(null);
   const radarLayerRef = useRef<L.LayerGroup | null>(null);
+  const floodSimLayerRef = useRef<L.LayerGroup | null>(null);
   const pickedMarkerRef = useRef<L.Marker | null>(null);
   const lastAlertTimeRef = useRef<number>(0);
   const { language, t } = useLanguage();
@@ -69,6 +77,7 @@ export function LiveMap({
     dangerCirclesLayerRef.current = L.layerGroup().addTo(map);
     routeLayerRef.current = L.layerGroup().addTo(map);
     radarLayerRef.current = L.layerGroup().addTo(map);
+    floodSimLayerRef.current = L.layerGroup().addTo(map);
 
     map.on("click", (e: L.LeafletMouseEvent) => {
       if (onPickLocation) {
@@ -441,7 +450,118 @@ export function LiveMap({
     };
   }, [radarActive, reports, onProximityAlert]);
 
-  // 5. Pan and smooth zoom to selected report
+  // 5. Render Catchment Basins Flood Simulation Layer
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const simGroup = floodSimLayerRef.current;
+    if (!map || !simGroup) return;
+
+    simGroup.clearLayers();
+
+    if (!floodSimActive || !simulationData) return;
+
+    simulationData.basinResults.forEach((item) => {
+      const isCritical =
+        item.riskLevel === "catastrophic" || item.riskLevel === "severe";
+      const fillColor =
+        item.riskLevel === "catastrophic"
+          ? "#7C3AED"
+          : item.riskLevel === "severe"
+          ? "#DC2626"
+          : item.riskLevel === "minor"
+          ? "#D97706"
+          : "#059669";
+
+      const strokeColor =
+        item.riskLevel === "catastrophic"
+          ? "#5B21B6"
+          : item.riskLevel === "severe"
+          ? "#991B1B"
+          : item.riskLevel === "minor"
+          ? "#B45309"
+          : "#047857";
+
+      // Render Catchment Polygon
+      const polygon = L.polygon(item.basin.polygonCoords, {
+        color: strokeColor,
+        weight: isCritical ? 2.5 : 1.5,
+        fillColor: fillColor,
+        fillOpacity:
+          item.riskLevel === "catastrophic"
+            ? 0.35
+            : item.riskLevel === "severe"
+            ? 0.28
+            : 0.18,
+        dashArray: item.riskLevel === "catastrophic" ? "6, 6" : undefined,
+      });
+
+      const displayName =
+        language === "ur"
+          ? item.basin.nameUr
+          : language === "ps"
+          ? item.basin.namePs
+          : item.basin.name;
+
+      polygon.bindPopup(`
+        <div style="font-family: inherit; min-width: 190px; padding: 2px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <b style="font-size: 13px; color: #12263A;">${displayName}</b>
+            <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; padding: 2px 6px; border-radius: 9999px; background: ${fillColor}22; color: ${strokeColor};">
+              ${item.riskLevel}
+            </span>
+          </div>
+          <div style="margin-top: 6px; font-size: 12px; color: #4B6073;">
+            Water Depth: <strong style="color: ${strokeColor}; font-size: 13px;">${item.inundationDepthCm} cm</strong> (${item.inundationDepthInches} in)
+          </div>
+          <div style="font-size: 11px; color: #0E6B73; margin-top: 2px;">
+            Runoff: <b>${item.runoffMillionLitersPerHour}M L/hr</b> • Cap: ${item.effectiveCapacityM3s} m³/s
+          </div>
+          <div style="font-size: 11px; color: ${item.activeBlockagesCount > 0 ? '#DC2626' : '#059669'}; margin-top: 2px;">
+            Choked Drains: <b>${item.activeBlockagesCount}</b> ${item.isMitigated ? '(Simulated Cleaned)' : ''}
+          </div>
+        </div>
+      `);
+
+      simGroup.addLayer(polygon);
+
+      // Centroid Depth Marker
+      const badgeIcon = L.divIcon({
+        html: `
+          <div style="
+            background: ${fillColor};
+            color: #FFFFFF;
+            font-weight: 800;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 9999px;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            cursor: pointer;
+          ">
+            <span>🌊</span>
+            <span>${item.inundationDepthCm}cm</span>
+          </div>
+        `,
+        className: "basin-sim-badge",
+        iconSize: [64, 24],
+        iconAnchor: [32, 12],
+      });
+
+      const badgeMarker = L.marker(item.basin.center, { icon: badgeIcon });
+      badgeMarker.on("click", () => {
+        polygon.openPopup();
+        if (onSelectBasin) onSelectBasin(item);
+      });
+
+      simGroup.addLayer(badgeMarker);
+    });
+  }, [floodSimActive, simulationData, language, onSelectBasin]);
+
+  // 6. Pan and smooth zoom to selected report
   useEffect(() => {
     if (selectedReport && mapInstanceRef.current) {
       mapInstanceRef.current.flyTo([selectedReport.lat, selectedReport.lng], 15, {

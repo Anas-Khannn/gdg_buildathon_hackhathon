@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useLanguage } from "@/components/language-provider";
 import { Language } from "@/lib/i18n";
 import { useSession, signOut } from "@/components/providers";
-import { Droplet, BarChart3, ShieldAlert, LogIn, LogOut, UserCheck, Info, PhoneCall } from "lucide-react";
+import { Droplet, BarChart3, ShieldAlert, LogIn, LogOut, UserCheck, Info, PhoneCall, Waves } from "lucide-react";
 import { WeatherAlertBanner } from "@/components/weather-alert-banner";
 import { EmergencyModal } from "@/components/emergency-modal";
 
@@ -71,6 +71,21 @@ export function Header() {
             }`}
           >
             <span>{t.mapView}</span>
+          </Link>
+
+          <Link
+            href="/flood-simulator"
+            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
+              pathname === "/flood-simulator"
+                ? "bg-[#0E6B73] text-white shadow-sm"
+                : "text-[#EAF0F2]/80 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <Waves className="w-4 h-4 text-emerald-300" />
+            <span>{language === "ur" ? "سیلاب سمیلیٹر" : language === "ps" ? "د سېلاب سمیلیټر" : "AI Flood Sim"}</span>
+            <span className="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+              Twin
+            </span>
           </Link>
 
           <Link

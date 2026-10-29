@@ -74,6 +74,8 @@ export interface Translations {
   routeDirectTitle: string;
   avoidedHazardsLabel: string;
   emergencyHelplines: string;
+  floodSimulator: string;
+  floodSimTagline: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -151,6 +153,8 @@ export const translations: Record<Language, Translations> = {
     routeDirectTitle: "Direct Path (Hazard Clashes)",
     avoidedHazardsLabel: "Hazards Avoided",
     emergencyHelplines: "Emergency Helplines (SOS)",
+    floodSimulator: "AI Flood Simulator",
+    floodSimTagline: "Predict urban storm runoff & simulate drain desilting across Peshawar",
   },
   ur: {
     appName: "نالی واچ",
@@ -226,6 +230,8 @@ export const translations: Record<Language, Translations> = {
     routeDirectTitle: "براہِ راست راستہ (خطرناک رکاوٹیں)",
     avoidedHazardsLabel: "بچے ہوئے خطرات",
     emergencyHelplines: "ہنگامی ہیلپ لائنز (SOS)",
+    floodSimulator: "اے آئی سیلاب سمیلیٹر",
+    floodSimTagline: "پشاور کے 8 طاسوں میں طوفانی بارش اور نالوں کی صفائی کا سائنسی تجزیہ",
   },
   ps: {
     appName: "نالۍ واچ",
@@ -301,5 +307,7 @@ export const translations: Record<Language, Translations> = {
     routeDirectTitle: "مستقيمه لاره (خطرناکه)",
     avoidedHazardsLabel: "مخنیوی شوي خطرونه",
     emergencyHelplines: "بېړنۍ شمېرې (SOS)",
+    floodSimulator: "د سېلاب د وړاندوینې AI سمیلیټر",
+    floodSimTagline: "په پیښور کې د دروند باران د راټولېدو او نالو د خلاصولو ساینسي وړاندوینه",
   },
 };
