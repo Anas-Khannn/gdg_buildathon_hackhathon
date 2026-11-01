@@ -13,6 +13,8 @@ import {
   ShieldAlert,
   LogIn,
   Waves,
+  Scale,
+  Mic,
 } from "lucide-react";
 
 export function MobileNav() {
@@ -25,6 +27,7 @@ export function MobileNav() {
 
   const isMapActive = pathname === "/";
   const isFloodSimActive = pathname === "/flood-simulator";
+  const isDrainDoctorActive = pathname === "/drain-doctor";
   const isScoreboardActive = pathname === "/scoreboard";
   const isAboutActive = pathname === "/about";
   const isAdminActive = pathname === "/admin";
@@ -62,7 +65,7 @@ export function MobileNav() {
       aria-label="Mobile Bottom Navigation"
       className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#12263A]/95 backdrop-blur-md border-t border-white/10 pb-[env(safe-area-inset-bottom)] select-none shadow-[0_-4px_20px_rgba(0,0,0,0.3)]"
     >
-      <div className={`grid ${isAdmin ? "grid-cols-6" : "grid-cols-5"} h-14 max-w-md mx-auto items-center px-1`}>
+      <div className={`grid ${isAdmin ? "grid-cols-7" : "grid-cols-6"} h-14 max-w-lg mx-auto items-center px-1`}>
         {/* Map Tab */}
         <Link
           href="/"
@@ -80,6 +83,22 @@ export function MobileNav() {
           </span>
         </Link>
 
+        {/* Voice AI Hotline Trigger Tab */}
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new CustomEvent("naali-open-voice"));
+            }
+          }}
+          className="flex flex-col items-center justify-center gap-1 h-full py-1 text-center transition-colors relative text-emerald-400 hover:text-emerald-300 cursor-pointer"
+        >
+          <Mic className="w-5 h-5 animate-pulse" />
+          <span className="text-[10px] leading-none truncate max-w-[64px]">
+            {language === "ur" ? "وائس" : "Voice AI"}
+          </span>
+        </button>
+
         {/* Flood Sim Tab */}
         <Link
           href="/flood-simulator"
@@ -94,6 +113,22 @@ export function MobileNav() {
           <Waves className="w-5 h-5" />
           <span className="text-[10px] leading-none truncate max-w-[64px]">
             {language === "ur" ? "سمیلیٹر" : "Flood Sim"}
+          </span>
+        </Link>
+
+        {/* Drain Doctor Tab */}
+        <Link
+          href="/drain-doctor"
+          className={`flex flex-col items-center justify-center gap-1 h-full py-1 text-center transition-colors relative ${
+            isDrainDoctorActive ? "text-amber-400 font-bold" : "text-[#C9D4DA]/70 hover:text-white"
+          }`}
+        >
+          {isDrainDoctorActive && (
+            <span className="absolute top-0 w-8 h-0.5 bg-amber-400 rounded-full" />
+          )}
+          <Scale className="w-5 h-5 text-amber-300" />
+          <span className="text-[10px] leading-none truncate max-w-[64px]">
+            {language === "ur" ? "ڈاکٹر" : "Doctor"}
           </span>
         </Link>
 

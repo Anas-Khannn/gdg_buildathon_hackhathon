@@ -44,6 +44,10 @@ import {
   Crosshair,
   Radar,
   Award,
+  Scale,
+  Mic,
+  Truck,
+  FileSpreadsheet,
 } from "lucide-react";
 
 interface NavSection {
@@ -57,6 +61,8 @@ interface NavSection {
 const SECTIONS: NavSection[] = [
   { id: "crisis", label: "The Crisis", shortLabel: "Crisis", icon: AlertTriangle, badge: "Peshawar" },
   { id: "vision-ai", label: "Gemini Vision AI", shortLabel: "AI Vision", icon: Camera, badge: "1.5 Flash" },
+  { id: "voice-ai", label: "Khyber Voice AI", shortLabel: "Voice AI", icon: Mic, badge: "Pashto" },
+  { id: "drain-doctor", label: "AI Drain Doctor", shortLabel: "Drain Doctor", icon: Scale, badge: "BOQ Audit" },
   { id: "gis-map", label: "Live GIS Droplet Map", shortLabel: "GIS Map", icon: MapPin },
   { id: "safe-route", label: "Safe-Route Radar", shortLabel: "Safe Route", icon: Navigation },
   { id: "aquatwin", label: "AquaTwin Simulator", shortLabel: "AquaTwin", icon: Waves, badge: "Twin" },
@@ -98,6 +104,16 @@ export function AboutShowcase() {
   // Interactive 5: Audio Siren & Speech Synthesis Console
   const [isSirenActive, setIsSirenActive] = useState<boolean>(false);
   const [isSpeakingUrdu, setIsSpeakingUrdu] = useState<boolean>(false);
+
+  // Interactive Showcase: Khyber Voice AI
+  const [voiceDialectIndex, setVoiceDialectIndex] = useState<number>(0);
+  const [isPlayingVoiceDemo, setIsPlayingVoiceDemo] = useState<boolean>(false);
+
+  // Interactive Showcase: AI Drain Doctor
+  const [demoDoctorWidth, setDemoDoctorWidth] = useState<number>(3.0);
+  const [demoDoctorDepth, setDemoDoctorDepth] = useState<number>(2.2);
+  const [demoDoctorLength, setDemoDoctorLength] = useState<number>(450);
+  const [demoDoctorFill, setDemoDoctorFill] = useState<number>(75);
 
   // Track active section on scroll
   useEffect(() => {
@@ -679,6 +695,357 @@ export function AboutShowcase() {
                   Priority 1 Dispatch
                 </span>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 2B: KHYBER VOICE AI HOTLINE (PASHTO / URDU MULTIMODAL DISPATCH)
+          ========================================================================= */}
+      <section id="voice-ai" className="scroll-mt-28 space-y-6">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0E6B73]">
+            <Mic className="w-4 h-4 text-[#0E6B73] animate-pulse" />
+            <span>Multimodal Audio Dialect Intelligence</span>
+          </div>
+          <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-[#12263A]">
+            2B. Khyber Voice AI Hotline (خیبر وائس ہاٹ لائن)
+          </h2>
+          <p className="text-sm sm:text-base text-[#4B6073] max-w-3xl">
+            In crisis situations, citizens speak in their native tongue. Khyber Voice AI utilizes Gemini 1.5 Flash to transcribe and triage raw emergency voice notes in <strong>Peshawar Pashto (پښتو)</strong>, <strong>Urdu</strong>, and <strong>Hindko</strong>, automatically extracting landmarks, acoustic distress levels, and dispatching machinery.
+          </p>
+        </div>
+
+        {/* Interactive Voice Triage Console */}
+        <div className="bg-[#0f1d2d] rounded-3xl p-6 sm:p-8 border border-white/10 text-white shadow-2xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div>
+              <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest block">
+                Peshawar Dialect Acoustic Engine
+              </span>
+              <h3 className="font-heading text-lg font-bold text-white">
+                Select a Real-World Dialect Recording to Inspect
+              </h3>
+            </div>
+
+            <div className="flex items-center gap-2 bg-black/40 p-1 rounded-2xl border border-white/10 overflow-x-auto">
+              {[
+                { label: "Kohati Gate (Pashto)", dialect: "ps" },
+                { label: "Saddar Bazar (Urdu)", dialect: "ur" },
+                { label: "Gulbahar Manhole (Hindko)", dialect: "ur" },
+              ].map((item, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setVoiceDialectIndex(idx)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
+                    voiceDialectIndex === idx
+                      ? "bg-emerald-500 text-black shadow-md font-extrabold"
+                      : "text-slate-300 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            {/* Left: Waveform & Speech Transcript */}
+            <div className="lg:col-span-7 space-y-4">
+              {/* Waveform Bar Visualizer */}
+              <div className="h-14 bg-black/50 rounded-2xl px-4 flex items-center justify-center gap-1.5 border border-white/10">
+                {[30, 65, 95, 45, 80, 25, 90, 70, 40, 100, 85, 30, 75, 50, 90, 60, 40, 80, 65, 35].map((h, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      height: `${h}%`,
+                      transition: "height 0.2s ease",
+                    }}
+                    className="w-1.5 rounded-full bg-gradient-to-t from-emerald-500 to-teal-300 animate-pulse"
+                  />
+                ))}
+              </div>
+
+              {/* Native Transcript Calligraphy Box */}
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+                <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+                  <span>CITIZEN_AUDIO_STREAM_0{voiceDialectIndex + 1}.WAV</span>
+                  <span className="text-emerald-400 font-bold">
+                    {voiceDialectIndex === 0 ? "Dialect: Peshawar Pashto (پښتو)" : "Dialect: Peshawar Urdu"}
+                  </span>
+                </div>
+                <p dir="rtl" className="font-serif text-base sm:text-lg text-emerald-200 leading-relaxed font-semibold">
+                  {voiceDialectIndex === 0 &&
+                    "«سلام، زه کوہاټي ګیټ لاندې انڈرپاس کښې یم۔ سخت باران دی او لوی نالی پوره بنده ده۔ ډک ګاډي په اوبو کښې ولاړ دي، سمدستي مرسته راولېږئ!»"}
+                  {voiceDialectIndex === 1 &&
+                    "«السلام علیکم۔ میں صدر کینٹ مین روڈ سے بول رہا ہوں۔ نالہ پلاسٹک کچرے سے بند ہے اور سڑک پر گھٹنوں تک پانی کھڑا ہو چکا ہے۔ دکانوں کے اندر پانی جا رہا ہے!»"}
+                  {voiceDialectIndex === 2 &&
+                    "«ایمرجنسی! گلبہار چارسدہ روڈ موڑ پر گٹر کا بھاری ڈھکن ابلتے پانی میں بہہ گیا ہے۔ گہرا گڑھا پانی کے نیچے چھپا ہوا ہے، خدارا فورا رکاوٹیں لگائیں!»"}
+                </p>
+              </div>
+
+              {/* Spoken AI Voice Confirmation */}
+              <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      setIsPlayingVoiceDemo(true);
+                      emergencyAudio.playAlertBeep();
+                      const txt =
+                        voiceDialectIndex === 0
+                          ? "ستاسو شکایت ثبت شو۔ کوہاٹی گیٹ انڈرپاس ته د WSSP بیړنۍ ډله روانیږي۔"
+                          : "آپ کی شکایت موصول ہو چکی ہے۔ متعلقہ علاقے کے لیے ریسکیو اور ویکیوم ٹرک روانہ کیا جا رہا ہے۔";
+                      emergencyAudio.speakAnnouncement(txt, voiceDialectIndex === 0 ? "ps" : "ur", () => {
+                        setIsPlayingVoiceDemo(false);
+                      });
+                    }}
+                    className="w-10 h-10 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black flex items-center justify-center font-bold shadow-md cursor-pointer transition"
+                    title="Play voice response"
+                  >
+                    <Volume2 className="w-5 h-5" />
+                  </button>
+                  <div>
+                    <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider block">
+                      Automated Spoken Audio Confirmation
+                    </span>
+                    <span className="text-white text-xs font-serif">
+                      {voiceDialectIndex === 0
+                        ? "«ستاسو شکایت ثبت شو، د ژغورنې ډله روانیږي»"
+                        : "«آپ کی شکایت موصول ہو چکی ہے، ویکیوم ٹرک روانہ ہے»"}
+                    </span>
+                  </div>
+                </div>
+
+                {isPlayingVoiceDemo && (
+                  <span className="text-[10px] font-mono text-emerald-300 animate-pulse font-extrabold uppercase">
+                    Playing...
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Right: AI Triage Telemetry Card */}
+            <div className="lg:col-span-5 p-5 rounded-2xl bg-black/40 border border-white/10 space-y-3 font-mono text-xs">
+              <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                <span className="text-emerald-400 font-bold flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4" />
+                  Gemini Flash Multimodal Triage
+                </span>
+                <span className="text-[10px] bg-red-500/20 text-red-300 border border-red-500/30 px-2 py-0.5 rounded font-extrabold uppercase animate-pulse">
+                  Panic Distress
+                </span>
+              </div>
+
+              <div className="space-y-2 text-slate-300">
+                <div className="flex justify-between">
+                  <span className="text-slate-400 font-sans">Geocoded Landmark:</span>
+                  <span className="font-bold text-white">
+                    {voiceDialectIndex === 0 ? "Kohati Gate (34.009°N, 71.572°E)" : voiceDialectIndex === 1 ? "Saddar Cantt (34.008°N, 71.545°E)" : "Gulbahar Road (34.016°N, 71.595°E)"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400 font-sans">Water Hazard:</span>
+                  <span className="font-bold text-red-400">
+                    {voiceDialectIndex === 2 ? "Open Manhole (High Risk)" : "Knee-to-Waist Flood"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400 font-sans">Fleet Dispatch:</span>
+                  <span className="font-bold text-emerald-300">
+                    {voiceDialectIndex === 2 ? "Hazmat Barrier + Manhole Lid" : "1x Jetting Vacuum Sucker"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new CustomEvent("naali-open-voice"));
+                    }
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-[#0E6B73] hover:from-emerald-400 hover:to-teal-600 text-black font-extrabold text-xs shadow-lg transition flex items-center justify-center gap-2 cursor-pointer font-sans"
+                >
+                  <Mic className="w-4 h-4 text-black" />
+                  <span>Launch Live Khyber Voice AI Hotline</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION 2C: AI DRAIN DOCTOR & ANTI-CORRUPTION BOQ AUDIT
+          ========================================================================= */}
+      <section id="drain-doctor" className="scroll-mt-28 space-y-6">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-amber-700">
+            <Scale className="w-4 h-4 text-amber-600" />
+            <span>Anti-Corruption Quantity Surveying</span>
+          </div>
+          <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-[#12263A]">
+            2C. AI Drain Doctor: Desiltation & Corruption Audit
+          </h2>
+          <p className="text-sm sm:text-base text-[#4B6073] max-w-3xl">
+            Pre-monsoon drain desilting (نالوں کی صفائی) is notorious for ghost tenders and inflated contractor claims. AquaSentinel introduces an automated quantity surveying engine calibrated with official <strong>Khyber Pakhtunkhwa C&W Composite Schedule of Rates (CSR)</strong> to verify sludge volume, machinery requirements, and flag procurement fraud.
+          </p>
+        </div>
+
+        {/* Interactive Forensic BOQ Calculator */}
+        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-300 shadow-xl space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            {/* Left 6 Cols: Interactive Sliders */}
+            <div className="lg:col-span-6 space-y-4">
+              <h4 className="font-heading text-sm font-bold text-[#12263A] flex items-center gap-2">
+                <Sliders className="w-4 h-4 text-[#0E6B73]" />
+                <span>Adjust Drain Channel Parameters & Observe BOQ</span>
+              </h4>
+
+              <div className="space-y-3 text-xs font-bold text-[#12263A]">
+                <div className="space-y-1">
+                  <div className="flex justify-between">
+                    <span>Channel Width:</span>
+                    <span className="font-mono text-[#0E6B73]">{demoDoctorWidth} m</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={1.0}
+                    max={6.0}
+                    step={0.2}
+                    value={demoDoctorWidth}
+                    onChange={(e) => setDemoDoctorWidth(parseFloat(e.target.value))}
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#0E6B73]"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex justify-between">
+                    <span>Channel Depth:</span>
+                    <span className="font-mono text-[#0E6B73]">{demoDoctorDepth} m</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={1.0}
+                    max={4.0}
+                    step={0.1}
+                    value={demoDoctorDepth}
+                    onChange={(e) => setDemoDoctorDepth(parseFloat(e.target.value))}
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#0E6B73]"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex justify-between">
+                    <span>Segment Length:</span>
+                    <span className="font-mono text-[#0E6B73]">{demoDoctorLength} meters</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={50}
+                    max={1200}
+                    step={25}
+                    value={demoDoctorLength}
+                    onChange={(e) => setDemoDoctorLength(parseInt(e.target.value))}
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#0E6B73]"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex justify-between">
+                    <span>Silt Obstruction:</span>
+                    <span className="font-mono text-red-600">{demoDoctorFill}% Choked</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={20}
+                    max={100}
+                    step={5}
+                    value={demoDoctorFill}
+                    onChange={(e) => setDemoDoctorFill(parseInt(e.target.value))}
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-red-600"
+                  />
+                </div>
+              </div>
+
+              {/* Machinery fleet badges */}
+              {(() => {
+                const vol = Math.round(demoDoctorWidth * demoDoctorDepth * demoDoctorLength * (demoDoctorFill / 100));
+                const tonnes = Math.round(vol * 1.65);
+                const suckerHours = Math.ceil(vol / 14);
+                const trips = Math.ceil(tonnes / 11);
+                return (
+                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-200 text-center text-xs">
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                      <span className="text-[10px] text-slate-500 uppercase font-bold block">Sludge</span>
+                      <span className="font-mono font-extrabold text-[#0E6B73]">{vol} m³</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                      <span className="text-[10px] text-slate-500 uppercase font-bold block">Sucker</span>
+                      <span className="font-mono font-extrabold text-[#0E6B73]">{suckerHours} Hrs</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                      <span className="text-[10px] text-slate-500 uppercase font-bold block">Dumpers</span>
+                      <span className="font-mono font-extrabold text-[#0E6B73]">{trips} Trips</span>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* Right 6 Cols: Forensic Financial Comparison Card */}
+            <div className="lg:col-span-6 space-y-4">
+              {(() => {
+                const vol = Math.round(demoDoctorWidth * demoDoctorDepth * demoDoctorLength * (demoDoctorFill / 100));
+                const fairCost = Math.round((vol * 1280) + (Math.ceil(vol / 14) * 6500) + (Math.ceil(vol * 1.65 / 11) * 4400) * 1.05);
+                const inflatedContractorBid = Math.round(fairCost * 2.35);
+                const delta = inflatedContractorBid - fairCost;
+                return (
+                  <div className="p-5 rounded-3xl bg-red-50/90 border-2 border-red-500/80 text-red-950 space-y-4 shadow-lg">
+                    <div className="flex items-center justify-between border-b border-black/10 pb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-red-600 animate-ping" />
+                        <span className="font-heading text-xs font-black uppercase text-red-900">
+                          Forensic Overbilling Discrepancy Flag
+                        </span>
+                      </div>
+                      <span className="font-mono text-xl font-black text-red-700">+135% Delta</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                      <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-xs">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase block">Official KP CSR Ceiling:</span>
+                        <span className="font-mono text-base font-black text-emerald-700">
+                          PKR {fairCost.toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="p-3 rounded-xl bg-white border border-red-300 shadow-xs">
+                        <span className="text-[10px] font-bold text-red-600 uppercase block">Overbilled Public Funds:</span>
+                        <span className="font-mono text-base font-black text-red-600">
+                          PKR {delta.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+
+                    <p dir="rtl" className="font-serif text-sm font-bold text-slate-900 leading-relaxed">
+                      «خبردار: پیش کردہ ٹینڈر سرکاری CSR نرخوں سے 135 فیصد زیادہ ہے۔ مبینہ کارٹل اوور بلنگ کی فوری نیب اور اینٹی کرپشن چھان بین ضروری ہے۔»
+                    </p>
+
+                    <div className="pt-1 flex items-center gap-2">
+                      <Link
+                        href="/drain-doctor"
+                        className="w-full py-2.5 rounded-xl bg-[#12263A] hover:bg-[#1a3854] text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <Scale className="w-4 h-4 text-amber-300" />
+                        <span>Explore Full AI Drain Doctor Suite</span>
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>

@@ -28,6 +28,8 @@ import {
   X,
   PhoneCall,
   Waves,
+  Scale,
+  Mic,
 } from "lucide-react";
 
 interface HomePageClientProps {
@@ -354,16 +356,40 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
           {/* Desktop Action Buttons */}
           <div className="p-3 border-t border-[#C9D4DA] bg-white space-y-2">
             <button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("naali-open-voice"));
+                }
+              }}
+              className="w-full h-11 rounded-xl bg-gradient-to-r from-emerald-600 via-[#0E6B73] to-teal-700 hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
+            >
+              <Mic className="w-4 h-4 text-emerald-300 animate-pulse" />
+              <span>{language === "ur" ? "خیبر وائس ہاٹ لائن (Voice AI)" : "Khyber Voice AI (خیبر وائس)"}</span>
+            </button>
+
+            <button
               onClick={() => setIsFloodSimModalOpen(true)}
-              className="w-full h-11 rounded-xl bg-gradient-to-r from-blue-700 via-[#0E6B73] to-teal-700 hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
+              className="w-full h-10 rounded-xl bg-gradient-to-r from-blue-700 via-[#0E6B73] to-teal-700 hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
             >
               <Waves className="w-4 h-4 text-emerald-300 animate-pulse" />
               <span>{language === "ur" ? "سیلاب پیش گوئی (AI Flood Sim)" : "AI Flood Predictor (سیلاب سمیلیٹر)"}</span>
             </button>
 
             <button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("naali-open-drain-doctor"));
+                }
+              }}
+              className="w-full h-10 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:opacity-95 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
+            >
+              <Scale className="w-4 h-4 text-amber-200" />
+              <span>{language === "ur" ? "ڈرین ڈاکٹر (BOQ Audit)" : "AI Drain Doctor (صفائی آڈٹ)"}</span>
+            </button>
+
+            <button
               onClick={() => setIsSafeRouteModalOpen(true)}
-              className="w-full h-11 rounded-xl bg-gradient-to-r from-emerald-600 via-[#0E6B73] to-[#095259] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
+              className="w-full h-10 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 active:scale-98 cursor-pointer"
             >
               <Navigation className="w-4 h-4 fill-white" />
               <span>{language === "ur" ? "محفوظ راستہ (AI Safe Route)" : "Plan Safe Route (محفوظ راستہ)"}</span>
@@ -395,6 +421,30 @@ export function HomePageClient({ initialReports }: HomePageClientProps) {
             >
               <PhoneCall className="w-3.5 h-3.5" />
               <span>SOS</span>
+            </button>
+
+            <button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("naali-open-voice"));
+                }
+              }}
+              className="shrink-0 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-md transition-all flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-emerald-950/40 cursor-pointer active:scale-95"
+            >
+              <Mic className="w-3.5 h-3.5 text-emerald-300 animate-pulse" />
+              <span>{language === "ur" ? "خیبر وائس" : "Voice AI"}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("naali-open-drain-doctor"));
+                }
+              }}
+              className="shrink-0 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-md transition-all flex items-center gap-1.5 bg-gradient-to-r from-amber-600 to-amber-700 text-white shadow-amber-950/40 cursor-pointer active:scale-95"
+            >
+              <Scale className="w-3.5 h-3.5 text-amber-200" />
+              <span>{language === "ur" ? "ڈرین ڈاکٹر" : "Drain Doctor"}</span>
             </button>
 
             <button

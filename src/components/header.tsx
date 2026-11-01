@@ -6,20 +6,34 @@ import { usePathname } from "next/navigation";
 import { useLanguage } from "@/components/language-provider";
 import { Language } from "@/lib/i18n";
 import { useSession, signOut } from "@/components/providers";
-import { Droplet, BarChart3, ShieldAlert, LogIn, LogOut, UserCheck, Info, PhoneCall, Waves } from "lucide-react";
+import { Droplet, BarChart3, ShieldAlert, LogIn, LogOut, UserCheck, Info, PhoneCall, Waves, Scale, Mic } from "lucide-react";
 import { WeatherAlertBanner } from "@/components/weather-alert-banner";
 import { EmergencyModal } from "@/components/emergency-modal";
+import { KhyberVoiceModal } from "@/components/voice/khyber-voice-modal";
+import { DrainDoctorModal } from "@/components/drain-doctor/drain-doctor-modal";
 
 export function Header() {
   const { language, setLanguage, t } = useLanguage();
   const { data: session } = useSession();
   const pathname = usePathname();
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+  const [isDrainDoctorModalOpen, setIsDrainDoctorModalOpen] = useState(false);
 
   useEffect(() => {
     const handleOpenEmergency = () => setIsEmergencyModalOpen(true);
+    const handleOpenVoice = () => setIsVoiceModalOpen(true);
+    const handleOpenDrainDoctor = () => setIsDrainDoctorModalOpen(true);
+
     window.addEventListener("naali-open-emergency", handleOpenEmergency);
-    return () => window.removeEventListener("naali-open-emergency", handleOpenEmergency);
+    window.addEventListener("naali-open-voice", handleOpenVoice);
+    window.addEventListener("naali-open-drain-doctor", handleOpenDrainDoctor);
+
+    return () => {
+      window.removeEventListener("naali-open-emergency", handleOpenEmergency);
+      window.removeEventListener("naali-open-voice", handleOpenVoice);
+      window.removeEventListener("naali-open-drain-doctor", handleOpenDrainDoctor);
+    };
   }, []);
 
   const userRole = (session?.user as unknown as { role?: string })?.role || "user";
@@ -111,6 +125,21 @@ export function Header() {
           </Link>
 
           <Link
+            href="/drain-doctor"
+            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
+              pathname === "/drain-doctor"
+                ? "bg-[#0E6B73] text-white shadow-sm"
+                : "text-[#EAF0F2]/80 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <Scale className="w-4 h-4 text-amber-300" />
+            <span>{language === "ur" ? "ڈرین ڈاکٹر" : "Drain Doctor"}</span>
+            <span className="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30">
+              Audit
+            </span>
+          </Link>
+
+          <Link
             href="/scoreboard"
             onClick={(e) => handleStaticNav("scoreboard", e)}
             className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
@@ -152,8 +181,20 @@ export function Header() {
           )}
         </nav>
 
-        {/* Right Side: Emergency SOS, Language Switcher & Profile */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        {/* Right Side: Emergency SOS, Voice AI, Language Switcher & Profile */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Khyber Voice AI Hotline Trigger */}
+          <button
+            type="button"
+            onClick={() => setIsVoiceModalOpen(true)}
+            title="Khyber Voice AI Hotline (خیبر وائس ہاٹ لائن)"
+            className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl text-xs font-extrabold bg-gradient-to-r from-emerald-600 via-[#0E6B73] to-teal-700 hover:opacity-95 text-white shadow-md shadow-emerald-950/30 border border-emerald-400/40 transition-all active:scale-95 cursor-pointer shrink-0"
+          >
+            <Mic className="w-3.5 h-3.5 text-emerald-300 animate-pulse" />
+            <span className="font-heading tracking-wide">Voice</span>
+            <span className="hidden xl:inline text-[11px] font-semibold opacity-95">Hotline</span>
+          </button>
+
           {/* Emergency Helplines SOS Button */}
           <button
             type="button"
@@ -225,6 +266,14 @@ export function Header() {
     <EmergencyModal
       isOpen={isEmergencyModalOpen}
       onClose={() => setIsEmergencyModalOpen(false)}
+    />
+    <KhyberVoiceModal
+      isOpen={isVoiceModalOpen}
+      onClose={() => setIsVoiceModalOpen(false)}
+    />
+    <DrainDoctorModal
+      isOpen={isDrainDoctorModalOpen}
+      onClose={() => setIsDrainDoctorModalOpen(false)}
     />
     </div>
   );

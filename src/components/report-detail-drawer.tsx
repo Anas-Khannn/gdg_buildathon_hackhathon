@@ -29,6 +29,7 @@ import {
   RefreshCw,
   FileText,
   PhoneCall,
+  Scale,
 } from "lucide-react";
 import { WsspLetterModal } from "@/components/wssp-letter-modal";
 
@@ -415,10 +416,24 @@ export function ReportDetailDrawer({
             <button
               type="button"
               onClick={() => setIsLetterOpen(true)}
-              className="py-2.5 px-3 rounded-2xl bg-white hover:bg-slate-50 border border-[#C9D4DA] text-[#12263A] font-bold text-xs flex items-center justify-center gap-2 shadow-2xs transition active:scale-98 col-span-1 sm:col-span-2"
+              className="py-2.5 px-3 rounded-2xl bg-white hover:bg-slate-50 border border-[#C9D4DA] text-[#12263A] font-bold text-xs flex items-center justify-center gap-2 shadow-2xs transition active:scale-98 col-span-1 sm:col-span-2 cursor-pointer"
             >
               <FileText className="w-4 h-4 text-[#0E6B73]" />
               <span>Official WSSP Grievance Letter (Print / PDF)</span>
+            </button>
+
+            {/* AI Drain Doctor BOQ Audit Trigger */}
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("naali-open-drain-doctor"));
+                }
+              }}
+              className="py-2.5 px-3 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-700 hover:opacity-95 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition active:scale-98 col-span-1 sm:col-span-2 cursor-pointer"
+            >
+              <Scale className="w-4 h-4 text-amber-200" />
+              <span>AI Drain Doctor: Run Desiltation BOQ & Anti-Corruption Audit</span>
             </button>
           </div>
         </div>

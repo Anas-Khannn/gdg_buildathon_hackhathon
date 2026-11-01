@@ -17,6 +17,9 @@ import {
   ArrowLeft,
   Trash2,
   RefreshCw,
+  Scale,
+  Mic,
+  Waves,
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -163,6 +166,67 @@ export default function AdminPage() {
             <Download className="w-4 h-4" />
             <span>Export CSV for WSSP / Press</span>
           </button>
+        </div>
+
+        {/* Quick Operations & Forensic Oversight Tools */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Link
+            href="/drain-doctor"
+            className="p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-amber-400 shadow-xs flex items-center justify-between group transition"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-800 flex items-center justify-center shrink-0">
+                <Scale className="w-5 h-5 text-amber-700" />
+              </div>
+              <div>
+                <span className="font-heading text-xs font-bold text-[#12263A] block">
+                  AI Drain Doctor & BOQ Audit
+                </span>
+                <span className="text-[10px] text-slate-500">KP C&W CSR Rate Verification</span>
+              </div>
+            </div>
+            <span className="text-xs font-bold text-[#0E6B73] group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
+
+          <button
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("naali-open-voice"));
+              }
+            }}
+            className="p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-400 shadow-xs flex items-center justify-between group transition text-left cursor-pointer"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-800 flex items-center justify-center shrink-0">
+                <Mic className="w-5 h-5 text-emerald-700" />
+              </div>
+              <div>
+                <span className="font-heading text-xs font-bold text-[#12263A] block">
+                  Khyber Voice AI Hotline
+                </span>
+                <span className="text-[10px] text-slate-500">Multilingual Audio Triage</span>
+              </div>
+            </div>
+            <span className="text-xs font-bold text-[#0E6B73] group-hover:translate-x-1 transition-transform">→</span>
+          </button>
+
+          <Link
+            href="/flood-simulator"
+            className="p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 shadow-xs flex items-center justify-between group transition"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-800 flex items-center justify-center shrink-0">
+                <Waves className="w-5 h-5 text-blue-700" />
+              </div>
+              <div>
+                <span className="font-heading text-xs font-bold text-[#12263A] block">
+                  AquaTwin Hydrological Sim
+                </span>
+                <span className="text-[10px] text-slate-500">8 Catchment Basin Runoff</span>
+              </div>
+            </div>
+            <span className="text-xs font-bold text-[#0E6B73] group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
         </div>
 
         {/* Mobile Complaints Cards (< md) */}
