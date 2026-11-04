@@ -94,7 +94,9 @@ Citizen feed showing real-time community upvotes, photo previews, verification b
 
 | Feature | Description |
 |---|---|
-| 🌊 **NaaliTwin AI Hydrological Simulator** | Real-time monsoon inundation digital twin predicting storm runoff ($Q = CIA / 360$), surface waterlogging depths (cm), and culvert backpressure across Peshawar's 8 catchments with interactive "What-If" desilting mitigation |
+| 🌊 **AquaTwin AI Hydrological Simulator** | Real-time monsoon inundation digital twin predicting storm runoff ($Q = CIA / 360$), surface waterlogging depths (cm), and culvert backpressure across Peshawar's 8 catchments with interactive "What-If" desilting mitigation |
+| 🎙️ **Khyber Voice AI Hotline (خیبر وائس)** | Multilingual audio dispatcher powered by Gemini 1.5 Flash in Peshawar Pashto (پښتو), Urdu, and Hindko with landmark geocoding and spoken audio confirmations |
+| 🏗️ **AI Drain Doctor & BOQ Audit (ڈرین ڈاکٹر)** | Statutory KP C&W Composite Schedule of Rates (CSR) quantity surveyor calculating sludge volume ($m^3$), tonnage, machine fleet mobilization, and anti-corruption overbilling flags |
 | 📢 **Mosque & Loudspeaker Voice Broadcast** | Dual-tone municipal emergency siren synthesis + bilingual Urdu/Pashto voice broadcaster for local mosques and WhatsApp crisis alerts |
 | 🤖 **Gemini 1.5 Flash Vision** | Multimodal AI that detects open manholes, standing water, and blocked drains with high confidence |
 | 📍 **Live Geolocation Mapping** | Leaflet-powered Peshawar map with interactive droplet markers, area clustering, and GPS locate-me |
@@ -120,6 +122,28 @@ Traditional civic apps are **reactive**—they wait for citizens to report after
 - **Interactive "What-If" Desilting Sandbox**: Municipal commissioners and citizens can toggle "Simulate Desilting" on any choked basin to immediately see flood water levels plummet and calculate millions of liters of flood damage averted!
 - **Gemini Autonomous Emergency Orders**: Google Gemini 1.5 Flash synthesizes real-time runoff and chokepoints to generate prioritized machine dispatch orders (Super Sucker gully emptiers, excavators, dewatering pumps) for WSSP Zones 1 to 4.
 - **Mosque Loudspeaker & Audio Broadcast**: Synthesizes a realistic dual-tone municipal warning siren using the Web Audio API, followed by natural Urdu and Pashto speech announcements ready for local mosque loudspeakers, mobile megaphones, and WhatsApp community distribution.
+
+---
+
+## 🎙️ Khyber Voice AI Hotline (خیبر وائس ہاٹ لائن)
+
+In crisis situations or torrential rains, citizens standing near open drains cannot navigate complex forms. **Khyber Voice AI** empowers citizens to report emergencies naturally in their mother tongue:
+
+- **Multilingual Dialect Intelligence**: Powered by Google Gemini 1.5 Flash, transcribing and comprehending **Peshawar Pashto (پښتو)**, **Urdu**, and **Hindko**.
+- **Acoustic Distress & Landmark Geocoding**: Automatically detects emotional acoustic urgency (e.g. `urgent_panicked` / `emergency`), resolves Peshawar landmarks to exact GPS coordinates (Kohati Gate, Saddar Cantt, Gulbahar, University Town), and classifies hazard depth.
+- **Natural Spoken Confirmation**: Synthesizes a calming audio reply in Pashto or Urdu confirming WSSP dispatch.
+- **Direct Live Map Integration**: 1-tap automated ticket dispatch straight into the PostgreSQL live map database.
+
+---
+
+## 🏗️ AI Drain Doctor & Anti-Corruption Desiltation Audit (ڈرین ڈاکٹر)
+
+Pre-monsoon municipal drain desilting (نالوں کی صفائی) is notorious for ghost tenders and cartel overbilling. **AI Drain Doctor** provides computerized forensic verification calibrated with official **Khyber Pakhtunkhwa C&W Composite Schedule of Rates (CSR)**:
+
+- **Automated Civil Quantity Surveying**: Computes exact sludge volume ($m^3$) and wet mass tonnage based on channel width ($W$), depth ($D$), length ($L$), and fill percentage ($F\%$).
+- **Heavy Fleet Mobilization**: Calculates exact operational machine requirements (High-Pressure Jetting Vacuum Sucker hours, 10-wheeler Tipper Dumper trips to Shamshatoo landfill, and sanitation crew man-days).
+- **Forensic Overbilling Discrepancy Flag**: Benchmarks fair statutory government ceiling costs against contractor tender claims, flagging overbilling percentages (e.g. $+140\%$ markup) and taxpayer funds at risk.
+- **Tamper-Proof Audit Certificate**: Generates an official cryptographic audit certificate hash with printable BOQ line items and **1-tap WhatsApp Whistleblower evidence dispatch** to the KP Anti-Corruption Establishment / Ehtesab Commission.
 
 ---
 
@@ -240,40 +264,58 @@ gdg_buildathon/
 ├── public/                          # Static assets & public icons
 ├── src/
 │   ├── app/
-│   │   ├── about/                   # About page & civic mission
-│   │   ├── admin/                   # Municipal triage & dispatch portal
+│   │   ├── about/                   # 60fps animated showcase & crisis manifesto
+│   │   ├── admin/                   # Municipal triage, dispatch & oversight portal
+│   │   ├── drain-doctor/            # AI Drain Doctor & BOQ anti-corruption audit suite
+│   │   ├── flood-simulator/         # AquaTwin hydrological digital twin command center
+│   │   ├── scoreboard/              # Public Peshawar civic leaderboard
 │   │   ├── api/
 │   │   │   ├── admin/               # Administrative status updates
 │   │   │   ├── analyze/             # Google Gemini Vision multimodal analysis
 │   │   │   ├── auth/                # NextAuth route handlers & password reset
+│   │   │   ├── drain-doctor/        # BOQ quantity surveyor & CSR calculations
+│   │   │   ├── flood-simulator/     # Rational runoff simulation engine API
 │   │   │   ├── geocode/             # Reverse geocoding for Peshawar locations
 │   │   │   ├── photos/              # Secure photo serving endpoint
 │   │   │   ├── reports/             # Report creation, listing, & upvotes
+│   │   │   ├── safe-route/          # Anti-flood routing with manhole radar
 │   │   │   ├── scoreboard/          # Zone-wise metrics aggregation
+│   │   │   ├── voice-hotline/       # Gemini Flash Pashto/Urdu/Hindko voice triage
 │   │   │   └── wssp-notify/         # Automated WSSP dispatch alerts
 │   │   ├── auth/                    # Sign in, register, forgot password
-│   │   ├── scoreboard/              # Public Peshawar civic leaderboard
-│   │   ├── globals.css              # Custom styling & animations
+│   │   ├── globals.css              # Custom styling & un-throttled keyframes
 │   │   ├── layout.tsx               # Root layout with providers
-│   │   └── page.tsx                 # Dynamic citizen dashboard
+│   │   └── page.tsx                 # Dynamic citizen dashboard & live map
 │   ├── components/
+│   │   ├── about/                   # Canvas rain & interactive animated showcase
 │   │   ├── auth/                    # Authentication modals & forms
+│   │   ├── drain-doctor/            # Forensic BOQ sliders & audit certificate modal
 │   │   ├── droplet-pin.tsx          # Animated SVG urgency droplet pins
-│   │   ├── header.tsx               # Navigation header & language switch
+│   │   ├── flood-simulator/         # 8 catchments & loudspeaker audio modal
+│   │   ├── header.tsx               # Top navigation header & quick triggers
 │   │   ├── home-page-client.tsx     # Client-side map & reports interactive UI
-│   │   ├── language-provider.tsx    # English / Urdu RTL state provider
+│   │   ├── language-provider.tsx    # English / Urdu / Pashto state provider
 │   │   ├── map/                     # Leaflet map container & markers
-│   │   ├── report-detail-drawer.tsx # Slide-over inspection drawer
+│   │   ├── mobile-nav.tsx           # Mobile bottom navigation bar
+│   │   ├── report-detail-drawer.tsx # Slide-over inspection & BOQ audit drawer
 │   │   ├── report-modal.tsx         # Camera capture & Gemini upload modal
-│   │   └── staff-gauge.tsx          # Water depth visualization gauge
+│   │   ├── safe-route-modal.tsx     # Commuter route planner & proximity radar
+│   │   └── voice/                   # Khyber Voice AI recorder & dialect simulator
 │   ├── db/
 │   │   ├── index.ts                 # Drizzle database client
 │   │   ├── schema.ts                # PostgreSQL schema definitions
 │   │   └── seed.ts                  # Peshawar seed dataset
 │   ├── lib/
-│   │   └── i18n.ts                  # English and Urdu translation dictionary
+│   │   ├── audio-siren.ts           # Web Audio API emergency siren & speech synthesis
+│   │   ├── drain-doctor-engine.ts   # Civil engineering & KP CSR BOQ rate math
+│   │   ├── hydrology-engine.ts      # Rational Method runoff ($Q=CIA/360$) engine
+│   │   ├── i18n.ts                  # Trilingual (EN, UR, PS) translation dictionary
+│   │   ├── voice-hotline-presets.ts # Peshawar dialect presets & geocoding mapping
+│   │   └── whatsapp.ts              # One-click WhatsApp municipal dispatch helper
 │   ├── types/
-│   │   └── report.ts                # TypeScript interfaces
+│   │   ├── report.ts                # TypeScript interfaces
+│   │   ├── route.ts                 # Safe route interfaces
+│   │   └── simulation.ts            # Hydrological simulation types
 │   └── auth.ts                      # NextAuth configuration
 ├── uploads/                         # Stored report photographs & placeholders
 ├── .env.example                     # Environment configuration template

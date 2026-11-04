@@ -44,7 +44,9 @@ export function AnimatedCounter({
     return () => cancelAnimationFrame(frameId);
   }, [from, to, duration]);
 
-  const displayVal = Number.isInteger(to) ? Math.round(val) : val.toFixed(1);
+  const displayVal = Number.isInteger(to)
+    ? Math.round(val).toLocaleString()
+    : val.toFixed(1);
 
   return (
     <span className={className}>
